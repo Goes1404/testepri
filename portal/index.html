@@ -173,9 +173,38 @@
   @keyframes pop{ from{ transform:scale(.97); } to{ transform:none; } }
   @keyframes shimmer{ from{ transform:translateX(-160%) skewX(-20deg); } to{ transform:translateX(260%) skewX(-20deg); } }
   @keyframes pulse{ 0%,100%{ transform:scale(1); opacity:1; } 50%{ transform:scale(1.6); opacity:.35; } }
-  /* ════ RESPONSIVE ════ */
-  .app-outer { display:flex; align-items:center; justify-content:center; }
+  /* ════ APP REAL — SEM FRAME DE iPHONE ════ */
+  html, body { margin:0; height:100%; overflow:hidden; }
+  .app-outer {
+    display:flex !important;
+    flex-direction:column !important;
+    align-items:stretch !important;
+    justify-content:flex-start !important;
+    padding:0 !important;
+    overflow:hidden !important;
+    min-height:100vh !important;
+  }
+  .amb { display:none !important; }
   .desktop-sidebar { display:none; }
+  /* Remove the iPhone shell styling on ALL viewports */
+  .phone-shell {
+    width:100% !important;
+    max-width:100% !important;
+    height:100vh !important;
+    height:100dvh !important;
+    border-radius:0 !important;
+    box-shadow:none !important;
+    flex:1 !important;
+    position:relative !important;
+    overflow:hidden !important;
+  }
+  .phone-statusbar { display:none !important; }
+  .phone-island    { display:none !important; }
+  .phone-home-indicator { display:none !important; }
+  /* Mobile: remove status-bar top padding, keep space for bottom nav */
+  .phone-scroll { padding-top:0 !important; padding-bottom:84px !important; }
+
+  /* ════ SIDEBAR BUTTON STYLES ════ */
   .sidebar-nav-btn { display:flex; align-items:center; gap:12px; border:none; background:transparent; cursor:pointer; padding:11px 14px; border-radius:14px; width:100%; text-align:left; font-family:"Sora",sans-serif; font-size:13.5px; font-weight:600; color:#6E6680; transition:background .18s,color .18s; }
   .sidebar-nav-btn:hover { background:rgba(75,45,163,.07); color:#4B2DA3; }
   .sidebar-nav-btn.active { background:rgba(75,45,163,.12); color:#4B2DA3; }
@@ -183,16 +212,9 @@
   .sidebar-divider { height:1px; background:rgba(75,45,163,.09); margin:8px 4px; }
   .sidebar-section-label { font-family:"Space Grotesk",sans-serif; font-size:10.5px; font-weight:600; color:#A89FBA; letter-spacing:.8px; text-transform:uppercase; padding:4px 14px 2px; }
 
+  /* ════ DESKTOP ≥1024px — SIDEBAR LAYOUT ════ */
   @media (min-width:1024px) {
-    html, body { overflow:hidden; height:100%; }
-    .app-outer {
-      flex-direction:row !important;
-      align-items:stretch !important;
-      justify-content:flex-start !important;
-      padding:0 !important;
-      overflow:hidden !important;
-    }
-    .amb { display:none !important; }
+    .app-outer { flex-direction:row !important; }
     .desktop-sidebar {
       display:flex !important;
       flex-direction:column;
@@ -210,48 +232,15 @@
       z-index:100;
       flex-shrink:0;
     }
-    .phone-shell {
-      flex:1 !important;
-      width:auto !important;
-      min-width:0 !important;
-      height:100vh !important;
-      border-radius:0 !important;
-      box-shadow:none !important;
-    }
-    .phone-statusbar { display:none !important; }
-    .phone-island { display:none !important; }
-    .phone-scroll { padding-top:20px !important; padding-bottom:20px !important; }
+    /* Hide bottom nav on desktop — sidebar handles navigation */
     .phone-bottomnav { display:none !important; }
-    .phone-home-indicator { display:none !important; }
-    /* Content width constraint on desktop */
+    .phone-scroll { padding-bottom:20px !important; background:#F4F1FB; }
+    /* Constrain content width on large screens */
     [data-screen-label] { max-width:720px; margin-left:auto; margin-right:auto; width:100%; }
-    .phone-scroll { background:#F4F1FB; }
-    
-    /* Better top header area for desktop */
-    .phone-scroll::before {
-      content: '';
-      display:block;
-      height:0;
-    }
-
-  }
-
-  @media (min-width:1024px) {
-    /* Scrollbar for phone content */
-    .phone-scroll::-webkit-scrollbar { width:6px; height:6px; }
+    /* Scrollbar */
+    .phone-scroll::-webkit-scrollbar { width:6px; }
     .phone-scroll::-webkit-scrollbar-track { background:transparent; }
     .phone-scroll::-webkit-scrollbar-thumb { background:rgba(75,45,163,.2); border-radius:99px; }
-  }
-  @media (min-width:768px) and (max-width:1023px) {
-    .app-outer { padding:20px !important; }
-    .phone-shell {
-      width:500px !important;
-      height:auto !important;
-      min-height:85vh !important;
-      border-radius:28px !important;
-      box-shadow:0 30px 80px rgba(42,21,96,.25) !important;
-    }
-    .phone-scroll { padding-bottom:90px !important; }
   }
 
 </style>
@@ -707,6 +696,7 @@
       <!-- ════════════ BOLSAS ════════════ -->
       <sc-if value="{{ bolsasOn }}" hint-placeholder-val="{{ false }}">
       <div style="padding:6px 20px 0;">
+        <sc-if value="{{ prev.length }}"><div style="padding:4px 0 6px;"><button onclick="{{ goBack }}" style="flex:none; width:40px; height:40px; border:none; border-radius:13px; background:rgba(255,255,255,.6); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); box-shadow:0 4px 14px rgba(75,45,163,.1); display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B2DA3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></button></div></sc-if>
         <div style="display:flex; align-items:center; justify-content:space-between; margin:8px 0 4px;">
           <h1 style="font-family:'Space Grotesk',sans-serif; font-size:28px; font-weight:600; color:#1B1326; margin:0;">Bolsas</h1>
           <div style="display:flex; gap:8px;">
@@ -803,6 +793,7 @@
       <!-- ════════════ EVENTOS ════════════ -->
       <sc-if value="{{ eventosOn }}" hint-placeholder-val="{{ false }}">
       <div style="padding:6px 20px 0;">
+        <sc-if value="{{ prev.length }}"><div style="padding:4px 0 6px;"><button onclick="{{ goBack }}" style="flex:none; width:40px; height:40px; border:none; border-radius:13px; background:rgba(255,255,255,.6); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); box-shadow:0 4px 14px rgba(75,45,163,.1); display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B2DA3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></button></div></sc-if>
         <h1 style="font-family:'Space Grotesk',sans-serif; font-size:28px; font-weight:600; color:#1B1326; margin:8px 0 4px;">Portas Abertas</h1>
         <p style="font-size:13px; color:#6E6680; margin:0 0 18px;">Visite os campi, converse com mentores e garanta sua vaga.</p>
         <div style="display:flex; flex-direction:column; gap:14px;">
@@ -825,6 +816,7 @@
       <!-- ════════════ HISTÓRICO ════════════ -->
       <sc-if value="{{ historicoOn }}" hint-placeholder-val="{{ false }}">
       <div style="padding:6px 20px 0;">
+        <sc-if value="{{ prev.length }}"><div style="padding:4px 0 6px;"><button onclick="{{ goBack }}" style="flex:none; width:40px; height:40px; border:none; border-radius:13px; background:rgba(255,255,255,.6); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); box-shadow:0 4px 14px rgba(75,45,163,.1); display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B2DA3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></button></div></sc-if>
         <h1 style="font-family:'Space Grotesk',sans-serif; font-size:28px; font-weight:600; color:#1B1326; margin:8px 0 4px;">Histórico</h1>
         <p style="font-size:13px; color:#6E6680; margin:0 0 16px;">A IA organiza suas conversas por tema, com títulos inteligentes.</p>
         <button onclick="{{ goChat }}" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; border:none; cursor:pointer; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:14px; border-radius:16px; margin-bottom:18px; box-shadow:0 10px 22px -6px rgba(75,45,163,.5);" style-active="transform:scale(.98)">
@@ -849,6 +841,7 @@
       <!-- ════════════ PERFIL ════════════ -->
       <sc-if value="{{ perfilOn }}" hint-placeholder-val="{{ false }}">
       <div style="padding:6px 20px 0;">
+        <sc-if value="{{ prev.length }}"><div style="padding:4px 0 6px;"><button onclick="{{ goBack }}" style="flex:none; width:40px; height:40px; border:none; border-radius:13px; background:rgba(255,255,255,.6); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); box-shadow:0 4px 14px rgba(75,45,163,.1); display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B2DA3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></button></div></sc-if>
         <div style="display:flex; flex-direction:column; align-items:center; text-align:center; margin:8px 0 22px; animation:fadeUp .4s ease both;">
           <div style="width:80px; height:80px; border-radius:26px; background:linear-gradient(135deg,#7B4FE0,#3A1F7A); display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:28px; color:#fff; box-shadow:0 14px 30px -8px rgba(75,45,163,.5);">MA</div>
           <div style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:600; color:#1B1326; margin-top:14px;">Marina Alves</div>
@@ -3838,6 +3831,9 @@ class Component extends DCLogic {
       entrevistaOn: tab === 'entrevista', recorrenciaOn: tab === 'recorrencia',
       eventoDetalheOn: tab === 'eventoDetalhe', inscricaoOn: tab === 'inscricao',
       conteudoOn: tab === 'conteudo', chatOn: tab === 'chat', notificacoesOn: tab === 'notificacoes', configOn: tab === 'config',
+
+      // navigation history (used for conditional back buttons)
+      prev: this.state.prev,
 
       // nav handlers
       goBack: this.goBack,
