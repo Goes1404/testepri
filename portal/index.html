@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -255,6 +255,7 @@
   @media (min-width:1024px) { .app-topbar { display:none !important; } }
 
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="app1.js"></script>
 </helmet>
 
@@ -425,6 +426,74 @@
           </div>
           <div style="margin-top:auto;"></div>
           <button onclick="{{ obContinue }}" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; border:none; cursor:pointer; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:15px; padding:16px; border-radius:17px; box-shadow:0 14px 30px -8px rgba(75,45,163,.5);" style-active="transform:scale(.98)">{{ obCtaLabel }}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+        </div>
+        </sc-if>
+
+        <!-- AUTH STEP (5) -->
+        <sc-if value="{{ obAuth }}" hint-placeholder-val="{{ false }}">
+        <div style="flex:1; display:flex; flex-direction:column; padding:8px 24px 28px;">
+          <div style="display:flex; align-items:center; gap:12px; margin:2px 0 25px;">
+            <button onclick="{{ obPrev }}" style="flex:none; width:40px; height:40px; border:none; border-radius:13px; background:rgba(255,255,255,.6); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); box-shadow:0 4px 14px rgba(75,45,163,.1); display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B2DA3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></button>
+            <div style="flex:1;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;"><span style="font-size:12px; font-weight:600; color:#7B4FE0;">Crie seu perfil</span><span style="font-family:'Space Grotesk',sans-serif; font-size:12px; font-weight:600; color:#A89FBA;">{{ obNum }} / {{ obTotalSteps }}</span></div>
+              <div style="position:relative; height:7px; border-radius:999px; background:#E7E0F4; overflow:hidden;"><div style="position:absolute; inset:0 auto 0 0; height:100%; width: {{ obPct }}; border-radius:999px; background:linear-gradient(90deg,#8A5CF0,#C44DD9); transition:width .45s cubic-bezier(.22,1,.36,1);"></div></div>
+            </div>
+          </div>
+
+          <!-- Auth mode tabs -->
+          <div style="display:flex; background:#E7E0F4; border-radius:14px; padding:4px; margin-bottom:24px;">
+            <button onclick="{{ toggleAuthSignUp }}" style="{{ authModeSignUp ? 'flex:1; border:none; cursor:pointer; padding:9px; border-radius:10px; font-family:Sora,sans-serif; font-size:12.5px; font-weight:600; color:#4B2DA3; background:#fff; box-shadow:0 4px 10px rgba(75,45,163,.1);' : 'flex:1; border:none; cursor:pointer; padding:9px; border-radius:10px; font-family:Sora,sans-serif; font-size:12.5px; font-weight:500; color:#6E6680; background:transparent;' }}">Criar Conta</button>
+            <button onclick="{{ toggleAuthSignIn }}" style="{{ authModeSignIn ? 'flex:1; border:none; cursor:pointer; padding:9px; border-radius:10px; font-family:Sora,sans-serif; font-size:12.5px; font-weight:600; color:#4B2DA3; background:#fff; box-shadow:0 4px 10px rgba(75,45,163,.1);' : 'flex:1; border:none; cursor:pointer; padding:9px; border-radius:10px; font-family:Sora,sans-serif; font-size:12.5px; font-weight:500; color:#6E6680; background:transparent;' }}">Já tenho conta</button>
+          </div>
+
+          <sc-if value="{{ authModeSignUp }}">
+            <div style="font-family:'Space Grotesk',sans-serif; font-size:24px; font-weight:600; color:#1B1326; line-height:1.22; letter-spacing:-.3px;">Salve seu progresso</div>
+            <div style="font-size:13px; color:#6E6680; margin-top:8px; line-height:1.5;">Crie uma conta gratuita para conectar ao Supabase, salvar seu perfil e enviar documentos.</div>
+          </sc-if>
+          <sc-if value="{{ authModeSignIn }}">
+            <div style="font-family:'Space Grotesk',sans-serif; font-size:24px; font-weight:600; color:#1B1326; line-height:1.22; letter-spacing:-.3px;">Boas-vindas de volta</div>
+            <div style="font-size:13px; color:#6E6680; margin-top:8px; line-height:1.5;">Acesse sua conta para visualizar suas bolsas e candidaturas recomendadas.</div>
+          </sc-if>
+
+          <!-- Inputs -->
+          <div style="display:flex; flex-direction:column; gap:12px; margin-top:20px;">
+            <input value="{{ authEmailVal }}" oninput="{{ authEmailChange }}" type="email" placeholder="Seu email" style="width:100%; box-sizing:border-box; border:1.5px solid #E3DCF5; background:rgba(255,255,255,.7); border-radius:16px; padding:14px 16px; font-family:'Sora',sans-serif; font-size:15px; color:#1B1326; outline:none;">
+            <input value="{{ authPasswordVal }}" oninput="{{ authPasswordChange }}" type="password" placeholder="Sua senha (mín. 6 caracteres)" style="width:100%; box-sizing:border-box; border:1.5px solid #E3DCF5; background:rgba(255,255,255,.7); border-radius:16px; padding:14px 16px; font-family:'Sora',sans-serif; font-size:15px; color:#1B1326; outline:none;">
+          </div>
+
+          <!-- Error Message -->
+          <sc-if value="{{ authError }}">
+            <div style="margin-top:14px; background:#FDF2F2; border:1px solid #FDE8E8; border-radius:12px; padding:12px; font-size:12.5px; color:#DE2C2C; font-weight:500;">
+              {{ authError }}
+            </div>
+          </sc-if>
+
+          <div style="margin-top:20px;">
+            <button onclick="{{ submitAuth }}" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; border:none; cursor:pointer; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:15px; padding:16px; border-radius:17px; box-shadow:0 14px 30px -8px rgba(75,45,163,.5);">
+              <sc-if value="{{ authLoading }}">
+                <span>Aguarde...</span>
+              </sc-if>
+              <sc-if value="{{ !authLoading }}">
+                <sc-if value="{{ authModeSignUp }}"><span>Criar minha conta</span></sc-if>
+                <sc-if value="{{ authModeSignIn }}"><span>Entrar na minha conta</span></sc-if>
+              </sc-if>
+            </button>
+          </div>
+
+          <!-- Divider -->
+          <div style="display:flex; align-items:center; gap:10px; margin:20px 0;">
+            <div style="flex:1; height:1px; background:rgba(75,45,163,.1);"></div>
+            <span style="font-size:11.5px; color:#A89FBA; font-weight:600; text-transform:uppercase; letter-spacing:.5px;">ou</span>
+            <div style="flex:1; height:1px; background:rgba(75,45,163,.1);"></div>
+          </div>
+
+          <!-- Google Login -->
+          <button onclick="{{ submitGoogleAuth }}" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px; border:1.5px solid #E3DCF5; background:#fff; color:#3A3450; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:14px; border-radius:17px; cursor:pointer;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z" fill="#FBBC05"></path><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z" fill="#EA4335"></path></svg>
+            <span>Entrar com o Google</span>
+          </button>
+
+          <button onclick="{{ obSkip }}" style="margin-top:auto; width:100%; border:none; background:transparent; color:#7B4FE0; font-family:'Sora',sans-serif; font-weight:600; font-size:13px; cursor:pointer; padding:6px 0 0;">Explorar sem cadastro</button>
         </div>
         </sc-if>
 
@@ -1370,7 +1439,7 @@
         <div style="background:#fff; border-radius:18px; overflow:hidden; box-shadow:0 6px 16px rgba(75,45,163,.06);">
           <div style="display:flex; align-items:center; gap:12px; padding:15px 16px; border-bottom:1px solid #F2EEFA;"><span style="flex:1; font-size:14px; color:#1B1326;">Privacidade e dados</span><svg width="8" height="14" viewBox="0 0 8 14"><path d="M1 1l6 6-6 6" stroke="#C4BAD6" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
           <div style="display:flex; align-items:center; gap:12px; padding:15px 16px; border-bottom:1px solid #F2EEFA;"><span style="flex:1; font-size:14px; color:#1B1326;">Ajuda e suporte</span><svg width="8" height="14" viewBox="0 0 8 14"><path d="M1 1l6 6-6 6" stroke="#C4BAD6" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></div>
-          <div style="display:flex; align-items:center; gap:12px; padding:15px 16px;"><span style="flex:1; font-size:14px; color:#C25BA0; font-weight:500;">Sair da conta</span></div>
+          <div onclick="{{ handleLogout }}" style="display:flex; align-items:center; gap:12px; padding:15px 16px; cursor:pointer;" style-active="opacity:.7"><span style="flex:1; font-size:14px; color:#C25BA0; font-weight:500;">Sair da conta</span></div>
         </div>
 
         <div style="margin-top:24px; padding-top:18px; border-top:1px solid rgba(75,45,163,.08);">
@@ -1725,7 +1794,7 @@
 
         <div style="background:rgba(255,255,255,.65); border:1px solid rgba(255,255,255,.7); border-radius:22px; padding:18px 20px; margin-bottom:16px;">
           <div style="display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid #F2EEFA;"><span style="font-size:13px; color:#6E6680;">Valor financiado</span><span style="font-family:'Space Grotesk',sans-serif; font-size:13.5px; font-weight:600; color:#1B1326;">{{ fiesFinanciadoStr }}</span></div>
-          <div style="display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid #F2EEFA;"><span style="font-size:13px; color:#6E6680;">Juros (~6,8% a.a.)</span><span style="font-family:'Space Grotesk',sans-serif; font-size:13.5px; font-weight:600; color:#C25BA0;">+ {{ fiesJurosStr }}</span></div>
+          <div style="display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid #F2EEFA;"><span style="font-size:13px; color:#6E6680;">Juros (~{{ fiesTaxaStr }})</span><span style="font-family:'Space Grotesk',sans-serif; font-size:13.5px; font-weight:600; color:#C25BA0;">+ {{ fiesJurosStr }}</span></div>
           <div style="display:flex; justify-content:space-between; padding:9px 0 2px;"><span style="font-size:13.5px; font-weight:700; color:#1B1326;">Total a pagar</span><span style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:700; color:#4B2DA3;">{{ fiesTotalFinalStr }}</span></div>
         </div>
 
@@ -2926,9 +2995,53 @@
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script="">
+// Initialize Supabase Client
+const SUPABASE_URL = window.ENV_SUPABASE_URL || localStorage.getItem('supabase-url') || 'https://your-project.supabase.co';
+const SUPABASE_ANON_KEY = window.ENV_SUPABASE_ANON_KEY || localStorage.getItem('supabase-anon-key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock';
+const supabaseClient = (window.supabase && SUPABASE_URL.indexOf('your-project') === -1)
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
+
+// API Fetch Helper
+async function fetchAPI(endpoint, options = {}) {
+  const baseUrl = window.ENV_API_URL || localStorage.getItem('api-url') || 'http://localhost:5000';
+  const headers = {
+    'Content-Type': 'application/json',
+    ...options.headers
+  };
+  if (supabaseClient) {
+    const session = (await supabaseClient.auth.getSession()).data.session;
+    if (session?.access_token) {
+      headers['Authorization'] = `Bearer ${session.access_token}`;
+    }
+  }
+  const response = await fetch(`${baseUrl}${endpoint}`, {
+    ...options,
+    headers
+  });
+  if (!response.ok) {
+    throw new Error(`API error: ${response.statusText}`);
+  }
+  return response.json();
+}
+
 class Component extends DCLogic {
   state = {
     tab: 'onboarding', obStep: 0, nome: '',
+    authMode: 'signup', authEmail: '', authPassword: '', authLoading: false, authError: '',
+    dbBolsas: null,
+    dbDeadlines: null,
+    selBolsaDetails: null,
+    salarioMinimo: 1412.00,
+    fiesTaxa: 0.068,
+    selBolsaHistory: [],
+    dashboardBolsasCount: 0,
+    dashboardEconomia: '',
+    dashboardMelhorMatch: 0,
+    dashboardApplicationsCount: 0,
+    dashboardDeadline: null,
+    dashboardEvent: null,
+    dashboardBestMatch: null,
     prev: [], filtros: { ingresso: false, modal: false, pct: false },
     qIndex: 0, ctx: { renda: '2-3', enem: '650-720', escola: 'publica' },
     selBolsa: null, selEvento: null,
@@ -2967,10 +3080,190 @@ class Component extends DCLogic {
   obPrev = () => { this.setState(s => ({ obStep: Math.max(0, s.obStep - 1) })); this.scrollTop(); };
   obSkip = () => { this.setState({ tab: 'inicio', obStep: 0 }); this.scrollTop(); };
   obNomeChange = (e) => { const v = e.target.value; this.setState({ nome: v }); };
-  obFinish = () => {
-    this.setState({ obStep: 5 }); this.scrollTop();
+  loadDashboardData = async () => {
+    try {
+      const data = await fetchAPI('/api/home/dashboard');
+      if (data) {
+        this.setState({
+          nome: data.displayNome || this.state.nome,
+          dashboardBolsasCount: data.bolsasCount,
+          dashboardEconomia: data.economiaTotal,
+          dashboardMelhorMatch: data.melhorMatch,
+          dashboardApplicationsCount: data.applicationsCount,
+          dashboardDeadline: data.nearestDeadline,
+          dashboardEvent: data.nextEvent,
+          dashboardBestMatch: data.bestMatch
+        });
+      }
+    } catch(e) {}
+  };
+  loadBolsasData = async () => {
+    try {
+      const { buscaFiltro } = this.state;
+      const qParams = new URLSearchParams({
+        programa: buscaFiltro.programa || 'todos',
+        pct_minimo: buscaFiltro.pct || 0,
+        estado: buscaFiltro.estado || 'todos',
+        nota: buscaFiltro.nota || 0
+      });
+      const data = await fetchAPI(`/api/bolsas?${qParams.toString()}`);
+      if (data && data.bolsas) {
+        this.setState({ dbBolsas: data.bolsas });
+      }
+    } catch(e) {}
+  };
+  openBolsaDetalhe = (b) => async () => {
+    this.setState({ tab: 'bolsaDetalhe', selBolsa: b, selBolsaDetails: null, selBolsaHistory: [] });
+    this.scrollTop();
+    if (!b || !b.id) return;
+    try {
+      const data = await fetchAPI(`/api/bolsas/${b.id}`);
+      if (data) {
+        this.setState({ selBolsaDetails: data });
+      }
+      const historyData = await fetchAPI(`/api/bolsas/${b.id}/cut-score-history`);
+      if (historyData && historyData.history) {
+        this.setState({ selBolsaHistory: historyData.history });
+      }
+    } catch(e) {}
+  };
+  loadDeadlinesData = async () => {
+    try {
+      const data = await fetchAPI('/api/deadlines');
+      if (data && data.deadlines) {
+        this.setState({ dbDeadlines: data.deadlines });
+      }
+    } catch(e) {}
+  };
+  loadConfigData = async () => {
+    try {
+      const wageData = await fetchAPI('/api/config/salario-minimo');
+      if (wageData) {
+        this.setState({ salarioMinimo: wageData.valor });
+      }
+      const fiesData = await fetchAPI('/api/config/fies-taxa');
+      if (fiesData) {
+        this.setState({ fiesTaxa: fiesData.taxa });
+      }
+    } catch(e) {}
+  };
+  obFinish = async () => {
+    this.setState({ obStep: 6 }); this.scrollTop();
+    try {
+      const { ctx, nome, simEnem } = this.state;
+      const note = parseInt(simEnem, 10) || 600;
+      await fetchAPI('/api/user/profile', {
+        method: 'PUT',
+        body: JSON.stringify({
+          nota_enem: note,
+          renda_familiar: ctx.renda,
+          tipo_escola: ctx.escola
+        })
+      });
+      if (supabaseClient) {
+        await supabaseClient.auth.updateUser({
+          data: { nome_completo: nome }
+        });
+      }
+    } catch(e) {}
     clearTimeout(this._ob);
-    this._ob = setTimeout(() => { this.setState({ tab: 'inicio', obStep: 0 }); this.scrollTop(); }, 2600);
+    this._ob = setTimeout(() => {
+      this.setState({ tab: 'inicio', obStep: 0 });
+      this.scrollTop();
+      this.loadDashboardData();
+      this.loadBolsasData();
+    }, 2600);
+  };
+  authEmailChange = (e) => { this.setState({ authEmail: e.target.value }); };
+  authPasswordChange = (e) => { this.setState({ authPassword: e.target.value }); };
+  toggleAuthMode = (mode) => () => { this.setState({ authMode: mode, authError: '' }); };
+  handleAuth = async () => {
+    const { authMode, authEmail, authPassword, nome, ctx } = this.state;
+    if (!authEmail || !authPassword) {
+      this.setState({ authError: 'Por favor, preencha todos os campos.' });
+      return;
+    }
+    this.setState({ authLoading: true, authError: '' });
+    if (!supabaseClient) {
+      setTimeout(() => {
+        this.setState({ authLoading: false });
+        this.obFinish();
+      }, 1200);
+      return;
+    }
+    try {
+      if (authMode === 'signup') {
+        const { data, error } = await supabaseClient.auth.signUp({
+          email: authEmail,
+          password: authPassword,
+          options: { data: { nome_completo: nome } }
+        });
+        if (error) throw error;
+        if (data?.user) {
+          await supabaseClient
+            .from('user_profiles')
+            .update({
+              nota_enem: ctx.enem === '<550' ? 500 : ctx.enem === '550-650' ? 600 : ctx.enem === '650-720' ? 680 : 750,
+              renda_familiar: ctx.renda,
+              tipo_escola: ctx.escola
+            })
+            .eq('user_id', data.user.id);
+        }
+        this.obFinish();
+      } else {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email: authEmail,
+          password: authPassword
+        });
+        if (error) throw error;
+        if (data?.user) {
+          const { data: userRecord } = await supabase.from('users').select('nome_completo').eq('id', data.user.id).single();
+          const { data: userProfile } = await supabase.from('user_profiles').select('*').eq('user_id', data.user.id).single();
+          if (userRecord) this.setState({ nome: userRecord.nome_completo });
+          if (userProfile) {
+            const enemRange = userProfile.nota_enem < 550 ? '<550' : userProfile.nota_enem < 650 ? '550-650' : userProfile.nota_enem < 720 ? '650-720' : '720+';
+            this.setState({
+              ctx: { renda: userProfile.renda_familiar, enem: enemRange, escola: userProfile.tipo_escola },
+              simEnem: userProfile.nota_enem || 650
+            });
+          }
+        }
+        this.setState({ tab: 'inicio', obStep: 0 });
+      }
+    } catch(err) {
+      this.setState({ authError: err.message || 'Erro na autenticação.' });
+    } finally {
+      this.setState({ authLoading: false });
+    }
+  };
+  handleGoogleLogin = async () => {
+    this.setState({ authLoading: true, authError: '' });
+    if (!supabaseClient) {
+      setTimeout(() => {
+        this.setState({ authLoading: false });
+        this.obFinish();
+      }, 1000);
+      return;
+    }
+    try {
+      const { error } = await supabaseClient.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin }
+      });
+      if (error) throw error;
+    } catch (err) {
+      this.setState({ authError: err.message || 'Erro no login com Google.', authLoading: false });
+    }
+  };
+  handleLogout = async () => {
+    if (supabaseClient) {
+      await supabaseClient.auth.signOut();
+    }
+    localStorage.removeItem('pa-state');
+    this.setState({
+      tab: 'onboarding', obStep: 0, nome: '', prev: [],
+      authEmail: '', authPassword: '', authError: '', authLoading: false
+    });
   };
   toggle(k) { return () => this.setState(s => ({ filtros: { ...s.filtros, [k]: !s.filtros[k] } })); }
   ctxSet(k, v) { return () => this.setState(s => ({ ctx: { ...s.ctx, [k]: v } })); }
@@ -2996,17 +3289,41 @@ class Component extends DCLogic {
   setCustoAlimentacao = (e) => { this.setState({ custoAlimentacao: parseInt(e.target.value) || 0 }); };
   toggleMoradia = () => { this.setState(s => ({ custoMoradia: !s.custoMoradia })); };
   setComunidadeTab = (t) => () => { this.setState({ comunidadeTab: t }); };
-  setBuscaProg  = (v) => () => this.setState(s => ({ buscaFiltro: { ...s.buscaFiltro, programa: v } }));
-  setBuscaEst   = (v) => () => this.setState(s => ({ buscaFiltro: { ...s.buscaFiltro, estado: v } }));
-  setBuscaPct   = (e) => this.setState(s => ({ buscaFiltro: { ...s.buscaFiltro, pct: parseInt(e.target.value)||0 } }));
-  setBuscaNota  = (e) => this.setState(s => ({ buscaFiltro: { ...s.buscaFiltro, nota: parseInt(e.target.value)||0 } }));
+  setBuscaProg  = (v) => () => this.setState(s => ({ buscaFiltro: { ...s.buscaFiltro, programa: v } }), () => this.loadBolsasData());
+  setBuscaEst   = (v) => () => this.setState(s => ({ buscaFiltro: { ...s.buscaFiltro, estado: v } }), () => this.loadBolsasData());
+  setBuscaPct   = (e) => this.setState(s => ({ buscaFiltro: { ...s.buscaFiltro, pct: parseInt(e.target.value)||0 } }), () => this.loadBolsasData());
+  setBuscaNota  = (e) => this.setState(s => ({ buscaFiltro: { ...s.buscaFiltro, nota: parseInt(e.target.value)||0 } }), () => this.loadBolsasData());
   toggleAlertaVaga  = (k) => () => this.setState(s => ({ alertasAtivos: { ...s.alertasAtivos, [k]: !s.alertasAtivos[k] } }));
   setCompA      = (v) => () => this.setState({ compA: v });
   setCompB      = (v) => () => this.setState({ compB: v });
   checklistNext = () => this.setState(s => ({ checklistStep: Math.min(s.checklistStep+1,6) }));
   checklistReset= () => this.setState({ checklistStep: 0 });
   printDecl     = () => window.print();
-  togglePerfilEdit = () => this.setState(s => ({ perfilEdit: !s.perfilEdit }));
+  togglePerfilEdit = async () => {
+    const wasEditing = this.state.perfilEdit;
+    this.setState(s => ({ perfilEdit: !s.perfilEdit }));
+    if (wasEditing) {
+      try {
+        const { ctx, nome, simEnem } = this.state;
+        const note = parseInt(simEnem, 10) || 600;
+        await fetchAPI('/api/user/profile', {
+          method: 'PUT',
+          body: JSON.stringify({
+            nota_enem: note,
+            renda_familiar: ctx.renda,
+            tipo_escola: ctx.escola
+          })
+        });
+        if (supabaseClient) {
+          await supabaseClient.auth.updateUser({
+            data: { nome_completo: nome }
+          });
+        }
+        this.loadDashboardData();
+        this.loadBolsasData();
+      } catch(e) {}
+    }
+  };
   toggleCota = (k) => () => this.setState(s => ({ cotaSel: { ...s.cotaSel, [k]: !s.cotaSel[k] } }));
   setNotaCorte = (sig) => () => this.setState({ notaCorteSel: sig });
   setFiesMens = (e) => this.setState({ fiesMensalidade: parseInt(e.target.value) || 0 });
@@ -3075,9 +3392,38 @@ class Component extends DCLogic {
       if (s && s.tab && s.tab !== 'onboarding') this.setState(s);
     } catch(e) {}
     this.runAnims();
+    this.loadConfigData();
+    if (supabaseClient) {
+      supabaseClient.auth.onAuthStateChange(async (event, session) => {
+        if (session?.user) {
+          try {
+            const { data: userRecord } = await supabaseClient.from('users').select('nome_completo').eq('id', session.user.id).single();
+            const { data: userProfile } = await supabaseClient.from('user_profiles').select('*').eq('user_id', session.user.id).single();
+            if (userRecord) this.setState({ nome: userRecord.nome_completo });
+            if (userProfile) {
+              const enemRange = userProfile.nota_enem < 550 ? '<550' : userProfile.nota_enem < 650 ? '550-650' : userProfile.nota_enem < 720 ? '650-720' : '720+';
+              this.setState({
+                ctx: { renda: userProfile.renda_familiar, enem: enemRange, escola: userProfile.tipo_escola },
+                simEnem: userProfile.nota_enem || 650
+              });
+            }
+            this.setState({ tab: 'inicio', obStep: 0 });
+            this.loadDashboardData();
+            this.loadBolsasData();
+          } catch(e) {}
+        }
+      });
+    }
   }
   componentDidUpdate() {
-    if (this._lastTab !== this.state.tab) { this._lastTab = this.state.tab; this.runAnims(); }
+    if (this._lastTab !== this.state.tab) {
+      this._lastTab = this.state.tab;
+      this.runAnims();
+     this.loadConfigData();
+      if (this.state.tab === 'inicio') this.loadDashboardData();
+      if (this.state.tab === 'bolsas' || this.state.tab === 'busca') this.loadBolsasData();
+      if (this.state.tab === 'prazos') this.loadDeadlinesData();
+    }
     try {
       const { nome, ctx, tab, prev, simEnem, cotaSel, obStep } = this.state;
       localStorage.setItem('pa-state', JSON.stringify({ nome, ctx, tab, prev, simEnem, cotaSel, obStep }));
@@ -3154,13 +3500,14 @@ class Component extends DCLogic {
       };
     };
 
-    const bolsas = [
+    const defaultBolsas = [
       { sigla:'AM',  curso:'Design Gráfico',         uni:'Anhembi Morumbi', local:'São Paulo · SP', modal:'Presencial', programa:'ProUni', pct:'100%', ingresso:'ProUni Integral', mec:'4', chance:'Alta',  val:88, cheio:1240, corte:642, prazo:'30 jun', dias:6,  vagasRest:12, rendaMax:'1,5 SM' },
       { sigla:'PUC', curso:'Arquitetura e Urbanismo',uni:'PUC Campinas',    local:'Campinas · SP',  modal:'Presencial', programa:'ProUni', pct:'50%',  ingresso:'ProUni Parcial',  mec:'5', chance:'Alta',  val:81, cheio:2180, corte:680, prazo:'15 jul', dias:21, vagasRest:8,  rendaMax:'3 SM' },
       { sigla:'UNS', curso:'Artes Visuais',           uni:'UNESP',           local:'São Paulo · SP', modal:'Presencial', programa:'SISU',   pct:'Gratuito', ingresso:'SISU',       mec:'5', chance:'Média', val:64, cheio:0,   corte:622, prazo:'10 jul', dias:16, vagasRest:8,  rendaMax:null },
       { sigla:'FAM', curso:'Psicologia',              uni:'FAM',             local:'São Paulo · SP', modal:'Presencial', programa:'ProUni', pct:'100%', ingresso:'ProUni Integral', mec:'4', chance:'Média', val:57, cheio:1100, corte:560, prazo:'28 jun', dias:4,  vagasRest:5,  rendaMax:'1,5 SM' },
       { sigla:'EST', curso:'Cinema e Audiovisual',    uni:'Estácio',         local:'São Paulo · SP', modal:'Presencial', programa:'FIES',   pct:'Financ.', ingresso:'FIES',        mec:'4', chance:'Baixa', val:38, cheio:1450, corte:450, prazo:'20 jul', dias:26, vagasRest:15, rendaMax:'3 SM' },
-    ].map(dec);
+    ];
+    const bolsas = (this.state.dbBolsas || defaultBolsas).map(dec);
 
     const economiaTotal = money(bolsas.reduce((a, b) => {
       if (b.isSisu) return a;
@@ -3205,7 +3552,7 @@ class Component extends DCLogic {
     const navColor = k => tab === k ? '#4B2DA3' : '#A89FBA';
 
     // open handlers for cards
-    bolsas.forEach(b => { b.open = this.nav('bolsaDetalhe', { selBolsa: b }); });
+    bolsas.forEach(b => { b.open = this.openBolsaDetalhe(b); });
     eventos.forEach(e => { e.open = this.nav('eventoDetalhe', { selEvento: e }); });
 
     const mainTabs = ['inicio', 'bolsas', 'eventos', 'historico', 'perfil'];
@@ -3259,7 +3606,7 @@ class Component extends DCLogic {
       4: { title: 'Onde você cursou o ensino médio?', sub: 'Define sua elegibilidade no ProUni, SISU e cotas.', opts: escolaOpts },
     };
     const fm = obFormMeta[obStep] || obFormMeta[2];
-    const obTotalSteps = 4;
+    const obTotalSteps = 5;
 
     // ── renovação de bolsa ──
     const renovObrig = [
@@ -3486,14 +3833,20 @@ class Component extends DCLogic {
     const docPct = Math.round(docDone / docTotal * 100) + '%';
 
     // ── prazos ──
-    const prazos = [
+    const prazosData = this.state.dbDeadlines || [
       { prog:'ProUni', fase:'1ª Chamada',       data:'25 jun', dias:1,    urgente:true,  cor:'#4B2DA3' },
       { prog:'SISU',   fase:'Inscrições',        data:'10 jul', dias:16,   urgente:false, cor:'#7B4FE0' },
       { prog:'ProUni', fase:'2ª Chamada',        data:'20 jul', dias:26,   urgente:false, cor:'#4B2DA3' },
       { prog:'FIES',   fase:'Processo Seletivo', data:'30 jul', dias:36,   urgente:false, cor:'#A24DE0' },
       { prog:'FIES',   fase:'Resultados',        data:'15 ago', dias:52,   urgente:false, cor:'#A24DE0' },
       { prog:'Partic.', fase:'Bolsas ativas',   data:'Contínuo', dias:null, urgente:false, cor:'#C25BA0' },
-    ].map(p => ({
+    ];
+    const prazos = prazosData.map(p => ({
+      ...p,
+      prog: p.prog || p.programa,
+      fase: p.fase || p.descricao,
+      urgente: p.urgente || (p.dias !== null && p.dias <= 5),
+      cor: p.cor || (p.programa === 'SISU' ? '#7B4FE0' : p.programa === 'FIES' ? '#A24DE0' : '#4B2DA3'),
       ...p,
       diasLabel: p.dias === null ? 'Sempre disponível' : p.dias === 1 ? 'AMANHÃ!' : 'Faltam ' + p.dias + ' dias',
       urgStyle: p.urgente
@@ -3616,7 +3969,7 @@ class Component extends DCLogic {
       { key:'professor',  label:'Sou professor(a) da rede pública de ensino',    sub:'ProUni reserva bolsas em cursos de licenciatura',        boost:10, progs:['ProUni'] },
     ].map(c => ({ ...c, on:this.toggleCota(c.key), checked:cotaSel[c.key], card:cotaSel[c.key]?cotaCardOn:cotaCardOff, box:cotaSel[c.key]?cotaBoxOn:cotaBoxOff }));
     const cotaCount = cotaDefs.filter(c=>c.checked).length;
-    const cotaBase  = 58;
+    const cotaBase  = this.state.dashboardMelhorMatch || 58;
     const cotaBoost = Math.min(40, cotaDefs.filter(c=>c.checked).reduce((a,c)=>a+c.boost,0));
     const cotaNova  = Math.min(97, cotaBase + cotaBoost);
     const cotaProgs = [...new Set(cotaDefs.filter(c=>c.checked).flatMap(c=>c.progs))];
@@ -3626,20 +3979,22 @@ class Component extends DCLogic {
     // ── NOTA DE CORTE HISTÓRICA ──
     const ncPickOn  = 'flex:none; border:none; cursor:pointer; padding:9px 15px; border-radius:12px; font-family:Sora,sans-serif; font-weight:600; font-size:12px; color:#fff; background:linear-gradient(135deg,#6B3FD0,#4B2DA3);';
     const ncPickOff = 'flex:none; border:1.5px solid #E3DCF5; cursor:pointer; padding:9px 15px; border-radius:12px; font-family:Sora,sans-serif; font-weight:500; font-size:12px; color:#5B3FA0; background:rgba(255,255,255,.7);';
-    const minhaNota = 648;
+    const minhaNota = parseInt(this.state.simEnem, 10) || 600;
     const ncBolsas  = bolsas.filter(b => b.corte > 0);
     const ncPicker  = ncBolsas.map(b => ({ sigla:b.sigla, on:this.setNotaCorte(b.sigla), st: this.state.notaCorteSel===b.sigla?ncPickOn:ncPickOff }));
     const ncSel     = ncBolsas.find(b => b.sigla===this.state.notaCorteSel) || ncBolsas[0];
-    const ncTrend   = [
-      { ano:'2023', nota: ncSel.corte - 13 },
-      { ano:'2024', nota: ncSel.corte - 9  },
-      { ano:'2025', nota: ncSel.corte - 4  },
-      { ano:'2026', nota: ncSel.corte      },
-    ];
+    const ncTrend   = (this.state.selBolsaHistory && this.state.selBolsaHistory.length > 0)
+      ? this.state.selBolsaHistory.map(h => ({ ano: h.ano.toString(), nota: parseFloat(h.nota_media) }))
+      : [
+          { ano:'2022', nota: ncSel.corte - 13 },
+          { ano:'2023', nota: ncSel.corte - 9  },
+          { ano:'2024', nota: ncSel.corte - 4  },
+          { ano:'2025', nota: ncSel.corte      },
+        ];
     const ncHi = Math.max(...ncTrend.map(t=>t.nota)) + 6;
     const ncLo = Math.min(...ncTrend.map(t=>t.nota)) - 22;
-    const ncBars = ncTrend.map(t => ({ ...t, h: Math.round(((t.nota-ncLo)/(ncHi-ncLo))*100)+'%', last: t.ano==='2026' }));
-    const ncDelta   = ncTrend[3].nota - ncTrend[0].nota;
+    const ncBars = ncTrend.map((t, i) => ({ ...t, h: Math.round(((t.nota-ncLo)/(ncHi-ncLo))*100)+'%', last: i === ncTrend.length - 1 }));
+    const ncDelta   = ncTrend[ncTrend.length - 1].nota - ncTrend[0].nota;
     const ncFolga   = minhaNota - ncSel.corte;
     const ncFolgaOk = ncFolga >= 0;
     const minhaW    = Math.round(((minhaNota-ncLo)/(ncHi-ncLo))*100)+'%';
@@ -3651,7 +4006,7 @@ class Component extends DCLogic {
     const fiesTotalCurso    = fMens * 6 * fSem;
     const fiesFinanciado    = fiesTotalCurso - (fiesDuranteMensal * 6 * fSem);
     const fiesPrazoMeses    = fSem * 6 * 3;
-    const fiesJuros         = Math.round(fiesFinanciado * 0.068 * (fiesPrazoMeses/12));
+    const fiesJuros         = Math.round(fiesFinanciado * (this.state.fiesTaxa || 0.068) * (fiesPrazoMeses/12));
     const fiesTotalFinal    = fiesFinanciado + fiesJuros;
     const fiesParcelaDepois = Math.round(fiesTotalFinal / fiesPrazoMeses);
     const fiesComprometim   = Math.round((fiesParcelaDepois / (fRenda||1)) * 100);
@@ -3856,21 +4211,38 @@ class Component extends DCLogic {
       cInicio: navColor('inicio'), cBolsas: navColor('bolsas'), cEventos: navColor('eventos'),
       cHistorico: navColor('historico'), cPerfil: navColor('perfil'),
       bolsas, bolsasPreview: bolsas.slice(0, 2),
-      bolsasCount: bolsas.length, economiaTotal, melhorMatch,
-      heroCurso: bolsas[0].curso, heroUni: bolsas[0].uni, heroPct: bolsas[0].pct, heroProg: bolsas[0].programa,
-      altasCount: bolsas.filter(b => b.chance === 'Alta').length,
+      bolsasCount: this.state.dashboardBolsasCount || bolsas.length,
+      economiaTotal: this.state.dashboardEconomia || economiaTotal,
+      melhorMatch: (this.state.dashboardMelhorMatch || melhorMatch) + '%',
+      heroCurso: this.state.dashboardBestMatch?.curso || (this.state.dbBolsas && this.state.dbBolsas[0]?.curso) || bolsas[0].curso,
+      heroUni: this.state.dashboardBestMatch?.uni || (this.state.dbBolsas && this.state.dbBolsas[0]?.uni) || bolsas[0].uni,
+      heroPct: this.state.dashboardBestMatch?.pct || (this.state.dbBolsas && this.state.dbBolsas[0]?.pct) || bolsas[0].pct,
+      heroProg: this.state.dashboardBestMatch?.programa || (this.state.dbBolsas && this.state.dbBolsas[0]?.programa) || bolsas[0].programa,
+      altasCount: this.state.dbBolsas ? this.state.dbBolsas.filter(b => b.chance === 'Alta').length : bolsas.filter(b => b.chance === 'Alta').length,
       displayNome, iniciais,
-      heroAbrir: this.nav('bolsaDetalhe', { selBolsa: bolsas[0] }),
+      heroAbrir: this.openBolsaDetalhe(this.state.dashboardBestMatch || (this.state.dbBolsas && this.state.dbBolsas[0]) || defaultBolsas[0]),
 
       // onboarding
       onboardingOn: tab === 'onboarding',
-      obWelcome: obStep === 0, obName: obStep === 1, obForm: obStep >= 2 && obStep <= 4, obAnalisando: obStep === 5,
+      obWelcome: obStep === 0, obName: obStep === 1, obForm: obStep >= 2 && obStep <= 4, obAuth: obStep === 5, obAnalisando: obStep === 6,
       obNext: this.obNext, obPrev: this.obPrev, obSkip: this.obSkip, obFinish: this.obFinish, obNomeChange: this.obNomeChange,
       obTitle: fm.title, obSub: fm.sub, obOpts: fm.opts,
-      obNum: obStep, obTotalSteps, obPct: Math.round((obStep / obTotalSteps) * 100) + '%',
+      obNum: obStep, obTotalSteps: 5, obPct: Math.round((obStep / 5) * 100) + '%',
       obNomeVal: this.state.nome,
-      obContinue: obStep === 4 ? this.obFinish : this.obNext,
-      obCtaLabel: obStep === 4 ? 'Ver minhas bolsas' : 'Continuar',
+      obContinue: obStep === 4 ? this.obNext : this.obNext,
+      obCtaLabel: 'Continuar',
+      authEmailVal: this.state.authEmail,
+      authPasswordVal: this.state.authPassword,
+      authEmailChange: this.authEmailChange,
+      authPasswordChange: this.authPasswordChange,
+      authModeSignUp: this.state.authMode === 'signup',
+      authModeSignIn: this.state.authMode === 'signin',
+      toggleAuthSignUp: this.toggleAuthMode('signup'),
+      toggleAuthSignIn: this.toggleAuthMode('signin'),
+      submitAuth: this.handleAuth,
+      submitGoogleAuth: this.handleGoogleLogin,
+      authLoading: this.state.authLoading,
+      authError: this.state.authError,
       eventos, eventosPreview: eventos.slice(0, 1),
       conteudos, historico,
       toggleIngresso: this.toggle('ingresso'), toggleModal: this.toggle('modal'), togglePct: this.toggle('pct'),
@@ -3954,6 +4326,7 @@ class Component extends DCLogic {
       fMens, fSem, fRenda, setFiesMens: this.setFiesMens, setFiesSem: this.setFiesSem, setFiesRenda: this.setFiesRenda,
       fiesDuranteMensalStr: fiesFmt(fiesDuranteMensal), fiesFinanciadoStr: fiesFmt(fiesFinanciado),
       fiesJurosStr: fiesFmt(fiesJuros), fiesTotalFinalStr: fiesFmt(fiesTotalFinal),
+      fiesTaxaStr: Math.round((this.state.fiesTaxa || 0.068) * 1000) / 10 + '% a.a.',
       fiesParcelaDepoisStr: fiesFmt(fiesParcelaDepois), fiesComprometim, fiesAlerta, fiesAnos: Math.round(fiesPrazoMeses/12),
       mapaUnis, mapaSorted,
       faqList,
@@ -3983,6 +4356,7 @@ class Component extends DCLogic {
       compPickerA, compPickerB, compDadoA, compDadoB, compRows,
       printDecl: this.printDecl,
       resetApp: () => { try { localStorage.removeItem('pa-state'); } catch(e) {} this.setState({ tab:'onboarding', obStep:0, prev:[], nome:'' }); },
+      handleLogout: this.handleLogout,
     };
   }
 }
