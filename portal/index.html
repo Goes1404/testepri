@@ -1061,8 +1061,8 @@
           </div>
           <div style="position:relative;">
             <span style="font-size:10.5px; font-weight:600; letter-spacing:.7px; text-transform:uppercase; color:#D9C7F8;">Seu perfil dominante</span>
-            <div style="font-family:'Space Grotesk',sans-serif; font-size:26px; font-weight:600; color:#fff; margin-top:8px; line-height:1.12;">Investigativo <span style="color:#D9C7F8;">&amp; Criativo</span></div>
-            <div style="font-size:13px; color:rgba(255,255,255,.8); margin-top:10px; line-height:1.5;">Você combina raciocínio analítico com expressão visual — um perfil raro e muito valorizado em carreiras de criação.</div>
+            <div style="font-family:'Space Grotesk',sans-serif; font-size:26px; font-weight:600; color:#fff; margin-top:8px; line-height:1.12;">{{ relLabel }}</div>
+            <div style="font-size:13px; color:rgba(255,255,255,.8); margin-top:10px; line-height:1.5;">Seu perfil combina habilidades únicas e valorizadas pelo mercado de trabalho — confira as carreiras mais compatíveis abaixo.</div>
             <div style="display:flex; gap:8px; margin-top:16px; flex-wrap:wrap;">
               <sc-for list="{{ pontosFortes }}" as="p" hint-placeholder-count="4">
                 <span style="font-size:11px; font-weight:600; color:#fff; background:rgba(255,255,255,.16); padding:6px 11px; border-radius:999px;">{{ p }}</span>
@@ -1119,7 +1119,7 @@
           </sc-for>
         </div>
 
-        <h2 style="font-family:'Space Grotesk',sans-serif; font-size:17px; font-weight:600; color:#1B1326; margin:24px 2px 13px;">Régua salarial · UX Designer</h2>
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-size:17px; font-weight:600; color:#1B1326; margin:24px 2px 13px;">Régua salarial · {{ profissoes[0].nome }}</h2>
         <div style="background:#fff; border-radius:20px; padding:18px; box-shadow:0 6px 16px rgba(75,45,163,.06);">
           <div style="display:flex; align-items:flex-end; gap:10px; height:104px;">
             <sc-for list="{{ salarioBars }}" as="s" hint-placeholder-count="3">
@@ -3728,27 +3728,92 @@ class Component extends DCLogic {
 
     // relatório
     const profGrad = m => m >= 90 ? 'linear-gradient(90deg,#8A5CF0,#4B2DA3)' : m >= 80 ? 'linear-gradient(90deg,#A24DE0,#7B2FCF)' : 'linear-gradient(90deg,#C2ABF2,#7B4FE0)';
-    const profissoes = [
+    // ── RIASEC scores derived from vocacional answers ──
+    const riasecMap = {
+      'design': { A:3, I:1 }, 'publicidade': { A:3, E:1 }, 'artes': { A:3 }, 'moda': { A:3 },
+      'engenharia': { I:3, R:2 }, 'ti': { I:3, R:1 }, 'sistemas': { I:3, R:1 }, 'exatas': { I:3, R:1 },
+      'medicina': { I:2, S:3 }, 'enfermagem': { S:3, R:1 }, 'psicologia': { S:3, I:1 },
+      'veterinaria': { S:2, R:2, I:1 }, 'farmacia': { I:2, S:2, R:1 },
+      'pedagogia': { S:3, A:1 }, 'servico-social': { S:3, E:1 }, 'jornalismo': { A:2, S:1, E:1 }, 'letras': { A:2, S:1 },
+      'adm': { E:3, C:1 }, 'direito': { E:2, I:2 }, 'contabilidade': { C:3, E:1 }, 'negocios': { E:3, C:1 },
+    };
+    const _ri = { R:0, I:0, A:0, S:0, E:0, C:0 };
+    (this.state.vocResps || []).forEach(areas => areas.forEach(a => {
+      const scores = riasecMap[a] || {};
+      Object.entries(scores).forEach(([k, v]) => { _ri[k] = (_ri[k] || 0) + v; });
+    }));
+    const _riMax = Math.max(...Object.values(_ri), 1);
+    const riGrad = v => v >= 75 ? 'linear-gradient(90deg,#8A5CF0,#4B2DA3)' : v >= 50 ? 'linear-gradient(90deg,#A24DE0,#7B2FCF)' : 'linear-gradient(90deg,#C2ABF2,#9A86C8)';
+    const _riNorm = (v) => Math.round((v / _riMax) * 100) || 30;
+    const riasec = [
+      { k: 'Investigativo', v: _riNorm(_ri.I) }, { k: 'Artístico',     v: _riNorm(_ri.A) },
+      { k: 'Social',        v: _riNorm(_ri.S) }, { k: 'Empreendedor',  v: _riNorm(_ri.E) },
+      { k: 'Convencional',  v: _riNorm(_ri.C) }, { k: 'Realista',      v: _riNorm(_ri.R) },
+    ].sort((a, b) => b.v - a.v).map(r => ({ ...r, width: r.v + '%', grad: riGrad(r.v) }));
+
+    // Profile descriptor and professions driven by top 2 RIASEC
+    const _topR = riasec.slice(0, 2);
+    const _relLabel = _topR.map(r => r.k).join(' & ');
+    const profPorRiasec = {
+      'Investigativo': [
+        { nome: 'Cientista de Dados', match: 93, faixa: 'R$ 5k – 18k', why: 'Análise profunda e modelagem de padrões' },
+        { nome: 'Engenheiro(a) de Software', match: 89, faixa: 'R$ 6k – 20k', why: 'Resolução lógica de problemas complexos' },
+      ],
+      'Artístico': [
+        { nome: 'UX / Product Designer', match: 94, faixa: 'R$ 3,5k – 14k', why: 'Une investigação de usuários e criação visual' },
+        { nome: 'Diretor(a) de Arte', match: 88, faixa: 'R$ 4,5k – 16k', why: 'Liderança criativa de projetos visuais' },
+      ],
+      'Social': [
+        { nome: 'Psicólogo(a)', match: 91, faixa: 'R$ 3k – 12k', why: 'Investigação e apoio ao comportamento humano' },
+        { nome: 'Assistente Social', match: 85, faixa: 'R$ 2,5k – 8k', why: 'Impacto direto em comunidades vulneráveis' },
+      ],
+      'Empreendedor': [
+        { nome: 'Gerente de Produto', match: 90, faixa: 'R$ 6k – 20k', why: 'Une negócios, tecnologia e liderança' },
+        { nome: 'Advogado(a)', match: 85, faixa: 'R$ 4k – 20k', why: 'Defesa de causas e argumentação estratégica' },
+      ],
+      'Convencional': [
+        { nome: 'Contador(a)', match: 88, faixa: 'R$ 3k – 10k', why: 'Precisão e organização financeira' },
+        { nome: 'Analista Financeiro', match: 83, faixa: 'R$ 4k – 14k', why: 'Modelos e análise de dados financeiros' },
+      ],
+      'Realista': [
+        { nome: 'Engenheiro(a) Civil', match: 87, faixa: 'R$ 4k – 15k', why: 'Projetos concretos e construção' },
+        { nome: 'Técnico de TI', match: 82, faixa: 'R$ 2,5k – 8k', why: 'Infraestrutura e sistemas práticos' },
+      ],
+    };
+    const _profList = [...(_topR[0] ? profPorRiasec[_topR[0].k] || [] : []), ...(_topR[1] ? profPorRiasec[_topR[1].k] || [] : [])];
+    const profGrad2 = v => v >= 85 ? 'linear-gradient(90deg,#23A06B,#147A4F)' : v >= 75 ? 'linear-gradient(90deg,#7B4FE0,#4B2DA3)' : 'linear-gradient(90deg,#C25BA0,#8A2580)';
+    const profissoes = (_profList.length ? _profList : [
       { nome: 'UX / Product Designer', match: 94, faixa: 'R$ 3,5k – 14k', why: 'Une investigação de usuários e criação visual' },
       { nome: 'Arquiteto(a)', match: 88, faixa: 'R$ 4k – 18k', why: 'Projeto técnico com forte apelo estético' },
-      { nome: 'Psicólogo(a)', match: 81, faixa: 'R$ 3k – 12k', why: 'Investigação do comportamento humano' },
-      { nome: 'Diretor(a) de Arte', match: 76, faixa: 'R$ 4,5k – 16k', why: 'Liderança criativa de projetos visuais' },
-    ].map(p => ({ ...p, width: p.match + '%', grad: profGrad(p.match) }));
-    const pontosFortes = ['Pensamento analítico', 'Criatividade', 'Empatia', 'Comunicação visual'];
+    ]).map(p => ({ ...p, width: p.match + '%', grad: profGrad2(p.match) }));
 
-    const riGrad = v => v >= 80 ? 'linear-gradient(90deg,#8A5CF0,#4B2DA3)' : v >= 55 ? 'linear-gradient(90deg,#A24DE0,#7B2FCF)' : 'linear-gradient(90deg,#C2ABF2,#9A86C8)';
-    const riasec = [
-      { k: 'Investigativo', v: 92 }, { k: 'Artístico', v: 85 }, { k: 'Social', v: 64 },
-      { k: 'Empreendedor', v: 52 }, { k: 'Convencional', v: 38 }, { k: 'Realista', v: 30 },
-    ].map(r => ({ ...r, width: r.v + '%', grad: riGrad(r.v) }));
-    const tracos = [
-      { k: 'Analítico', v: 90 }, { k: 'Criativo', v: 88 }, { k: 'Colaborativo', v: 72 }, { k: 'Organização', v: 65 },
-    ].map(t => ({ ...t, width: t.v + '%' }));
-    const salarioBars = [
-      { l: 'Júnior', v: 'R$ 3,5k', h: '38px', c: '#E2D8F6', cText: '#6E6680' },
-      { l: 'Pleno', v: 'R$ 7k', h: '58px', c: '#B79CF0', cText: '#6E6680' },
-      { l: 'Sênior', v: 'R$ 14k', h: '82px', c: 'linear-gradient(180deg,#6B3FD0,#4B2DA3)', cText: '#4B2DA3' },
-    ];
+    const pontosFortesPorR = {
+      'Investigativo': ['Pensamento analítico', 'Curiosidade intelectual'],
+      'Artístico':     ['Criatividade', 'Comunicação visual'],
+      'Social':        ['Empatia', 'Escuta ativa'],
+      'Empreendedor':  ['Liderança', 'Persuasão'],
+      'Convencional':  ['Organização', 'Atenção a detalhes'],
+      'Realista':      ['Praticidade', 'Habilidade manual'],
+    };
+    const pontosFortes = _topR.flatMap(r => pontosFortesPorR[r.k] || []).slice(0, 4);
+
+    const tracosPorR = {
+      'Investigativo': [{ k: 'Analítico', v: _ri.I > 0 ? _riNorm(_ri.I) : 70 }],
+      'Artístico':     [{ k: 'Criativo',  v: _ri.A > 0 ? _riNorm(_ri.A) : 70 }],
+      'Social':        [{ k: 'Colaborativo', v: _ri.S > 0 ? _riNorm(_ri.S) : 70 }],
+      'Empreendedor':  [{ k: 'Liderança', v: _ri.E > 0 ? _riNorm(_ri.E) : 70 }],
+      'Convencional':  [{ k: 'Organização', v: _ri.C > 0 ? _riNorm(_ri.C) : 70 }],
+      'Realista':      [{ k: 'Foco prático', v: _ri.R > 0 ? _riNorm(_ri.R) : 70 }],
+    };
+    const tracos = Object.keys(tracosPorR).map(k => tracosPorR[k][0]).sort((a,b) => b.v - a.v).slice(0,4).map(t => ({ ...t, width: t.v + '%' }));
+
+    const salarioPorR = {
+      'Investigativo': [{ l: 'Júnior', v: 'R$ 5k', h: '38px', c: '#E2D8F6', cText: '#6E6680' }, { l: 'Pleno', v: 'R$ 10k', h: '58px', c: '#B79CF0', cText: '#6E6680' }, { l: 'Sênior', v: 'R$ 20k', h: '82px', c: 'linear-gradient(180deg,#6B3FD0,#4B2DA3)', cText: '#4B2DA3' }],
+      'Artístico':     [{ l: 'Júnior', v: 'R$ 3,5k', h: '38px', c: '#E2D8F6', cText: '#6E6680' }, { l: 'Pleno', v: 'R$ 7k', h: '58px', c: '#B79CF0', cText: '#6E6680' }, { l: 'Sênior', v: 'R$ 14k', h: '82px', c: 'linear-gradient(180deg,#6B3FD0,#4B2DA3)', cText: '#4B2DA3' }],
+      'Social':        [{ l: 'Júnior', v: 'R$ 2,5k', h: '38px', c: '#E2D8F6', cText: '#6E6680' }, { l: 'Pleno', v: 'R$ 5k', h: '58px', c: '#B79CF0', cText: '#6E6680' }, { l: 'Sênior', v: 'R$ 10k', h: '82px', c: 'linear-gradient(180deg,#6B3FD0,#4B2DA3)', cText: '#4B2DA3' }],
+      'Empreendedor':  [{ l: 'Júnior', v: 'R$ 4k', h: '38px', c: '#E2D8F6', cText: '#6E6680' }, { l: 'Pleno', v: 'R$ 9k', h: '58px', c: '#B79CF0', cText: '#6E6680' }, { l: 'Sênior', v: 'R$ 20k', h: '82px', c: 'linear-gradient(180deg,#6B3FD0,#4B2DA3)', cText: '#4B2DA3' }],
+    };
+    const salarioBars = (salarioPorR[_topR[0]?.k] || salarioPorR['Artístico']);
 
     // contexto — segmented controls
     const segSel = 'flex:1; text-align:center; border:none; cursor:pointer; padding:11px 4px; border-radius:13px; font-family:Sora,sans-serif; font-weight:600; font-size:12.5px; color:#fff; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); box-shadow:0 8px 18px -6px rgba(75,45,163,.5);';
@@ -4535,7 +4600,7 @@ class Component extends DCLogic {
       quizQuestion: cur.q, quizOptions,
 
       // relatório / contexto / detalhes
-      profissoes, pontosFortes, riasec, tracos, salarioBars,
+      profissoes, pontosFortes, riasec, tracos, salarioBars, relLabel: _relLabel,
       rendaOpts, enemOpts, escolaOpts, ctxEnem: enemLabel,
       selB, requisitos, selE,
       hubCats, hub,
