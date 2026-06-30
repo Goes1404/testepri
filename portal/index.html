@@ -1254,14 +1254,20 @@
         <div style="font-family:'Space Grotesk',sans-serif; font-size:24px; font-weight:600; color:#1B1326; margin-top:24px;">Candidatura enviada!</div>
         <div style="font-size:13.5px; color:#6E6680; margin-top:10px; line-height:1.55; max-width:260px;">Sua inscrição para <strong style="color:#4B2DA3;">{{ selB.curso }}</strong> na {{ selB.uni }} foi registrada.</div>
 
-        <div style="width:100%; background:rgba(255,255,255,.6); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,.6); border-radius:18px; padding:18px; box-shadow:0 8px 22px rgba(75,45,163,.08); margin-top:30px; text-align:left;">
-          <div style="font-size:12px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#A89FBA; margin-bottom:14px;">Próximos passos</div>
-          <div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:14px;"><span style="width:24px; height:24px; flex:none; border-radius:8px; background:#F1ECFB; color:#4B2DA3; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12px; display:flex; align-items:center; justify-content:center;">1</span><span style="font-size:13px; color:#2A2238; line-height:1.4;">Enviar histórico escolar em até 5 dias</span></div>
-          <div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:14px;"><span style="width:24px; height:24px; flex:none; border-radius:8px; background:#F1ECFB; color:#4B2DA3; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12px; display:flex; align-items:center; justify-content:center;">2</span><span style="font-size:13px; color:#2A2238; line-height:1.4;">Aguardar análise da universidade</span></div>
-          <div style="display:flex; gap:12px; align-items:flex-start;"><span style="width:24px; height:24px; flex:none; border-radius:8px; background:#F1ECFB; color:#4B2DA3; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12px; display:flex; align-items:center; justify-content:center;">3</span><span style="font-size:13px; color:#2A2238; line-height:1.4;">Receber o resultado pelo app</span></div>
+        <div style="background:rgba(75,45,163,.06); border:1px solid rgba(75,45,163,.12); border-radius:12px; padding:10px 18px; margin-top:14px;">
+          <span style="font-size:11px; color:#A89FBA; letter-spacing:.3px;">Protocolo</span>
+          <span style="font-family:'Space Grotesk',monospace; font-size:13px; font-weight:700; color:#4B2DA3; margin-left:8px;">{{ candidaturaProtocolo }}</span>
         </div>
 
-        <button onclick="{{ goInicio }}" style="margin-top:26px; width:100%; border:none; cursor:pointer; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:15px; border-radius:16px; box-shadow:0 12px 26px -6px rgba(75,45,163,.5);" style-active="transform:scale(.98)">Voltar ao início</button>
+        <div style="width:100%; background:rgba(255,255,255,.6); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,.6); border-radius:18px; padding:18px; box-shadow:0 8px 22px rgba(75,45,163,.08); margin-top:20px; text-align:left;">
+          <div style="font-size:12px; font-weight:700; letter-spacing:.4px; text-transform:uppercase; color:#A89FBA; margin-bottom:14px;">Próximos passos — {{ selB.programa }}</div>
+          <sc-for list="{{ candidaturaPassos }}" as="p" hint-placeholder-count="3">
+            <div style="display:flex; gap:12px; align-items:flex-start; margin-bottom:12px;"><span style="width:24px; height:24px; flex:none; border-radius:8px; background:#F1ECFB; color:#4B2DA3; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:12px; display:flex; align-items:center; justify-content:center;">{{ p.n }}</span><span style="font-size:13px; color:#2A2238; line-height:1.4;">{{ p.txt }}</span></div>
+          </sc-for>
+        </div>
+
+        <button onclick="{{ goAcompanhamento }}" style="margin-top:20px; width:100%; border:none; cursor:pointer; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:15px; border-radius:16px; box-shadow:0 12px 26px -6px rgba(75,45,163,.5);" style-active="transform:scale(.98)">Acompanhar candidatura</button>
+        <button onclick="{{ goInicio }}" style="margin-top:10px; width:100%; border:1px solid #E3DCF5; cursor:pointer; background:transparent; color:#4B2DA3; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:14px; border-radius:16px;" style-active="transform:scale(.98)">Voltar ao início</button>
       </div>
       </sc-if>
 
@@ -1296,7 +1302,7 @@
       </div>
       <div style="position:absolute; left:0; right:0; bottom:0; z-index:36; padding:14px 20px 30px; background:linear-gradient(transparent,rgba(244,241,251,.95) 28%); display:flex; gap:12px; align-items:center;">
         <div style="flex:none;"><div style="font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:700; color:#4B2DA3;">{{ selE.vagasLabel }}</div><div style="font-size:11px; color:#A89FBA;">disponíveis</div></div>
-        <button onclick="{{ goInscricao }}" style="flex:1; border:none; cursor:pointer; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:15px; border-radius:15px; box-shadow:0 12px 26px -6px rgba(75,45,163,.5);" style-active="transform:scale(.98)">Garantir minha vaga</button>
+        <button onclick="{{ selE.registrar }}" style="flex:1; border:none; cursor:pointer; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:15px; border-radius:15px; box-shadow:0 12px 26px -6px rgba(75,45,163,.5);" style-active="transform:scale(.98)">Garantir minha vaga</button>
       </div>
       </sc-if>
 
@@ -1332,7 +1338,6 @@
       <div style="padding:6px 20px 0;">
         <div style="display:flex; align-items:center; gap:12px; margin:2px 0 16px;">
           <button onclick="{{ goBack }}" style="flex:none; width:40px; height:40px; border:none; border-radius:13px; background:rgba(255,255,255,.6); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); box-shadow:0 4px 14px rgba(75,45,163,.1); display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B2DA3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></button>
-          <button onclick="{{ goBack }}" style="flex:none; width:40px; height:40px; border:none; border-radius:13px; background:rgba(255,255,255,.6); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); box-shadow:0 4px 14px rgba(75,45,163,.1); display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B2DA3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></button>
           <h1 style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:600; color:#1B1326; margin:0; white-space:nowrap;">Conteúdos</h1>
         </div>
         <div style="display:flex; gap:8px; overflow-x:auto; margin:0 -20px 18px; padding:0 20px 4px;">
@@ -1360,7 +1365,6 @@
       <div style="padding:6px 20px 0; min-height:660px; display:flex; flex-direction:column;">
         <div style="display:flex; align-items:center; gap:12px; margin:2px 0 18px;">
           <button onclick="{{ goBack }}" style="flex:none; width:40px; height:40px; border:none; border-radius:13px; background:rgba(255,255,255,.6); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); box-shadow:0 4px 14px rgba(75,45,163,.1); display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B2DA3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></button>
-          <button onclick="{{ goBack }}" style="flex:none; width:40px; height:40px; border:none; border-radius:13px; background:rgba(255,255,255,.6); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); box-shadow:0 4px 14px rgba(75,45,163,.1); display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4B2DA3" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"></path></svg></button>
           <div style="display:flex; align-items:center; gap:10px;">
             <div style="position:relative; width:40px; height:40px; border-radius:13px; background:linear-gradient(135deg,#7B4FE0,#4B2DA3); display:flex; align-items:center; justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4"></path></svg><span style="position:absolute; right:-1px; bottom:-1px; width:11px; height:11px; border-radius:50%; background:#1F8A5B; border:2px solid #F4F1FB;"></span></div>
             <div><div style="font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:600; color:#1B1326;">Etapa</div><div style="font-size:11px; color:#1F8A5B; font-weight:500;">Mentora · online</div></div>
@@ -1371,6 +1375,15 @@
           <sc-for list="{{ chatMsgs }}" as="m" hint-placeholder-count="2">
             <div style="{{ m.row }}"><div style="{{ m.bubble }}">{{ m.text }}</div></div>
           </sc-for>
+          <sc-if value="{{ chatLoading }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex; justify-content:flex-start; animation:pop .3s ease both;">
+              <div style="max-width:80%; background:rgba(255,255,255,.7); border:1px solid rgba(255,255,255,.7); color:#A89FBA; font-size:13px; padding:12px 15px; border-radius:18px 18px 18px 5px; display:flex; gap:5px; align-items:center;">
+                <span style="animation:pulse 1s ease-in-out infinite; width:7px; height:7px; border-radius:50%; background:#A89FBA; display:inline-block;"></span>
+                <span style="animation:pulse 1s ease-in-out infinite .2s; width:7px; height:7px; border-radius:50%; background:#A89FBA; display:inline-block;"></span>
+                <span style="animation:pulse 1s ease-in-out infinite .4s; width:7px; height:7px; border-radius:50%; background:#A89FBA; display:inline-block;"></span>
+              </div>
+            </div>
+          </sc-if>
         </div>
 
         <div style="position:sticky; bottom:0; padding-top:8px;">
@@ -1378,8 +1391,8 @@
             <sc-for list="{{ quickReplies }}" as="q" hint-placeholder-count="3"><button onclick="{{ q.on }}" style="flex:none; border:1px solid #D8CBF6; background:rgba(255,255,255,.7); color:#5B3FA0; font-family:'Sora',sans-serif; font-weight:500; font-size:12.5px; padding:9px 14px; border-radius:999px; cursor:pointer; white-space:nowrap;" style-active="transform:scale(.97)">{{ q.label }}</button></sc-for>
           </div>
           <div style="display:flex; align-items:center; gap:10px; background:rgba(255,255,255,.7); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,.7); border-radius:16px; padding:7px 7px 7px 16px; box-shadow:0 8px 22px rgba(75,45,163,.1); margin-bottom:14px;">
-            <span style="flex:1; font-size:13.5px; color:#A89FBA;">Pergunte algo à Etapa…</span>
-            <button style="width:40px; height:40px; flex:none; border:none; border-radius:12px; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); display:flex; align-items:center; justify-content:center; cursor:pointer;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"></path></svg></button>
+            <input value="{{ chatInput }}" oninput="{{ setChatInput }}" onkeydown="{{ sendChatKey }}" placeholder="Pergunte algo à Etapa…" style="flex:1; border:none; outline:none; background:transparent; font-family:'Sora',sans-serif; font-size:13.5px; color:#2A2238;">
+            <button onclick="{{ sendChatFree }}" style="width:40px; height:40px; flex:none; border:none; border-radius:12px; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); display:flex; align-items:center; justify-content:center; cursor:pointer;" style-active="transform:scale(.95)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"></path></svg></button>
           </div>
         </div>
       </div>
@@ -3067,10 +3080,13 @@ class Component extends DCLogic {
       { id: 0, curso: 'Design Gráfico', cidade: 'São Paulo', minPct: 50, ativo: true  },
       { id: 1, curso: 'Arquitetura',    cidade: 'Qualquer',  minPct: 75, ativo: false },
     ],
-    chat: [ { who: 'ai', text: 'Oi, Marina! Sou a Etapa, sua mentora de carreira. Quer que eu compare dois cursos ou busque bolsas pra você?' } ],
+    chat: [ { who: 'ai', text: 'Oi! Sou a Etapa, sua mentora de bolsas. Posso buscar bolsas para o seu perfil, comparar cursos ou tirar dúvidas sobre ProUni, SISU e FIES. Como posso ajudar?' } ],
+    chatInput: '',
+    chatLoading: false,
     cidade: '', estado: '', userEmail: '',
-    dbApplications: null, dbAlerts: null, dbNotifications: null,
+    dbApplications: null, dbAlerts: null, dbNotifications: null, dbEventos: null, dbComunidade: null, dbRenovacoes: null,
     currentApplicationId: null,
+    vocResultSaved: false,
   };
 
   scrollTop() { const el = this.base && this.base.querySelector('[data-scroll]'); if (el) el.scrollTop = 0; }
@@ -3171,6 +3187,47 @@ class Component extends DCLogic {
         this.setState({ dbNotifications: data.notifications });
       }
     } catch(e) {}
+  };
+  loadEventosData = async () => {
+    try {
+      const data = await fetchAPI('/api/eventos');
+      if (data && data.eventos) this.setState({ dbEventos: data.eventos });
+    } catch(e) {}
+  };
+  loadRenovacaoData = async () => {
+    const appId = this.state.currentApplicationId
+      || (this.state.dbApplications && this.state.dbApplications[0]?.id);
+    if (!appId) return;
+    try {
+      const data = await fetchAPI(`/api/applications/${appId}/renewals`);
+      if (data && data.renewals) this.setState({ dbRenovacoes: data.renewals });
+    } catch(e) {}
+  };
+  loadComunidadeData = async () => {
+    try {
+      const data = await fetchAPI('/api/comunidade/posts');
+      if (data && data.posts) this.setState({ dbComunidade: data.posts });
+    } catch(e) {}
+  };
+  saveVocacionalResults = async (areas) => {
+    try {
+      const scoreRiasec = {};
+      areas.forEach(a => { scoreRiasec[a] = (scoreRiasec[a] || 0) + 1; });
+      await fetchAPI('/api/user/vocacional', {
+        method: 'POST',
+        body: JSON.stringify({ score_riasec: scoreRiasec, areas_recomendadas: areas.slice(0, 5) }),
+      });
+      this.setState({ vocResultSaved: true });
+    } catch(e) {}
+  };
+  registrarEvento = (ev) => async () => {
+    if (!ev || !ev.id) return;
+    try {
+      await fetchAPI(`/api/eventos/${ev.id}/registrar`, { method: 'POST' });
+      this.nav('inscricao', { selEvento: ev })();
+    } catch(e) {
+      this.nav('inscricao', { selEvento: ev })();
+    }
   };
   goCandidaturaOkHandler = async () => {
     const selB = this.state.selBolsa;
@@ -3378,9 +3435,15 @@ class Component extends DCLogic {
   toggleFaq = (i) => () => this.setState(s => ({ faqAberta: s.faqAberta === i ? null : i }));
   vocEscolher = (val) => () => {
     const resps = [...this.state.vocResps, val];
-    this.setState({ vocResps: resps, vocStep: this.state.vocStep + 1 });
+    const nextStep = this.state.vocStep + 1;
+    this.setState({ vocResps: resps, vocStep: nextStep, vocResultSaved: false });
+    // Save results when all questions answered
+    if (nextStep >= 4) {
+      const allAreas = resps.flat();
+      this.saveVocacionalResults(allAreas);
+    }
   };
-  vocReset = () => this.setState({ vocStep: 0, vocResps: [] });
+  vocReset = () => this.setState({ vocStep: 0, vocResps: [], vocResultSaved: false });
   setDecl = (field) => (e) => this.setState({ [field]: e.target.value });
   entrevistaNext = () => this.setState(s => ({ entrevistaStep: Math.min(s.entrevistaStep + 1, 4) }));
   entrevistaPrev = () => this.setState(s => ({ entrevistaStep: Math.max(s.entrevistaStep - 1, 0) }));
@@ -3394,22 +3457,46 @@ class Component extends DCLogic {
       { area:'Redação',           q:'No texto dissertativo-argumentativo, a tese deve aparecer:', opts:['Na introdução','Na conclusão','Em todo parágrafo','Só no desenvolvimento'] },
     ];
   }
-  sendChat(t) { return () => { this.setState(s => ({ chat: [...s.chat, { who: 'me', text: t }, { who: 'ai', text: this.aiReply(t) }] })); }; }
-  aiReply(t) {
-    if (/bolsa/i.test(t)) return 'Encontrei 5 bolsas alinhadas ao seu perfil Investigativo. A de Design Gráfico na Anhembi tem 88% de chance pra você. Quer ver os requisitos?';
-    if (/compar/i.test(t)) return 'Arquitetura tem régua salarial maior no topo, mas Design entra mais rápido no mercado. Posso abrir o relatório lado a lado?';
-    if (/evento|visita|portas/i.test(t)) return 'Tem Portas Abertas na USP dia 28/06 com 32 vagas. Quer que eu garanta a sua?';
-    return 'Boa! Já anotei isso no seu mapa. Posso sugerir os próximos passos quando quiser.';
-  }
+  setChatInput = (e) => { this.setState({ chatInput: e.target.value }); };
+  sendChat(t) { return () => { this._doSendChat(t); }; }
+  sendChatFree = () => {
+    const msg = (this.state.chatInput || '').trim();
+    if (!msg || this.state.chatLoading) return;
+    this.setState({ chatInput: '' });
+    this._doSendChat(msg);
+  };
+  sendChatKey = (e) => { if (e.key === 'Enter') this.sendChatFree(); };
+  _doSendChat = async (msg) => {
+    const history = this.state.chat.slice(-6);
+    this.setState(s => ({ chat: [...s.chat, { who: 'me', text: msg }], chatLoading: true }));
+    try {
+      const data = await fetchAPI('/api/chat', {
+        method: 'POST',
+        body: JSON.stringify({ message: msg, history }),
+      });
+      const reply = data?.reply || 'Desculpe, não consegui processar sua pergunta agora.';
+      this.setState(s => ({ chat: [...s.chat, { who: 'ai', text: reply }], chatLoading: false }));
+    } catch(e) {
+      this.setState(s => ({ chat: [...s.chat, { who: 'ai', text: 'Ops, tive um problema de conexão. Tente novamente.' }], chatLoading: false }));
+    }
+  };
   answerQuiz(i) {
     return () => this.setState(s => {
+      const answers = [...(s.vestAnswers || []), i];
       const next = s.qIndex + 1;
       if (next >= this.QUESTIONS.length) {
         clearTimeout(this._qt);
         this._qt = setTimeout(() => this.setState({ tab: 'relatorio' }), 2800);
-        return { qIndex: 0, prev: [...s.prev, 'teste'].slice(-10), tab: 'processando' };
+        // Save quiz session
+        const VEST_CORRECT = [0, 0, 0, 0, 0];
+        const score = 450 + answers.reduce((acc, ans, idx) => acc + (ans === VEST_CORRECT[idx] ? 60 : 20), 0);
+        fetchAPI('/api/user/quiz', {
+          method: 'POST',
+          body: JSON.stringify({ tipo: 'vestibular', respostas: answers, score }),
+        }).catch(() => {});
+        return { qIndex: 0, vestAnswers: answers, prev: [...s.prev, 'teste'].slice(-10), tab: 'processando' };
       }
-      return { qIndex: next };
+      return { qIndex: next, vestAnswers: answers };
     });
   }
   get QUESTIONS() {
@@ -3466,6 +3553,9 @@ class Component extends DCLogic {
       if (this.state.tab === 'acompanhamento') this.loadApplicationsData();
       if (this.state.tab === 'alerta') this.loadAlertsData();
       if (this.state.tab === 'notificacoes') this.loadNotificationsData();
+      if (this.state.tab === 'eventos') this.loadEventosData();
+      if (this.state.tab === 'comunidade') this.loadComunidadeData();
+      if (this.state.tab === 'renovacao') this.loadRenovacaoData();
     }
     try {
       const { nome, ctx, tab, prev, simEnem, cotaSel, obStep } = this.state;
@@ -3563,16 +3653,17 @@ class Component extends DCLogic {
       ? 'margin-top:13px; width:100%; border:none; background:#EFEBF7; color:#A89FBA; font-family:Sora,sans-serif; font-weight:600; font-size:13px; padding:12px; border-radius:14px; cursor:not-allowed;'
       : 'margin-top:13px; width:100%; border:none; cursor:pointer; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); color:#fff; font-family:Sora,sans-serif; font-weight:600; font-size:13px; padding:12px; border-radius:14px;';
 
-    const eventos = [
-      { titulo: 'Portas Abertas USP',  data: '28 jun · 09h', local: 'Cidade Universitária · SP', vagas: 32, lotado: false },
-      { titulo: 'Dia do Vestibulando', data: '05 jul · 14h', local: 'Mackenzie · Higienópolis',  vagas: 8,  lotado: false },
-      { titulo: 'Visita Guiada FGV',   data: '12 jul · 10h', local: 'Bela Vista · SP',            vagas: 0,  lotado: true  },
-    ].map(e => ({
+    const defaultEventos = [
+      { id: null, titulo: 'Portas Abertas USP',  data: '28 jun · 09h', local: 'Cidade Universitária · SP', vagas: 32, lotado: false, vagasLabel: '32 vagas', tagBg: '#4B2DA3' },
+      { id: null, titulo: 'Dia do Vestibulando', data: '05 jul · 14h', local: 'Mackenzie · Higienópolis',  vagas: 8,  lotado: false, vagasLabel: '8 vagas',  tagBg: '#C25BA0' },
+      { id: null, titulo: 'Visita Guiada FGV',   data: '12 jul · 10h', local: 'Bela Vista · SP',           vagas: 0,  lotado: true,  vagasLabel: 'Lotado',   tagBg: '#9C93B3' },
+    ];
+    const eventos = (this.state.dbEventos || defaultEventos).map(e => ({
       ...e,
-      vagasLabel: e.lotado ? 'Lotado' : e.vagas + ' vagas',
-      tagBg: e.lotado ? '#9C93B3' : (e.vagas <= 10 ? '#C25BA0' : '#4B2DA3'),
       btnLabel: e.lotado ? 'Lista de espera' : 'Garantir minha vaga',
       btnStyle: evBtn(e.lotado),
+      open: this.nav('eventoDetalhe', { selEvento: e }),
+      registrar: this.registrarEvento(e),
     }));
 
     const conteudos = [
@@ -3596,7 +3687,6 @@ class Component extends DCLogic {
 
     // open handlers for cards
     bolsas.forEach(b => { b.open = this.openBolsaDetalhe(b); });
-    eventos.forEach(e => { e.open = this.nav('eventoDetalhe', { selEvento: e }); });
 
     const mainTabs = ['inicio', 'bolsas', 'eventos', 'historico', 'perfil'];
     const showNav = mainTabs.includes(tab);
@@ -3659,12 +3749,15 @@ class Component extends DCLogic {
       { icon:'M9 11l3 3L22 4', label:'Declarar alterações à faculdade', desc:'Nome, endereço, emprego — atualizar sempre', ok:true,  okC:'#1F8A5B', okBg:'#E8F7F1' },
       { icon:'M9 11l3 3L22 4', label:'Não trancar mais de 1 semestre', desc:'Trancamento consecutivo cancela o ProUni', ok:true,  okC:'#1F8A5B', okBg:'#E8F7F1' },
     ];
-    const renovSemestres = [
-      { sem:'1º Sem 2024', freq:88, nota:7.4, ok:true  },
-      { sem:'2º Sem 2024', freq:81, nota:6.9, ok:true  },
-      { sem:'1º Sem 2025', freq:92, nota:7.8, ok:true  },
-      { sem:'2º Sem 2025', freq:79, nota:7.1, ok:true  },
-    ].map(s => ({
+    const renovRaw = (this.state.dbRenovacoes && this.state.dbRenovacoes.length > 0)
+      ? this.state.dbRenovacoes.map(r => ({ sem: r.semestre, freq: r.frequencia, nota: r.ira, ok: r.situacao === 'aprovado' }))
+      : [
+        { sem:'1º Sem 2024', freq:88, nota:7.4, ok:true  },
+        { sem:'2º Sem 2024', freq:81, nota:6.9, ok:true  },
+        { sem:'1º Sem 2025', freq:92, nota:7.8, ok:true  },
+        { sem:'2º Sem 2025', freq:79, nota:7.1, ok:true  },
+      ];
+    const renovSemestres = renovRaw.map(s => ({
       ...s,
       freqW: s.freq+'%',
       freqC: s.freq >= 75 ? '#1F8A5B' : '#C25BA0',
@@ -3741,18 +3834,33 @@ class Component extends DCLogic {
 
     // ── comunidade ──
     const comunidadeTab = this.state.comunidadeTab;
-    const historiasRaw = [
-      { ini:'LS', nome:'Larissa S.', curso:'Design Gráfico · ProUni 100%', uni:'Anhembi Morumbi', nota:'652', texto:'Fiz o ProUni com 652 de média. A plataforma me mostrou que eu já tinha a nota necessária — eu nem sabia! O processo foi simples.', tempo:'2 dias', curtidas:48 },
-      { ini:'MR', nome:'Marcos R.', curso:'Artes Visuais · SISU', uni:'UNESP', nota:'634', texto:'Entrei na UNESP pelo SISU. A calculadora de chance me ajudou a focar na opção certa e não desperdiçar a inscrição.', tempo:'5 dias', curtidas:34 },
-      { ini:'AG', nome:'Ana G.', curso:'Psicologia · ProUni 100%', uni:'FAM', nota:'578', texto:'Achei que minha nota era baixa demais. Mas a IA apontou cursos com corte menor. Consegui bolsa integral!', tempo:'1 sem', curtidas:61 },
+    const dbPosts = this.state.dbComunidade || [];
+    const coresH = ['linear-gradient(135deg,#8A5CF0,#4B2DA3)', 'linear-gradient(135deg,#1E6FA0,#0D4A6B)', 'linear-gradient(135deg,#23A06B,#147A4F)', 'linear-gradient(135deg,#C25BA0,#8A2580)', 'linear-gradient(135deg,#E07800,#A05000)'];
+    const defaultHistorias = [
+      { ini:'LS', nome:'Larissa S.', curso:'Design Gráfico · ProUni 100%', nota:'652', corpo:'Fiz o ProUni com 652 de média. A plataforma me mostrou que eu já tinha a nota necessária — eu nem sabia! O processo foi simples.', tempo:'2 dias', likes:48 },
+      { ini:'MR', nome:'Marcos R.', curso:'Artes Visuais · SISU', nota:'634', corpo:'Entrei na UNESP pelo SISU. A calculadora de chance me ajudou a focar na opção certa e não desperdiçar a inscrição.', tempo:'5 dias', likes:34 },
+      { ini:'AG', nome:'Ana G.', curso:'Psicologia · ProUni 100%', nota:'578', corpo:'Achei que minha nota era baixa demais. Mas a IA apontou cursos com corte menor. Consegui bolsa integral!', tempo:'1 sem', likes:61 },
     ];
-    const coresH = ['linear-gradient(135deg,#8A5CF0,#4B2DA3)', 'linear-gradient(135deg,#1E6FA0,#0D4A6B)', 'linear-gradient(135deg,#23A06B,#147A4F)'];
-    const historiasFormatted = historiasRaw.map((h, i) => ({ ...h, corH: coresH[i] }));
-    const duvidas = [
+    const historiasSource = dbPosts.filter(p => p.tipo === 'historia').length > 0
+      ? dbPosts.filter(p => p.tipo === 'historia')
+      : defaultHistorias;
+    const historiasFormatted = historiasSource.map((h, i) => ({
+      ...h,
+      ini: h.ini || (h.nome||'A').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(),
+      texto: h.corpo || h.texto || '',
+      curtidas: h.likes || h.curtidas || 0,
+      corH: coresH[i % coresH.length],
+    }));
+    const defaultDuvidas = [
       { ini:'JP', nome:'João P.', pergunta:'Posso fazer ProUni se minha mãe tem ensino superior?', respostas:3, tempo:'1h', respondida:true },
       { ini:'CF', nome:'Camila F.', pergunta:'FIES cobre pós-graduação?', respostas:1, tempo:'3h', respondida:false },
       { ini:'RS', nome:'Rafael S.', pergunta:'Qual a diferença de cota para escola pública no ProUni?', respostas:7, tempo:'2 dias', respondida:true },
     ];
+    const dbDuvidas = dbPosts.filter(p => p.tipo === 'duvida').map(p => ({
+      ini: (p.nome||'A').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(),
+      nome: p.nome, pergunta: p.titulo, respostas: 0, tempo: p.tempo || '', respondida: false,
+    }));
+    const duvidas = dbDuvidas.length > 0 ? dbDuvidas : defaultDuvidas;
     const comTabSel = 'flex:none; border:none; cursor:pointer; padding:10px 18px; border-radius:12px; font-family:Sora,sans-serif; font-weight:600; font-size:13px; color:#fff; background:linear-gradient(135deg,#6B3FD0,#4B2DA3);';
     const comTabOff = 'flex:none; border:1px solid #E3DCF5; cursor:pointer; padding:10px 18px; border-radius:12px; font-family:Sora,sans-serif; font-weight:500; font-size:13px; color:#5B3FA0; background:rgba(255,255,255,.7);';
     const comunidadeHistoriasOn = comunidadeTab === 'historias';
@@ -3946,7 +4054,8 @@ class Component extends DCLogic {
     ].map(r => ({ ...r, bg: r.ok ? '#1F8A5B' : '#C4BAD6', path: r.ok ? 'M20 6L9 17l-5-5' : 'M12 8v5M12 16.5v.5' }));
 
     // evento selecionado
-    const selE = this.state.selEvento || eventos[0];
+    const _selERaw = this.state.selEvento || eventos[0];
+    const selE = { ..._selERaw, registrar: _selERaw.registrar || this.registrarEvento(_selERaw) };
 
     // hub de conteúdo
     const catSel = 'flex:none; border:none; cursor:pointer; padding:8px 15px; border-radius:999px; font-family:Sora,sans-serif; font-weight:600; font-size:12.5px; color:#fff; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); white-space:nowrap;';
@@ -4399,6 +4508,39 @@ class Component extends DCLogic {
       checklistOn: tab === 'checklist', goChecklist: this.nav('checklist'),
       alertaVagaOn: tab === 'alertaVaga', goAlertaVaga: this.nav('alertaVaga'),
       authEmail: this.state.userEmail || this.state.authEmail,
+
+      // chat
+      chatLoading: this.state.chatLoading,
+      chatInput: this.state.chatInput,
+      setChatInput: this.setChatInput,
+      sendChatFree: this.sendChatFree,
+      sendChatKey: this.sendChatKey,
+
+      // candidatura ok
+      candidaturaProtocolo: this.state.currentApplicationId
+        ? '#PA-' + this.state.currentApplicationId.slice(0, 8).toUpperCase()
+        : '#PA-' + Math.random().toString(36).slice(2, 10).toUpperCase(),
+      candidaturaPassos: (() => {
+        const prog = (this.state.selBolsa || {}).programa || 'ProUni';
+        const steps = {
+          'ProUni':  [
+            { n:1, txt:'Envie o histórico escolar e comprovante de renda em até 5 dias úteis' },
+            { n:2, txt:'Aguarde a análise de elegibilidade do MEC (até 10 dias)' },
+            { n:3, txt:'Se convocado, compareça à universidade para assinatura do Termo de Bolsa' },
+          ],
+          'SISU':    [
+            { n:1, txt:'Verifique se a nota de corte foi atingida no portal do SISU' },
+            { n:2, txt:'Faça a matrícula diretamente na universidade no prazo indicado' },
+            { n:3, txt:'Apresente RG, histórico escolar e comprovante de ENEM na matrícula' },
+          ],
+          'FIES':    [
+            { n:1, txt:'Assine o contrato de financiamento no banco parceiro (Caixa ou Bradesco)' },
+            { n:2, txt:'Apresente fiador ou garantia alternativa aprovada pelo agente financeiro' },
+            { n:3, txt:'Mantenha frequência mínima e renove semestralmente para manter o FIES' },
+          ],
+        };
+        return steps[prog] || steps['ProUni'];
+      })(),
       ckDots, ckFinal, ckNotFinal, ckAtual, ckPct, ckBarW, ckTotal,
       checklistNext: this.checklistNext, checklistReset: this.checklistReset,
       alertaBolsas, alertaVagaCount, alertaVagaStr,

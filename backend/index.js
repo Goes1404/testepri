@@ -24,6 +24,9 @@ const deadlinesRoutes = require('./src/routes/deadlines');
 const applicationsRoutes = require('./src/routes/applications');
 const alertsRoutes = require('./src/routes/alerts');
 const notificationsRoutes = require('./src/routes/notifications');
+const chatRoutes = require('./src/routes/chat');
+const comunidadeRoutes = require('./src/routes/comunidade');
+const eventosRoutes = require('./src/routes/eventos');
 
 // Healthcheck
 app.get('/api/health', (req, res) => {
@@ -43,6 +46,9 @@ app.use('/api/deadlines', deadlinesRoutes);
 app.use('/api/applications', applicationsRoutes);
 app.use('/api/alerts', alertsRoutes);
 app.use('/api/notifications', notificationsRoutes);
+app.use('/api/chat', chatRoutes);
+app.use('/api/comunidade', comunidadeRoutes);
+app.use('/api/eventos', eventosRoutes);
 
 // Error Handler
 app.use((err, req, res, next) => {
