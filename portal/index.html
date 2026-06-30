@@ -2499,10 +2499,11 @@
             <div style="font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:600; color:#fff; margin-top:8px; line-height:1.2;">{{ planoMeta.curso }}<br><span style="color:rgba(255,255,255,.7); font-size:14px; font-weight:500;">{{ planoMeta.uni }}</span></div>
             <div style="display:flex; align-items:center; gap:16px; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,.15);">
               <div style="text-align:center;"><div style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:#fff;">{{ planoMeta.notaAtual }}</div><div style="font-size:10px; color:rgba(255,255,255,.65); margin-top:2px;">sua nota</div></div>
-              <div style="flex:1; position:relative; height:6px; border-radius:999px; background:rgba(255,255,255,.2); overflow:hidden;"><div style="position:absolute; inset:0 auto 0 0; height:100%; width:95%; border-radius:999px; background:linear-gradient(90deg,#7DFFC2,#23A06B);"></div></div>
+              <div style="flex:1; position:relative; height:6px; border-radius:999px; background:rgba(255,255,255,.2); overflow:hidden;"><div style="position:absolute; inset:0 auto 0 0; height:100%; width: {{ planoMeta.progW }}; border-radius:999px; background:linear-gradient(90deg,#7DFFC2,#23A06B);"></div></div>
               <div style="text-align:center;"><div style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:#7DFFC2;">{{ planoMeta.notaCorte }}</div><div style="font-size:10px; color:rgba(255,255,255,.65); margin-top:2px;">corte</div></div>
             </div>
-            <div style="margin-top:12px; display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,.16); padding:7px 13px; border-radius:999px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="#7DFFC2"><path d="M20 6L9 17l-5-5" stroke="#7DFFC2" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg><span style="font-size:12px; font-weight:600; color:#fff;">Nota atual já passa no corte!</span></div>
+            <sc-if value="{{ planoMeta.passou }}" hint-placeholder-val="{{ true }}"><div style="margin-top:12px; display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,.16); padding:7px 13px; border-radius:999px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="#7DFFC2"><path d="M20 6L9 17l-5-5" stroke="#7DFFC2" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg><span style="font-size:12px; font-weight:600; color:#fff;">Nota atual já passa no corte!</span></div></sc-if>
+            <sc-if value="{{ !planoMeta.passou }}" hint-placeholder-val="{{ false }}"><div style="margin-top:12px; display:inline-flex; align-items:center; gap:6px; background:rgba(255,255,255,.16); padding:7px 13px; border-radius:999px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FFD479" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg><span style="font-size:12px; font-weight:600; color:#fff;">Faltam {{ planoMeta.faltam }} pts para o corte</span></div></sc-if>
           </div>
         </div>
 
@@ -3908,21 +3909,27 @@ class Component extends DCLogic {
       grad: a.v >= 75 ? 'linear-gradient(90deg,#23A06B,#1F8A5B)' : a.v >= 65 ? 'linear-gradient(90deg,#8A5CF0,#4B2DA3)' : 'linear-gradient(90deg,#C25BA0,#8A2580)',
       statusColor: a.v >= 75 ? '#1F8A5B' : a.v >= 65 ? '#4B2DA3' : '#C25BA0',
     }));
+    const _diaSemana = new Date().getDay(); // 0=Dom, 1=Seg, ...
     const planoDias = [
-      { label:'Seg', mat:'Mat.', cor:'#4B2DA3', hoje:true  },
-      { label:'Ter', mat:'Lin.', cor:'#7B4FE0', hoje:false },
-      { label:'Qua', mat:'Mat.', cor:'#4B2DA3', hoje:false },
-      { label:'Qui', mat:'Hum.', cor:'#A24DE0', hoje:false },
-      { label:'Sex', mat:'Nat.', cor:'#C44DD9', hoje:false },
-      { label:'Sáb', mat:'Red.', cor:'#1F8A5B', hoje:false },
-      { label:'Dom', mat:'Rev.', cor:'#9C93B3', hoje:false },
+      { label:'Seg', mat:'Mat.', cor:'#4B2DA3', dow:1 },
+      { label:'Ter', mat:'Lin.', cor:'#7B4FE0', dow:2 },
+      { label:'Qua', mat:'Mat.', cor:'#4B2DA3', dow:3 },
+      { label:'Qui', mat:'Hum.', cor:'#A24DE0', dow:4 },
+      { label:'Sex', mat:'Nat.', cor:'#C44DD9', dow:5 },
+      { label:'Sáb', mat:'Red.', cor:'#1F8A5B', dow:6 },
+      { label:'Dom', mat:'Rev.', cor:'#9C93B3', dow:0 },
     ].map(d => ({
-      ...d,
-      bg: d.hoje ? d.cor : '#EDE8F7',
-      tc:  d.hoje ? '#fff' : '#6E6680',
-      mc:  d.hoje ? 'rgba(255,255,255,.7)' : '#A89FBA',
+      ...d, hoje: d.dow === _diaSemana,
+      bg: d.dow === _diaSemana ? d.cor : '#EDE8F7',
+      tc:  d.dow === _diaSemana ? '#fff' : '#6E6680',
+      mc:  d.dow === _diaSemana ? 'rgba(255,255,255,.7)' : '#A89FBA',
     }));
-    const planoMeta = { curso: bolsas[1].curso, uni: bolsas[1].uni, notaAtual: 685, notaCorte: bolsas[1].corte, faltam: Math.max(0, bolsas[1].corte - 685) };
+    const _planoBolsa = this.state.dashboardBestMatch || (bolsas && bolsas[0]) || {};
+    const _planoNota = parseInt(this.state.simEnem, 10) || 650;
+    const _planoCorte = _planoBolsa.corte || 642;
+    const _planoPassou = _planoNota >= _planoCorte;
+    const _planoProgW = Math.min(100, Math.round(_planoNota / Math.max(_planoCorte, 1) * 100)) + '%';
+    const planoMeta = { curso: _planoBolsa.curso || bolsas[0]?.curso || 'Design Gráfico', uni: _planoBolsa.uni || bolsas[0]?.uni || '', notaAtual: _planoNota, notaCorte: _planoCorte, faltam: Math.max(0, _planoCorte - _planoNota), progW: _planoProgW, passou: _planoPassou };
 
     // ── calculadora de elegibilidade ──
     const rendaNum  = { '0-1':1, '1-2':2, '2-3':2.5, '3+':4 }[ctx.renda]  || 2.5;
