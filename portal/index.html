@@ -708,7 +708,7 @@
         <!-- acompanhamento card -->
         <button onclick="{{ goAcompanhamento }}" style="width:100%; margin:18px 0 0; display:flex; align-items:center; gap:14px; background:rgba(255,255,255,.65); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1.5px solid rgba(75,45,163,.14); border-radius:20px; padding:14px 16px; box-shadow:0 8px 22px rgba(75,45,163,.09); cursor:pointer;" style-active="transform:scale(.99)">
           <div style="width:42px; height:42px; flex:none; border-radius:13px; background:linear-gradient(135deg,#4B2DA3,#2A1560); display:flex; align-items:center; justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></div>
-          <div style="flex:1; text-align:left;"><div style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; color:#1B1326;">2 candidaturas em andamento</div><div style="font-size:12px; color:#7B4FE0; margin-top:2px; font-weight:500;">Design Gráfico · Em análise · <span style="color:#C25BA0;">1 doc urgente</span></div></div>
+          <div style="flex:1; text-align:left;"><div style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; color:#1B1326;">{{ dashboardApplicationsCount || 0 }} candidaturas em andamento</div><div style="font-size:12px; color:#7B4FE0; margin-top:2px; font-weight:500;">Acompanhe o status das suas candidaturas</div></div>
           <svg width="8" height="14" viewBox="0 0 8 14"><path d="M1 1l6 6-6 6" stroke="#C4BAD6" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg>
         </button>
 
@@ -1584,9 +1584,9 @@
         <div style="position:relative; border-radius:24px; padding:20px; overflow:hidden; background:linear-gradient(150deg,#5B33B8,#2A1560); box-shadow:0 18px 36px -12px rgba(42,21,96,.55); margin-bottom:20px;">
           <div style="position:absolute; inset:0; filter:url(#goo); opacity:.7; pointer-events:none;"><div class="goo-blob" style="position:absolute; width:90px; height:90px; border-radius:50%; background:#8A5CF0; top:-22px; right:-10px;"></div><div class="goo-blob" style="position:absolute; width:60px; height:60px; border-radius:50%; background:#C44DD9; bottom:-16px; left:24px;"></div></div>
           <div style="position:relative; display:flex; align-items:center; gap:16px;">
-            <div style="width:60px; height:60px; flex:none; border-radius:50%; background:rgba(255,255,255,.2); border:2px solid rgba(255,255,255,.3); display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:#fff;">L</div>
+            <div style="width:60px; height:60px; flex:none; border-radius:50%; background:rgba(255,255,255,.2); border:2px solid rgba(255,255,255,.3); display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:#fff;">{{ iniciais }}</div>
             <div style="flex:1;">
-              <div style="font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:600; color:#fff;">Lucas M.</div>
+              <div style="font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:600; color:#fff;">{{ displayNome }}</div>
               <div style="font-size:12px; color:rgba(255,255,255,.75); margin-top:2px;">Perfil {{ perfilCompleto }}% completo</div>
               <div style="position:relative; height:5px; border-radius:999px; background:rgba(255,255,255,.2); overflow:hidden; margin-top:8px;"><div style="position:absolute; inset:0 auto 0 0; height:100%; width: {{ perfilProgW }}; border-radius:999px; background:linear-gradient(90deg,#7DFFC2,#23A06B);"></div></div>
             </div>
@@ -4220,6 +4220,7 @@ class Component extends DCLogic {
       heroProg: this.state.dashboardBestMatch?.programa || (this.state.dbBolsas && this.state.dbBolsas[0]?.programa) || bolsas[0].programa,
       altasCount: this.state.dbBolsas ? this.state.dbBolsas.filter(b => b.chance === 'Alta').length : bolsas.filter(b => b.chance === 'Alta').length,
       displayNome, iniciais,
+      dashboardApplicationsCount: this.state.dashboardApplicationsCount || 0,
       heroAbrir: this.openBolsaDetalhe(this.state.dashboardBestMatch || (this.state.dbBolsas && this.state.dbBolsas[0]) || defaultBolsas[0]),
 
       // onboarding
