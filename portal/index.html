@@ -3079,7 +3079,7 @@ class Component extends DCLogic {
     chatInput: '',
     chatLoading: false,
     cidade: '', estado: '', userEmail: '',
-    dbApplications: null, dbAlerts: null, dbNotifications: null, dbEventos: null, dbComunidade: null, dbRenovacoes: null,
+    dbApplications: null, dbAlerts: null, dbNotifications: null, dbEventos: null, dbComunidade: null, dbRenovacoes: null, dbDocIds: {},
     currentApplicationId: null,
     vocResultSaved: false,
   };
@@ -3203,6 +3203,39 @@ class Component extends DCLogic {
       const data = await fetchAPI('/api/comunidade/posts');
       if (data && data.posts) this.setState({ dbComunidade: data.posts });
     } catch(e) {}
+  };
+  loadDocumentsData = async () => {
+    const appId = this.state.currentApplicationId
+      || (this.state.dbApplications && this.state.dbApplications[0]?.id);
+    if (!appId) return;
+    try {
+      const data = await fetchAPI(`/api/applications/${appId}/documents`);
+      if (data && data.documents) {
+        const keyMap = { rg: 'rg', cpf: 'cpf', historico_escolar: 'historico', comprovante_enem: 'enem', comprovante_renda: 'renda' };
+        const docStatus = {};
+        const docIds = {};
+        data.documents.forEach(d => {
+          const k = keyMap[d.tipo] || d.tipo;
+          docStatus[k] = d.status === 'aprovado' ? 'ai' : d.status === 'enviado' ? 'sent' : 'pending';
+          docIds[k] = d.id;
+        });
+        this.setState({ docStatus: { ...this.state.docStatus, ...docStatus }, dbDocIds: docIds });
+      }
+    } catch(e) {}
+  };
+  markDocSent = (key) => async () => {
+    const appId = this.state.currentApplicationId
+      || (this.state.dbApplications && this.state.dbApplications[0]?.id);
+    const docId = (this.state.dbDocIds || {})[key];
+    this.setState(s => ({ docStatus: { ...s.docStatus, [key]: 'sent' } }));
+    if (appId && docId) {
+      try {
+        await fetchAPI(`/api/applications/${appId}/documents/${docId}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ status: 'enviado' }),
+        });
+      } catch(e) {}
+    }
   };
   saveVocacionalResults = async (areas) => {
     try {
@@ -3551,6 +3584,7 @@ class Component extends DCLogic {
       if (this.state.tab === 'eventos') this.loadEventosData();
       if (this.state.tab === 'comunidade') this.loadComunidadeData();
       if (this.state.tab === 'renovacao') this.loadRenovacaoData();
+      if (this.state.tab === 'candidatura') this.loadDocumentsData();
     }
     try {
       const { nome, ctx, tab, prev, simEnem, cotaSel, obStep } = this.state;
@@ -3972,7 +4006,7 @@ class Component extends DCLogic {
         statusBg:    aiDone ? '#E8F7F1'  : sent ? '#EDE7FA' : '#F4F1FB',
         iconPath:    aiDone || sent ? 'M20 6L9 17l-5-5' : 'M12 5v7l4 2',
         iconBg:      aiDone ? '#1F8A5B' : sent ? '#4B2DA3' : '#D6CDE8',
-        markSent: !pend ? null : this.setDoc(d.key, 'sent'),
+        markSent: !pend ? null : this.markDocSent(d.key),
       };
     });
     const docDone = docItems.filter(d => d.done).length;
