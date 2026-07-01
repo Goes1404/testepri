@@ -2557,11 +2557,13 @@
         </div>
 
         <!-- streak -->
-        <div style="display:flex; gap:10px; margin-bottom:22px;">
-          <div style="flex:1; background:linear-gradient(135deg,#4B2DA3,#2A1560); border-radius:18px; padding:16px; text-align:center; box-shadow:0 10px 22px -6px rgba(75,45,163,.4);"><div style="font-size:26px; margin-bottom:6px;">🔥</div><div style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:#fff;">7</div><div style="font-size:11px; color:rgba(255,255,255,.7); margin-top:3px;">dias seguidos</div></div>
-          <div style="flex:1; background:rgba(255,255,255,.65); border:1px solid rgba(255,255,255,.65); border-radius:18px; padding:16px; text-align:center; box-shadow:0 5px 14px rgba(75,45,163,.06);"><div style="font-size:26px; margin-bottom:6px;">⚡</div><div style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:#4B2DA3;">3h</div><div style="font-size:11px; color:#6E6680; margin-top:3px;">esta semana</div></div>
-          <div style="flex:1; background:rgba(255,255,255,.65); border:1px solid rgba(255,255,255,.65); border-radius:18px; padding:16px; text-align:center; box-shadow:0 5px 14px rgba(75,45,163,.06);"><div style="font-size:26px; margin-bottom:6px;">🎯</div><div style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:#4B2DA3;">+8</div><div style="font-size:11px; color:#6E6680; margin-top:3px;">pts esta sem.</div></div>
+        <div style="display:flex; gap:10px; margin-bottom:16px;">
+          <div style="flex:1; background:linear-gradient(135deg,#4B2DA3,#2A1560); border-radius:18px; padding:16px; text-align:center; box-shadow:0 10px 22px -6px rgba(75,45,163,.4);"><div style="font-size:26px; margin-bottom:6px;">🔥</div><div style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:#fff;">{{ planoCurrentStreak }}</div><div style="font-size:11px; color:rgba(255,255,255,.7); margin-top:3px;">dias seguidos</div></div>
+          <div style="flex:1; background:rgba(255,255,255,.65); border:1px solid rgba(255,255,255,.65); border-radius:18px; padding:16px; text-align:center; box-shadow:0 5px 14px rgba(75,45,163,.06);"><div style="font-size:26px; margin-bottom:6px;">⚡</div><div style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:#4B2DA3;">{{ planoWeekHours }}</div><div style="font-size:11px; color:#6E6680; margin-top:3px;">esta semana</div></div>
+          <div style="flex:1; background:rgba(255,255,255,.65); border:1px solid rgba(255,255,255,.65); border-radius:18px; padding:16px; text-align:center; box-shadow:0 5px 14px rgba(75,45,163,.06);"><div style="font-size:26px; margin-bottom:6px;">🎯</div><div style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:#4B2DA3;">{{ planoTodayLogged ? '✓' : '—' }}</div><div style="font-size:11px; color:#6E6680; margin-top:3px;">hoje</div></div>
         </div>
+
+        <button onclick="{{ planoLogBtn.on }}" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; border:none; cursor:pointer; background:linear-gradient(135deg,#1F8A5B,#156644); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:14px; border-radius:16px; box-shadow:0 10px 22px -6px rgba(31,138,91,.45); margin-bottom:12px; {{ planoLogBtn.style }}" style-active="transform:scale(.98)">{{ planoLogBtn.label }}</button>
 
         <button onclick="{{ goBolsas }}" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; border:none; cursor:pointer; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:15px; border-radius:16px; box-shadow:0 12px 26px -6px rgba(75,45,163,.5);" style-active="transform:scale(.98)">Ver bolsas que já posso pegar<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
       </div>
@@ -3101,6 +3103,7 @@ class Component extends DCLogic {
     vocResultSaved: false,
     quizHistory: null, dbAchievements: null,
     dbConteudo: null, hubCatSel: 'Tudo',
+    planoStreak: null,
   };
 
   scrollTop() { const el = this.base && this.base.querySelector('[data-scroll]'); if (el) el.scrollTop = 0; }
@@ -3266,6 +3269,18 @@ class Component extends DCLogic {
     try {
       const data = await fetchAPI('/api/user/achievements');
       if (data && data.achievements) this.setState({ dbAchievements: data.achievements });
+    } catch(e) {}
+  };
+  loadPlanoStreak = async () => {
+    try {
+      const data = await fetchAPI('/api/plano/streak');
+      if (data) this.setState({ planoStreak: data });
+    } catch(e) {}
+  };
+  logStudySession = async (minutes) => {
+    try {
+      await fetchAPI('/api/plano/log', { method: 'POST', body: JSON.stringify({ minutes }) });
+      this.loadPlanoStreak();
     } catch(e) {}
   };
   loadConteudoData = async (tag) => {
@@ -3650,6 +3665,7 @@ class Component extends DCLogic {
       if (this.state.tab === 'vestResult') this.loadQuizHistory();
       if (this.state.tab === 'conquistas') this.loadAchievementsData();
       if (this.state.tab === 'conteudo') this.loadConteudoData(this.state.hubCatSel);
+      if (this.state.tab === 'plano') this.loadPlanoStreak();
     }
     try {
       const { nome, ctx, tab, prev, simEnem, cotaSel, obStep } = this.state;
@@ -4046,21 +4062,33 @@ class Component extends DCLogic {
       grad: a.v >= 75 ? 'linear-gradient(90deg,#23A06B,#1F8A5B)' : a.v >= 65 ? 'linear-gradient(90deg,#8A5CF0,#4B2DA3)' : 'linear-gradient(90deg,#C25BA0,#8A2580)',
       statusColor: a.v >= 75 ? '#1F8A5B' : a.v >= 65 ? '#4B2DA3' : '#C25BA0',
     }));
+    const _streakData = this.state.planoStreak;
+    const _streakWeek = _streakData?.week;
     const _diaSemana = new Date().getDay(); // 0=Dom, 1=Seg, ...
-    const planoDias = [
-      { label:'Seg', mat:'Mat.', cor:'#4B2DA3', dow:1 },
-      { label:'Ter', mat:'Lin.', cor:'#7B4FE0', dow:2 },
-      { label:'Qua', mat:'Mat.', cor:'#4B2DA3', dow:3 },
-      { label:'Qui', mat:'Hum.', cor:'#A24DE0', dow:4 },
-      { label:'Sex', mat:'Nat.', cor:'#C44DD9', dow:5 },
-      { label:'Sáb', mat:'Red.', cor:'#1F8A5B', dow:6 },
-      { label:'Dom', mat:'Rev.', cor:'#9C93B3', dow:0 },
-    ].map(d => ({
-      ...d, hoje: d.dow === _diaSemana,
-      bg: d.dow === _diaSemana ? d.cor : '#EDE8F7',
-      tc:  d.dow === _diaSemana ? '#fff' : '#6E6680',
-      mc:  d.dow === _diaSemana ? 'rgba(255,255,255,.7)' : '#A89FBA',
+    const planoDias = (_streakWeek && _streakWeek.length ? _streakWeek : [
+      { label:'Seg', mat:'Mat.', cor:'#4B2DA3', dow:1, estudou:false, hoje:false },
+      { label:'Ter', mat:'Lin.', cor:'#7B4FE0', dow:2, estudou:false, hoje:false },
+      { label:'Qua', mat:'Mat.', cor:'#4B2DA3', dow:3, estudou:false, hoje:false },
+      { label:'Qui', mat:'Hum.', cor:'#A24DE0', dow:4, estudou:false, hoje:false },
+      { label:'Sex', mat:'Nat.', cor:'#C44DD9', dow:5, estudou:false, hoje:false },
+      { label:'Sáb', mat:'Red.', cor:'#1F8A5B', dow:6, estudou:false, hoje:false },
+      { label:'Dom', mat:'Rev.', cor:'#9C93B3', dow:0, estudou:false, hoje:_diaSemana===0 },
+    ]).map(d => ({
+      ...d,
+      bg: d.estudou ? d.cor : d.hoje ? d.cor + 'CC' : '#EDE8F7',
+      tc: (d.estudou || d.hoje) ? '#fff' : '#6E6680',
+      mc: (d.estudou || d.hoje) ? 'rgba(255,255,255,.7)' : '#A89FBA',
+      checkIcon: d.estudou ? 'M20 6L9 17l-5-5' : '',
     }));
+    const planoCurrentStreak = _streakData?.streak ?? 0;
+    const planoWeekMins = (_streakWeek || []).reduce((s, d) => s + (d.minutes || 0), 0);
+    const planoWeekHours = planoWeekMins >= 60
+      ? Math.floor(planoWeekMins/60) + 'h' + (planoWeekMins%60 ? (planoWeekMins%60)+'m' : '')
+      : (planoWeekMins > 0 ? planoWeekMins+'m' : '0h');
+    const planoTodayLogged = !!(_streakWeek && _streakWeek.find(d => d.hoje && d.estudou));
+    const planoLogBtn = planoTodayLogged
+      ? { label: 'Sessão registrada ✓', style: 'opacity:.6; cursor:default;', on: () => {} }
+      : { label: 'Registrar sessão de hoje', style: '', on: () => this.logStudySession(30) };
     const _planoBolsa = this.state.dashboardBestMatch || (bolsas && bolsas[0]) || {};
     const _planoNota = parseInt(this.state.simEnem, 10) || 650;
     const _planoCorte = _planoBolsa.corte || 642;
@@ -4699,7 +4727,7 @@ class Component extends DCLogic {
       prazos,
       simBolsas, simUnlocked, simEnem, simSlide: this.simSlide,
       comparBolsas, comparPicker,
-      planoAreas, planoDias, planoMeta,
+      planoAreas, planoDias, planoMeta, planoCurrentStreak, planoWeekHours, planoTodayLogged, planoLogBtn,
       eligCards, eligCount,
       acompCands,
       alertaFmt,

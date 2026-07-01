@@ -28,6 +28,7 @@ const chatRoutes = require('./src/routes/chat');
 const comunidadeRoutes = require('./src/routes/comunidade');
 const eventosRoutes = require('./src/routes/eventos');
 const conteudoRoutes = require('./src/routes/conteudo');
+const planoRoutes = require('./src/routes/plano');
 
 // Healthcheck
 app.get('/api/health', (req, res) => {
@@ -51,6 +52,7 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/comunidade', comunidadeRoutes);
 app.use('/api/eventos', eventosRoutes);
 app.use('/api/conteudo', conteudoRoutes);
+app.use('/api/plano', planoRoutes);
 
 // Error Handler
 app.use((err, req, res, next) => {

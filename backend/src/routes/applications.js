@@ -80,7 +80,7 @@ router.post('/', requireAuth, async (req, res) => {
 
     // Seed default document slots
     await supabase.from('documents').insert(
-      DEFAULT_DOC_TYPES.map(tipo => ({ application_id: data.id, tipo, status: 'pendente' }))
+      DEFAULT_DOC_TYPES.map(tipo => ({ application_id: data.id, tipo, status: 'pending' }))
     );
 
     res.status(201).json({ application: data });

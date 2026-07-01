@@ -130,8 +130,13 @@ router.get('/dashboard', requireAuth, async (req, res, next) => {
       }
     }
 
+    const displayNome = req.user?.user_metadata?.nome_completo
+      || req.user?.user_metadata?.name
+      || req.user?.email?.split('@')[0]
+      || 'Estudante';
+
     res.json({
-      displayNome: profile ? req.user.nome_completo || 'Marina' : 'Marina',
+      displayNome,
       bolsasCount,
       economiaTotal: economiaTotal > 0 ? 'R$ ' + economiaTotal.toLocaleString('pt-BR') : 'R$ 0',
       melhorMatch: bestMatch ? bestMatch.matchVal : 0,
