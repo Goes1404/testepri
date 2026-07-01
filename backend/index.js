@@ -27,6 +27,7 @@ const notificationsRoutes = require('./src/routes/notifications');
 const chatRoutes = require('./src/routes/chat');
 const comunidadeRoutes = require('./src/routes/comunidade');
 const eventosRoutes = require('./src/routes/eventos');
+const conteudoRoutes = require('./src/routes/conteudo');
 
 // Healthcheck
 app.get('/api/health', (req, res) => {
@@ -49,6 +50,7 @@ app.use('/api/notifications', notificationsRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/comunidade', comunidadeRoutes);
 app.use('/api/eventos', eventosRoutes);
+app.use('/api/conteudo', conteudoRoutes);
 
 // Error Handler
 app.use((err, req, res, next) => {

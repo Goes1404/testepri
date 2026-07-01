@@ -1339,12 +1339,12 @@
           <h1 style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:600; color:#1B1326; margin:0; white-space:nowrap;">Conteúdos</h1>
         </div>
         <div style="display:flex; gap:8px; overflow-x:auto; margin:0 -20px 18px; padding:0 20px 4px;">
-          <sc-for list="{{ hubCats }}" as="c" hint-placeholder-count="5"><button style="{{ c.st }}">{{ c.label }}</button></sc-for>
+          <sc-for list="{{ hubCats }}" as="c" hint-placeholder-count="5"><button onclick="{{ c.on }}" style="{{ c.st }}">{{ c.label }}</button></sc-for>
         </div>
 
         <div style="position:relative; border-radius:22px; overflow:hidden; margin-bottom:16px; background:linear-gradient(150deg,#5B33B8,#341970); padding:20px; box-shadow:0 18px 38px -14px rgba(42,21,96,.5);">
           <div style="position:absolute; inset:0; filter:url(#goo); opacity:.7; pointer-events:none;"><div class="goo-blob" style="position:absolute; width:90px; height:90px; border-radius:50%; background:#C44DD9; top:-26px; right:-10px;"></div><div class="goo-blob" style="position:absolute; width:64px; height:64px; border-radius:50%; background:#5B7BF0; bottom:-20px; left:24px;"></div></div>
-          <div style="position:relative;"><span style="font-size:10.5px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; color:#D9C7F8;">Em destaque</span><div style="font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:600; color:#fff; line-height:1.25; margin-top:8px; max-width:240px;">Guia completo do ProUni e FIES em 2026</div><div style="font-size:12px; color:rgba(255,255,255,.75); margin-top:8px;">8 min de leitura</div></div>
+          <div style="position:relative;"><span style="font-size:10.5px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; color:#D9C7F8;">Em destaque</span><div style="font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:600; color:#fff; line-height:1.25; margin-top:8px; max-width:240px;">{{ hubDestaque.titulo }}</div><div style="font-size:12px; color:rgba(255,255,255,.75); margin-top:8px;">{{ hubDestaque.tempo }} de leitura</div></div>
         </div>
 
         <div style="display:flex; flex-direction:column; gap:11px;">
@@ -2288,8 +2288,24 @@
             <div style="font-size:11px; font-weight:600; letter-spacing:.8px; text-transform:uppercase; color:rgba(255,255,255,.7); margin-bottom:12px;">Nota equivalente ENEM</div>
             <div style="font-family:'Space Grotesk',sans-serif; font-size:64px; font-weight:700; color:#fff; line-height:1; margin-bottom:8px;">{{ vestScore }}</div>
             <div style="display:inline-flex; align-items:center; gap:7px; background:rgba(255,255,255,.18); padding:7px 16px; border-radius:999px;"><span style="font-size:14px; font-weight:600; color:#fff;">{{ vestLabel }}</span></div>
+            <sc-if value="{{ vestDeltaLabel }}" hint-placeholder-val="">
+              <div style="margin-top:10px; font-size:12.5px; font-weight:600; color:rgba(255,255,255,.85);">{{ vestDeltaLabel }}</div>
+            </sc-if>
           </div>
         </div>
+
+        <!-- histórico de simulados -->
+        <sc-if value="{{ vestHasHistory }}" hint-placeholder-val="{{ false }}">
+        <h2 style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; color:#1B1326; margin:0 2px 13px;">Seu histórico</h2>
+        <div style="background:rgba(255,255,255,.65); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.65); border-radius:18px; padding:14px 16px; box-shadow:0 6px 16px rgba(75,45,163,.06); margin-bottom:20px;">
+          <sc-for list="{{ vestHistorico }}" as="h" hint-placeholder-count="3">
+            <div style="display:flex; justify-content:space-between; align-items:center; padding:7px 0; border-bottom:1px solid #F0EBF9;">
+              <span style="font-size:12.5px; color:#6E6680;">{{ h.date }}</span>
+              <span style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:700; color:#4B2DA3;">{{ h.score }}</span>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
 
         <!-- bolsas desbloqueadas -->
         <h2 style="font-family:'Space Grotesk',sans-serif; font-size:16px; font-weight:600; color:#1B1326; margin:0 2px 13px;">Bolsas compatíveis com essa nota</h2>
@@ -3083,6 +3099,8 @@ class Component extends DCLogic {
     dbApplications: null, dbAlerts: null, dbNotifications: null, dbEventos: null, dbComunidade: null, dbRenovacoes: null, dbDocIds: {},
     currentApplicationId: null,
     vocResultSaved: false,
+    quizHistory: null, dbAchievements: null,
+    dbConteudo: null, hubCatSel: 'Tudo',
   };
 
   scrollTop() { const el = this.base && this.base.querySelector('[data-scroll]'); if (el) el.scrollTop = 0; }
@@ -3238,6 +3256,37 @@ class Component extends DCLogic {
       } catch(e) {}
     }
   };
+  loadQuizHistory = async () => {
+    try {
+      const data = await fetchAPI('/api/user/quiz-history');
+      if (data) this.setState({ quizHistory: data });
+    } catch(e) {}
+  };
+  loadAchievementsData = async () => {
+    try {
+      const data = await fetchAPI('/api/user/achievements');
+      if (data && data.achievements) this.setState({ dbAchievements: data.achievements });
+    } catch(e) {}
+  };
+  loadConteudoData = async (tag) => {
+    try {
+      const q = tag && tag !== 'Tudo' ? `?tag=${encodeURIComponent(tag)}` : '';
+      const data = await fetchAPI(`/api/conteudo${q}`);
+      if (data) this.setState({ dbConteudo: data });
+    } catch(e) {}
+  };
+  setHubCat = (cat) => () => {
+    this.setState({ hubCatSel: cat });
+    this.loadConteudoData(cat);
+  };
+  unlockAchievement = async (tipo) => {
+    const already = (this.state.dbAchievements || []).some(a => a.tipo === tipo);
+    if (already) return;
+    try {
+      await fetchAPI('/api/user/achievements', { method: 'POST', body: JSON.stringify({ tipo }) });
+      this.loadAchievementsData();
+    } catch(e) {}
+  };
   saveVocacionalResults = async (areas) => {
     try {
       const scoreRiasec = {};
@@ -3247,6 +3296,7 @@ class Component extends DCLogic {
         body: JSON.stringify({ score_riasec: scoreRiasec, areas_recomendadas: areas.slice(0, 5) }),
       });
       this.setState({ vocResultSaved: true });
+      this.unlockAchievement('Explorador');
     } catch(e) {}
   };
   registrarEvento = (ev) => async () => {
@@ -3411,6 +3461,14 @@ class Component extends DCLogic {
       const answers = [...s.vestAnswers, i];
       const next = s.vestIdx + 1;
       if (next >= this.VEST_Q.length) {
+        const VEST_CORRECT = [0, 0, 0, 0, 0];
+        const score = 450 + answers.reduce((acc, ans, idx) => acc + (ans === VEST_CORRECT[idx] ? 60 : 20), 0);
+        fetchAPI('/api/user/quiz', {
+          method: 'POST',
+          body: JSON.stringify({ tipo: 'vestibular', respostas: answers, score }),
+        }).catch(() => {});
+        const pct = Math.round(score / 950 * 100);
+        if (pct >= 80) this.unlockAchievement('Mestre do simulado');
         return { vestAnswers: answers, vestIdx: 0, prev: [...s.prev, 'vestibular'].slice(-10), tab: 'vestResult' };
       }
       return { vestAnswers: answers, vestIdx: next };
@@ -3453,6 +3511,9 @@ class Component extends DCLogic {
         }
         this.loadDashboardData();
         this.loadBolsasData();
+        const perfilCamposLen = 5;
+        const filledLen = [note, ctx.renda, ctx.escola, nome, this.state.cidade || this.state.estado].filter(Boolean).length;
+        if (filledLen >= perfilCamposLen) this.unlockAchievement('Perfil completo');
       } catch(e) {}
     }
   };
@@ -3586,6 +3647,9 @@ class Component extends DCLogic {
       if (this.state.tab === 'comunidade') this.loadComunidadeData();
       if (this.state.tab === 'renovacao') this.loadRenovacaoData();
       if (this.state.tab === 'candidatura') this.loadDocumentsData();
+      if (this.state.tab === 'vestResult') this.loadQuizHistory();
+      if (this.state.tab === 'conquistas') this.loadAchievementsData();
+      if (this.state.tab === 'conteudo') this.loadConteudoData(this.state.hubCatSel);
     }
     try {
       const { nome, ctx, tab, prev, simEnem, cotaSel, obStep } = this.state;
@@ -3903,6 +3967,14 @@ class Component extends DCLogic {
     const vestLabel = vestScore >= 700 ? 'Excelente' : vestScore >= 600 ? 'Bom' : 'Em desenvolvimento';
     const vestColor = vestScore >= 700 ? '#1F8A5B' : vestScore >= 600 ? '#4B2DA3' : '#C25BA0';
     const vestBolsas = bolsas.filter(b => b.corte === 0 || vestScore >= b.corte);
+    const _qh = this.state.quizHistory;
+    const vestPrevScore = _qh?.previous || null;
+    const vestBestScore = _qh?.best || null;
+    const vestDelta = vestPrevScore ? vestScore - vestPrevScore : null;
+    const vestDeltaLabel = vestDelta === null ? '' : vestDelta > 0 ? '+' + vestDelta + ' pts vs anterior' : vestDelta < 0 ? vestDelta + ' pts vs anterior' : '= igual ao anterior';
+    const vestDeltaColor = vestDelta === null ? '' : vestDelta > 0 ? '#1F8A5B' : vestDelta < 0 ? '#C25BA0' : '#A89FBA';
+    const vestHistorico = _qh?.sessions?.slice(0, 5) || [];
+    const vestHasHistory = vestHistorico.length > 0;
 
     // ── calculadora de custo real ──
     const custoTransporte = this.state.custoTransporte;
@@ -4161,12 +4233,16 @@ class Component extends DCLogic {
     // hub de conteúdo
     const catSel = 'flex:none; border:none; cursor:pointer; padding:8px 15px; border-radius:999px; font-family:Sora,sans-serif; font-weight:600; font-size:12.5px; color:#fff; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); white-space:nowrap;';
     const catOff = 'flex:none; border:1px solid #E3DCF5; cursor:pointer; padding:8px 15px; border-radius:999px; font-family:Sora,sans-serif; font-weight:500; font-size:12.5px; color:#5B3FA0; background:rgba(255,255,255,.6); white-space:nowrap;';
-    const hubCats = ['Tudo', 'Carreira', 'ENEM', 'Bolsas', 'Mercado'].map((c, i) => ({ label: c, st: i === 0 ? catSel : catOff }));
-    const hub = [
-      ...conteudos,
-      { tag: 'Bolsas', titulo: 'ProUni 2026: calendário e notas de corte', tempo: '5 min' },
-      { tag: 'Carreira', titulo: '5 profissões criativas em alta para 2027', tempo: '7 min' },
-    ];
+    const hubCatSel = this.state.hubCatSel || 'Tudo';
+    const hubCats = ['Tudo', 'Carreira', 'ENEM', 'Bolsas', 'Mercado'].map(c => ({ label: c, st: c === hubCatSel ? catSel : catOff, on: this.setHubCat(c) }));
+    const _hubDB = this.state.dbConteudo;
+    const hubDestaque = _hubDB?.destaque || { titulo: 'Guia completo do ProUni e FIES em 2026', tempo: '8 min' };
+    const hub = _hubDB?.articles?.length
+      ? _hubDB.articles
+      : conteudos.concat([
+          { tag: 'Bolsas', titulo: 'ProUni 2026: calendário e notas de corte', tempo: '5 min' },
+          { tag: 'Carreira', titulo: '5 profissões criativas em alta para 2027', tempo: '7 min' },
+        ]);
 
     // chat
     const meBubble = 'max-width:78%; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); color:#fff; font-size:13.5px; line-height:1.45; padding:12px 15px; border-radius:18px 18px 5px 18px; box-shadow:0 6px 16px rgba(75,45,163,.18);';
@@ -4292,13 +4368,15 @@ class Component extends DCLogic {
     const isApproved = !!(this.state.dbApplications && this.state.dbApplications.some(a => a.status === 'Aprovado' || a.status === 'Matrícula'));
     const vestDone = this.state.vestAnswers && this.state.vestAnswers.length >= (this.VEST_Q || []).length && this.state.vestAnswers.length > 0;
     const vestPct = vestDone ? Math.round(vestScore / 950 * 100) : 0;
+    const dbAch = this.state.dbAchievements || [];
+    const dbHas = (tipo) => dbAch.some(a => a.tipo === tipo);
     const conquistas = [
-      { titulo:'Perfil completo',      sub:'Preencheu todos os dados',      unlocked: perfilCompleto >= 100, prog: perfilCompleto < 100 ? perfilCompleto + '%' : null },
-      { titulo:'Primeira candidatura', sub:'Enviou sua 1ª inscrição',       unlocked: hasApplication, prog: hasApplication ? null : '—' },
-      { titulo:'Explorador',           sub:'Completou o teste vocacional',  unlocked: this.state.vocResultSaved || vocFinal, prog: null },
-      { titulo:'7 dias de estudo',     sub:'Sequência no Plano ENEM',       unlocked:false, prog:'Em breve' },
-      { titulo:'Mestre do simulado',   sub:'80%+ de acerto na mini-prova', unlocked: vestDone && vestPct >= 80, prog: vestDone ? vestPct + '%' : '—' },
-      { titulo:'Aprovado',             sub:'Garantiu sua bolsa',            unlocked: isApproved, prog: isApproved ? null : '—' },
+      { titulo:'Perfil completo',      sub:'Preencheu todos os dados',      unlocked: perfilCompleto >= 100 || dbHas('Perfil completo'), prog: perfilCompleto < 100 ? perfilCompleto + '%' : null },
+      { titulo:'Primeira candidatura', sub:'Enviou sua 1ª inscrição',       unlocked: hasApplication || dbHas('Primeira candidatura'), prog: hasApplication ? null : '—' },
+      { titulo:'Explorador',           sub:'Completou o teste vocacional',  unlocked: this.state.vocResultSaved || vocFinal || dbHas('Explorador'), prog: null },
+      { titulo:'7 dias de estudo',     sub:'Sequência no Plano ENEM',       unlocked: dbHas('7 dias de estudo'), prog: dbHas('7 dias de estudo') ? null : 'Em breve' },
+      { titulo:'Mestre do simulado',   sub:'80%+ de acerto na mini-prova', unlocked: (vestDone && vestPct >= 80) || dbHas('Mestre do simulado'), prog: vestDone ? vestPct + '%' : '—' },
+      { titulo:'Aprovado',             sub:'Garantiu sua bolsa',            unlocked: isApproved || dbHas('Aprovado'), prog: isApproved ? null : '—' },
     ].map(c => ({ ...c, ico: c.unlocked?conqIcoOn:conqIcoOff, locked: !c.unlocked }));
     const conqDone = conquistas.filter(c=>c.unlocked).length;
 
@@ -4603,7 +4681,7 @@ class Component extends DCLogic {
       profissoes, pontosFortes, riasec, tracos, salarioBars, relLabel: _relLabel,
       rendaOpts, enemOpts, escolaOpts, ctxEnem: enemLabel,
       selB, requisitos, selE,
-      hubCats, hub,
+      hubCats, hub, hubDestaque,
       chatMsgs, quickReplies,
       notificacoes, settings,
       renovObrig, renovSemestres, renovAtencao,
@@ -4611,6 +4689,7 @@ class Component extends DCLogic {
       perfilCampos, perfilCompleto, perfilProgW, perfilEdit,
       vCur, vestOptions, vIdx, vestTotal: vestQ.length, vestPct: Math.round((vIdx/vestQ.length)*100)+'%',
       vestScore, vestLabel, vestColor, vestBolsas,
+      vestDeltaLabel, vestDeltaColor, vestHasHistory, vestHistorico, vestBestScore,
       custoItems, custoTransporte, custoAlimentacao, custoMoradia,
       moradiaTrack, moradiaKnob, setCustoTransporte: this.setCustoTransporte,
       setCustoAlimentacao: this.setCustoAlimentacao, toggleMoradia: this.toggleMoradia,

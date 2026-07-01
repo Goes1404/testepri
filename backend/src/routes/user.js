@@ -120,4 +120,78 @@ router.post('/quiz', requireAuth, async (req, res) => {
   }
 });
 
+// GET /api/user/quiz-history — past vestibular quiz scores
+router.get('/quiz-history', requireAuth, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('quiz_sessions')
+      .select('id, score, created_at')
+      .eq('user_id', req.user.id)
+      .eq('tipo', 'vestibular')
+      .order('created_at', { ascending: false })
+      .limit(10);
+
+    if (error) throw error;
+
+    const sessions = (data || []).map(s => ({
+      id: s.id,
+      score: s.score,
+      date: new Date(s.created_at).toLocaleDateString('pt-BR'),
+      created_at: s.created_at,
+    }));
+
+    const best = sessions.length ? Math.max(...sessions.map(s => s.score)) : null;
+    const previous = sessions.length > 1 ? sessions[1].score : null;
+
+    res.json({ sessions, best, previous });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// GET /api/user/achievements — list user's unlocked achievements
+router.get('/achievements', requireAuth, async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('achievements')
+      .select('id, tipo, desbloqueado_em')
+      .eq('user_id', req.user.id)
+      .order('desbloqueado_em', { ascending: false });
+
+    if (error) throw error;
+    res.json({ achievements: data || [] });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// POST /api/user/achievements — unlock an achievement (idempotent)
+router.post('/achievements', requireAuth, async (req, res) => {
+  try {
+    const { tipo } = req.body;
+    if (!tipo) return res.status(400).json({ error: 'tipo required' });
+
+    // Idempotent — return existing if already unlocked
+    const { data: existing } = await supabase
+      .from('achievements')
+      .select('id, tipo, desbloqueado_em')
+      .eq('user_id', req.user.id)
+      .eq('tipo', tipo)
+      .maybeSingle();
+
+    if (existing) return res.json({ achievement: existing, already_unlocked: true });
+
+    const { data, error } = await supabase
+      .from('achievements')
+      .insert({ user_id: req.user.id, tipo })
+      .select()
+      .single();
+
+    if (error) throw error;
+    res.status(201).json({ achievement: data });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 module.exports = router;
