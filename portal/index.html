@@ -3019,9 +3019,9 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script="">
 // Initialize Supabase Client
-const SUPABASE_URL = window.ENV_SUPABASE_URL || localStorage.getItem('supabase-url') || 'https://your-project.supabase.co';
-const SUPABASE_ANON_KEY = window.ENV_SUPABASE_ANON_KEY || localStorage.getItem('supabase-anon-key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock';
-const supabaseClient = (window.supabase && SUPABASE_URL.indexOf('your-project') === -1)
+const SUPABASE_URL = window.ENV_SUPABASE_URL || localStorage.getItem('supabase-url') || 'https://cryeesunxnfgkshvafbo.supabase.co';
+const SUPABASE_ANON_KEY = window.ENV_SUPABASE_ANON_KEY || localStorage.getItem('supabase-anon-key') || 'sb_publishable__ifc1Ou0s5gXCjyiaoGJYA_W6vNIMiH';
+const supabaseClient = (window.supabase && SUPABASE_URL.indexOf('your-project') === -1 && SUPABASE_ANON_KEY.indexOf('mock') === -1)
   ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
   : null;
 
