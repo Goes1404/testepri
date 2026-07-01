@@ -143,12 +143,15 @@ router.get('/:id/documents', requireAuth, async (req, res) => {
 // PATCH /api/applications/:id/documents/:docId
 router.patch('/:id/documents/:docId', requireAuth, async (req, res) => {
   try {
-    const { status } = req.body;
+    const { status, file_url } = req.body;
     if (!status) return res.status(400).json({ error: 'status required' });
+
+    const updates = { status, uploaded_at: new Date().toISOString() };
+    if (file_url) updates.file_url = file_url;
 
     const { data, error } = await supabase
       .from('documents')
-      .update({ status, uploaded_at: new Date().toISOString() })
+      .update(updates)
       .eq('id', req.params.docId)
       .select()
       .single();
