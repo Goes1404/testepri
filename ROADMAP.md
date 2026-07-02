@@ -92,13 +92,13 @@
 | 4.1 | **Conectar botão "Candidatar-se"** em BolsaDetalhe ao `POST /api/applications` | 🔴 Alta |
 | 4.2 | **Mapa de Universidades** (tela 36) com dados reais do DB | 🟡 Média |
 | 4.3 | **Push notifications** via Supabase Realtime para novas bolsas | 🟡 Média |
-| 4.4 | **Upload real de documentos** (Supabase Storage) | 🟡 Média |
+| 4.4 | **Upload real de documentos** (Supabase Storage) | ✅ |
 | 4.5 | **Chat IA** (`/api/chat`) — resposta contextual por perfil | 🟡 Média |
 | 4.6 | **Plano de estudos avançado** — sessões de 25/45/60min, histórico de minutos | 🟢 Baixa |
 | 4.7 | **Comparador de Bolsas** — busca por curso/uni real do DB | 🟢 Baixa |
-| 4.8 | **Renovação** — POST para submeter dados do semestre | 🟢 Baixa |
+| 4.8 | **Renovação** — POST para submeter dados do semestre | ✅ |
 | 4.9 | **Onboarding** — salvar `obStep` e perfil no banco ao concluir | 🟢 Baixa |
-| 4.10 | **Comunidade** — POST de posts/respostas, likes reais | 🟢 Baixa |
+| 4.10 | **Comunidade** — POST de posts/respostas, likes reais | ✅ |
 
 ---
 
@@ -115,8 +115,14 @@ Sem o `SERVICE_ROLE_KEY`, o backend usa a `ANON_KEY` que pode ser bloqueada pelo
 
 ---
 
+## Pendência do Usuário
+
+Para o backend funcionar em produção, preencher no `backend/.env`:
+- **Service Role Key**: https://supabase.com/dashboard/project/cryeesunxnfgkshvafbo/settings/api
+- **JWT Secret**: mesmo link acima, seção "JWT Settings"
+
 ## Próximos Passos Imediatos
 
-1. **4.1** — Conectar "Candidatar-se": botão em `bolsaDetalhe` → `POST /api/applications` → redirecionar para `tab='candidatura'`
-2. **4.4** — Upload real de docs via Supabase Storage bucket `documents`
-3. **4.2** — Mapa de Universidades com pins reais
+1. **4.2** — Mapa de Universidades com pins reais (dados do DB)
+2. **4.5** — Chat IA contextual com perfil do usuário (ANTHROPIC_API_KEY no backend)
+3. **4.9** — Onboarding: salvar perfil completo no banco ao concluir
