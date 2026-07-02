@@ -188,4 +188,41 @@ router.get('/:id/renewals', requireAuth, async (req, res) => {
   }
 });
 
+// POST /api/applications/:id/renewals
+router.post('/:id/renewals', requireAuth, async (req, res) => {
+  try {
+    const { data: app } = await supabase
+      .from('applications')
+      .select('id, user_id')
+      .eq('id', req.params.id)
+      .eq('user_id', req.user.id)
+      .single();
+
+    if (!app) return res.status(404).json({ error: 'Not found' });
+
+    const { semestre, ira, frequencia, observacao } = req.body;
+    if (!semestre || ira === undefined || frequencia === undefined) {
+      return res.status(400).json({ error: 'semestre, ira, frequencia required' });
+    }
+
+    const iraNum = parseFloat(ira);
+    const freqNum = parseFloat(frequencia);
+    if (isNaN(iraNum) || iraNum < 0 || iraNum > 10) return res.status(400).json({ error: 'ira must be 0-10' });
+    if (isNaN(freqNum) || freqNum < 0 || freqNum > 100) return res.status(400).json({ error: 'frequencia must be 0-100' });
+
+    const situacao = iraNum >= 7 && freqNum >= 75 ? 'aprovado' : 'reprovado';
+
+    const { data, error } = await supabase
+      .from('renewals')
+      .insert({ application_id: req.params.id, semestre, ira: iraNum, frequencia: freqNum, situacao, observacao })
+      .select()
+      .single();
+
+    if (error) throw error;
+    res.status(201).json({ renewal: data, situacao });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 module.exports = router;

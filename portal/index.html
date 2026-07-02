@@ -1515,7 +1515,43 @@
           <div><div style="font-size:13px; font-weight:700; color:#A05000; margin-bottom:3px;">Atenção: Renda familiar</div><div style="font-size:12.5px; color:#6B3800; line-height:1.5;">Se sua renda familiar per capita ultrapassar 1,5 salário mínimo, você deve comunicar à instituição em até 30 dias para não perder a bolsa.</div></div>
         </div>
 
-        <button onclick="{{ goChat }}" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; border:none; cursor:pointer; background:linear-gradient(135deg,#147A4F,#083524); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:15px; border-radius:16px; box-shadow:0 12px 26px -6px rgba(20,122,79,.45);" style-active="transform:scale(.98)">Tirar dúvida com a IA<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+        <button onclick="{{ openRenovForm }}" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; border:none; cursor:pointer; background:linear-gradient(135deg,#23A06B,#147A4F); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:15px; border-radius:16px; box-shadow:0 12px 26px -6px rgba(20,122,79,.45); margin-bottom:12px;" style-active="transform:scale(.98)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>Registrar semestre
+        </button>
+        <button onclick="{{ goChat }}" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; border:none; cursor:pointer; background:rgba(255,255,255,.65); border:1px solid #E3DCF5; color:#4B2DA3; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:14px; border-radius:16px;" style-active="transform:scale(.98)">Tirar dúvida com a IA<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4B2DA3" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+
+        <!-- modal registrar semestre -->
+        <sc-if value="{{ renovFormOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:fixed; inset:0; background:rgba(27,19,38,.55); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); z-index:200; display:flex; align-items:flex-end; justify-content:center;" onclick="{{ closeRenovForm }}">
+          <div style="width:100%; max-width:430px; background:linear-gradient(180deg,#F7F4FE,#EDE8F7); border-radius:28px 28px 0 0; padding:28px 22px 40px; box-shadow:0 -20px 50px rgba(75,45,163,.2);" onclick="event.stopPropagation()">
+            <div style="width:40px; height:5px; border-radius:3px; background:#D6CDE8; margin:0 auto 22px;"></div>
+            <sc-if value="{{ renovDone }}" hint-placeholder-val="{{ false }}">
+              <div style="text-align:center; padding:20px 0;"><div style="font-size:48px; margin-bottom:12px;">🎓</div><div style="font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:600; color:#1B1326;">Semestre registrado!</div><div style="font-size:13px; color:#6E6680; margin-top:8px;">Renovação processada com sucesso.</div></div>
+            </sc-if>
+            <sc-if value="{{ !renovDone }}" hint-placeholder-val="{{ true }}">
+              <h2 style="font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:600; color:#1B1326; margin:0 0 18px;">Registrar semestre</h2>
+              <div style="display:flex; flex-direction:column; gap:13px; margin-bottom:20px;">
+                <div>
+                  <label style="font-size:12px; font-weight:600; color:#5B3FA0; display:block; margin-bottom:6px;">Semestre</label>
+                  <input value="{{ renovSemestre }}" oninput="{{ setRenovSemestre }}" placeholder="Ex: 2025/2" style="width:100%; box-sizing:border-box; border:1.5px solid #D8CBF6; border-radius:12px; padding:12px 14px; font-family:'Sora',sans-serif; font-size:13.5px; color:#1B1326; background:rgba(255,255,255,.8); outline:none;">
+                </div>
+                <div style="display:flex; gap:12px;">
+                  <div style="flex:1;">
+                    <label style="font-size:12px; font-weight:600; color:#5B3FA0; display:block; margin-bottom:6px;">IRA (0–10)</label>
+                    <input value="{{ renovIra }}" oninput="{{ setRenovIra }}" type="number" min="0" max="10" step="0.1" placeholder="8.5" style="width:100%; box-sizing:border-box; border:1.5px solid #D8CBF6; border-radius:12px; padding:12px 14px; font-family:'Sora',sans-serif; font-size:13.5px; color:#1B1326; background:rgba(255,255,255,.8); outline:none;">
+                  </div>
+                  <div style="flex:1;">
+                    <label style="font-size:12px; font-weight:600; color:#5B3FA0; display:block; margin-bottom:6px;">Frequência (%)</label>
+                    <input value="{{ renovFreq }}" oninput="{{ setRenovFreq }}" type="number" min="0" max="100" step="1" placeholder="90" style="width:100%; box-sizing:border-box; border:1.5px solid #D8CBF6; border-radius:12px; padding:12px 14px; font-family:'Sora',sans-serif; font-size:13.5px; color:#1B1326; background:rgba(255,255,255,.8); outline:none;">
+                  </div>
+                </div>
+              </div>
+              <div style="background:#E8F7F1; border:1px solid rgba(31,138,91,.2); border-radius:12px; padding:11px 14px; margin-bottom:18px; font-size:12.5px; color:#147A4F;">Mínimo para manter a bolsa: IRA ≥ 7,0 e Frequência ≥ 75%</div>
+              <button onclick="{{ submitRenov }}" style="width:100%; border:none; cursor:pointer; background:linear-gradient(135deg,#23A06B,#147A4F); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:14.5px; padding:15px; border-radius:16px; box-shadow:0 12px 26px -6px rgba(20,122,79,.4);" style-active="transform:scale(.98)">{{ renovLoading ? 'Salvando…' : 'Salvar semestre' }}</button>
+            </sc-if>
+          </div>
+        </div>
+        </sc-if>
       </div>
       </sc-if>
 
@@ -2418,7 +2454,7 @@
               </div>
               <p style="font-size:13px; color:#3A3450; line-height:1.6; margin:0 0 13px; font-style:italic;">"{{ h.texto }}"</p>
               <div style="display:flex; align-items:center; justify-content:space-between; padding-top:11px; border-top:1px solid #F2EEFA;">
-                <div style="display:flex; align-items:center; gap:6px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A89FBA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg><span style="font-size:12px; color:#A89FBA;">{{ h.curtidas }}</span></div>
+                <button onclick="{{ h.likeBtn }}" style="display:flex; align-items:center; gap:6px; border:none; background:transparent; cursor:pointer; padding:0;" style-active="transform:scale(.9)"><svg width="14" height="14" viewBox="0 0 24 24" fill="{{ h.liked ? h.heartColor : 'none' }}" stroke="{{ h.heartColor }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg><span style="font-size:12px; color:{{ h.heartColor }};">{{ h.curtidas }}</span></button>
                 <span style="font-size:11.5px; color:#A89FBA;">Nota ENEM: <strong style="color:#4B2DA3;">{{ h.nota }}</strong> · {{ h.tempo }}</span>
               </div>
             </div>
@@ -2442,9 +2478,37 @@
             </div>
           </sc-for>
         </div>
-        <button style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; border:2px dashed #C4BAD6; background:transparent; color:#7B4FE0; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:16px; border-radius:18px; cursor:pointer;" style-active="transform:scale(.98)">
+        <button onclick="{{ openNewPost }}" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; border:2px dashed #C4BAD6; background:transparent; color:#7B4FE0; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:16px; border-radius:18px; cursor:pointer;" style-active="transform:scale(.98)">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg>Fazer uma pergunta
         </button>
+        </sc-if>
+
+        <!-- modal novo post -->
+        <sc-if value="{{ newPostOpen }}" hint-placeholder-val="{{ false }}">
+        <div style="position:fixed; inset:0; background:rgba(27,19,38,.55); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); z-index:200; display:flex; align-items:flex-end; justify-content:center;" onclick="{{ closeNewPost }}">
+          <div style="width:100%; max-width:430px; background:linear-gradient(180deg,#F7F4FE,#EDE8F7); border-radius:28px 28px 0 0; padding:28px 22px 40px; box-shadow:0 -20px 50px rgba(75,45,163,.2);" onclick="event.stopPropagation()">
+            <div style="width:40px; height:5px; border-radius:3px; background:#D6CDE8; margin:0 auto 22px;"></div>
+            <sc-if value="{{ newPostDone }}" hint-placeholder-val="{{ false }}">
+              <div style="text-align:center; padding:20px 0;">
+                <div style="font-size:48px; margin-bottom:12px;">✅</div>
+                <div style="font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:600; color:#1B1326;">Pergunta enviada!</div>
+                <div style="font-size:13px; color:#6E6680; margin-top:8px;">Nossa equipe vai revisar e publicar em breve.</div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ !newPostDone }}" hint-placeholder-val="{{ true }}">
+              <h2 style="font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:600; color:#1B1326; margin:0 0 18px;">Nova dúvida</h2>
+              <div style="margin-bottom:14px;">
+                <label style="font-size:12px; font-weight:600; color:#5B3FA0; display:block; margin-bottom:6px;">Título da pergunta</label>
+                <input value="{{ newPostTitulo }}" oninput="{{ setNewPostTitulo }}" placeholder="Ex: Posso usar cotas para ProUni?" style="width:100%; box-sizing:border-box; border:1.5px solid #D8CBF6; border-radius:12px; padding:12px 14px; font-family:'Sora',sans-serif; font-size:13.5px; color:#1B1326; background:rgba(255,255,255,.8); outline:none;">
+              </div>
+              <div style="margin-bottom:20px;">
+                <label style="font-size:12px; font-weight:600; color:#5B3FA0; display:block; margin-bottom:6px;">Detalhes</label>
+                <textarea oninput="{{ setNewPostCorpo }}" placeholder="Explique sua dúvida com mais detalhes..." rows="4" style="width:100%; box-sizing:border-box; border:1.5px solid #D8CBF6; border-radius:12px; padding:12px 14px; font-family:'Sora',sans-serif; font-size:13.5px; color:#1B1326; background:rgba(255,255,255,.8); outline:none; resize:none;">{{ newPostCorpo }}</textarea>
+              </div>
+              <button onclick="{{ submitNewPost }}" style="width:100%; border:none; cursor:pointer; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:14.5px; padding:15px; border-radius:16px; box-shadow:0 12px 26px -6px rgba(75,45,163,.5);" style-active="transform:scale(.98)">{{ newPostLoading ? 'Enviando…' : 'Enviar pergunta' }}</button>
+            </sc-if>
+          </div>
+        </div>
         </sc-if>
       </div>
       </sc-if>
@@ -3081,6 +3145,9 @@ class Component extends DCLogic {
     vestIdx: 0, vestAnswers: [],
     custoTransporte: 300, custoMoradia: false, custoAlimentacao: 500,
     comunidadeTab: 'historias',
+    newPostOpen: false, newPostTipo: 'duvida', newPostTitulo: '', newPostCorpo: '', newPostLoading: false, newPostDone: false,
+    likedPosts: {},
+    renovFormOpen: false, renovSemestre: '', renovIra: '', renovFreq: '', renovLoading: false, renovDone: false,
     buscaFiltro: { programa: 'todos', pct: 0, estado: 'todos', nota: 0 },
     perfilEdit: false,
     cotaSel: { publica: false, racial: false, pcd: false, baixaRenda: false, indigena: false, professor: false },
@@ -3540,6 +3607,56 @@ class Component extends DCLogic {
   setCustoAlimentacao = (e) => { this.setState({ custoAlimentacao: parseInt(e.target.value) || 0 }); };
   toggleMoradia = () => { this.setState(s => ({ custoMoradia: !s.custoMoradia })); };
   setComunidadeTab = (t) => () => { this.setState({ comunidadeTab: t }); };
+  likePost = (id) => async () => {
+    if ((this.state.likedPosts || {})[id]) return;
+    this.setState(s => ({ likedPosts: { ...s.likedPosts, [id]: true } }));
+    try {
+      const data = await fetchAPI(`/api/comunidade/posts/${id}/like`, { method: 'POST' });
+      if (data && data.likes !== undefined) {
+        this.setState(s => ({
+          dbComunidade: (s.dbComunidade || []).map(p => p.id === id ? { ...p, likes: data.likes } : p)
+        }));
+      }
+    } catch(e) {}
+  };
+  openRenovForm = () => { this.setState({ renovFormOpen: true, renovSemestre: '', renovIra: '', renovFreq: '', renovDone: false }); };
+  closeRenovForm = () => { this.setState({ renovFormOpen: false }); };
+  submitRenov = async () => {
+    const { renovSemestre, renovIra, renovFreq } = this.state;
+    if (!renovSemestre || !renovIra || !renovFreq) return;
+    const appId = this.state.currentApplicationId || (this.state.dbApplications && this.state.dbApplications[0]?.id);
+    if (!appId) return;
+    this.setState({ renovLoading: true });
+    try {
+      const data = await fetchAPI(`/api/applications/${appId}/renewals`, {
+        method: 'POST',
+        body: JSON.stringify({ semestre: renovSemestre, ira: parseFloat(renovIra), frequencia: parseFloat(renovFreq) }),
+      });
+      if (data) {
+        this.setState({ renovDone: true, renovLoading: false });
+        setTimeout(() => { this.setState({ renovFormOpen: false }); this.loadRenovacaoData(); }, 2000);
+      }
+    } catch(e) {
+      this.setState({ renovLoading: false });
+    }
+  };
+  openNewPost = () => { this.setState({ newPostOpen: true, newPostTitulo: '', newPostCorpo: '', newPostDone: false }); };
+  closeNewPost = () => { this.setState({ newPostOpen: false }); };
+  submitNewPost = async () => {
+    const { newPostTipo, newPostTitulo, newPostCorpo } = this.state;
+    if (!newPostTitulo.trim() || !newPostCorpo.trim()) return;
+    this.setState({ newPostLoading: true });
+    try {
+      await fetchAPI('/api/comunidade/posts', {
+        method: 'POST',
+        body: JSON.stringify({ tipo: newPostTipo, titulo: newPostTitulo, corpo: newPostCorpo }),
+      });
+      this.setState({ newPostDone: true, newPostLoading: false });
+      setTimeout(() => this.setState({ newPostOpen: false }), 2200);
+    } catch(e) {
+      this.setState({ newPostLoading: false });
+    }
+  };
   setBuscaProg  = (v) => () => this.setState(s => ({ buscaFiltro: { ...s.buscaFiltro, programa: v } }), () => this.loadBolsasData());
   setBuscaEst   = (v) => () => this.setState(s => ({ buscaFiltro: { ...s.buscaFiltro, estado: v } }), () => this.loadBolsasData());
   setBuscaPct   = (e) => this.setState(s => ({ buscaFiltro: { ...s.buscaFiltro, pct: parseInt(e.target.value)||0 } }), () => this.loadBolsasData());
@@ -4073,12 +4190,16 @@ class Component extends DCLogic {
     const historiasSource = dbPosts.filter(p => p.tipo === 'historia').length > 0
       ? dbPosts.filter(p => p.tipo === 'historia')
       : defaultHistorias;
+    const _likedPosts = this.state.likedPosts || {};
     const historiasFormatted = historiasSource.map((h, i) => ({
       ...h,
       ini: h.ini || (h.nome||'A').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(),
       texto: h.corpo || h.texto || '',
       curtidas: h.likes || h.curtidas || 0,
       corH: coresH[i % coresH.length],
+      liked: !!_likedPosts[h.id],
+      likeBtn: h.id ? this.likePost(h.id) : null,
+      heartColor: _likedPosts[h.id] ? '#E0356A' : '#A89FBA',
     }));
     const defaultDuvidas = [
       { ini:'JP', nome:'João P.', pergunta:'Posso fazer ProUni se minha mãe tem ensino superior?', respostas:3, tempo:'1h', respondida:true },
@@ -4771,6 +4892,17 @@ class Component extends DCLogic {
       setCustoAlimentacao: this.setCustoAlimentacao, toggleMoradia: this.toggleMoradia,
       historiasFormatted, duvidas, comunidadeHistoriasOn, comunidadeDuvidasOn,
       comTabSel, comTabOff, setComunidadeTabH: this.setComunidadeTab('historias'), setComunidadeTabD: this.setComunidadeTab('duvidas'),
+      newPostOpen: this.state.newPostOpen, newPostTipo: this.state.newPostTipo, newPostTitulo: this.state.newPostTitulo,
+      newPostCorpo: this.state.newPostCorpo, newPostLoading: this.state.newPostLoading, newPostDone: this.state.newPostDone,
+      openNewPost: this.openNewPost, closeNewPost: this.closeNewPost, submitNewPost: this.submitNewPost,
+      setNewPostTitulo: (e) => this.setState({ newPostTitulo: e.target.value }),
+      setNewPostCorpo: (e) => this.setState({ newPostCorpo: e.target.value }),
+      renovFormOpen: this.state.renovFormOpen, renovDone: this.state.renovDone, renovLoading: this.state.renovLoading,
+      renovSemestre: this.state.renovSemestre, renovIra: this.state.renovIra, renovFreq: this.state.renovFreq,
+      openRenovForm: this.openRenovForm, closeRenovForm: this.closeRenovForm, submitRenov: this.submitRenov,
+      setRenovSemestre: (e) => this.setState({ renovSemestre: e.target.value }),
+      setRenovIra: (e) => this.setState({ renovIra: e.target.value }),
+      setRenovFreq: (e) => this.setState({ renovFreq: e.target.value }),
       docItems, docDone, docTotal, docPct,
       prazos,
       simBolsas, simUnlocked, simEnem, simSlide: this.simSlide,
