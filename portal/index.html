@@ -8,6 +8,14 @@
 <x-dc>
 
 <helmet>
+<title>Portal do Aluno — Bolsas ProUni, SISU e FIES</title>
+<meta name="description" content="Encontre bolsas universitárias, acompanhe candidaturas e prepare-se para o ENEM com IA.">
+<meta name="theme-color" content="#4B2DA3">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Portal do Aluno">
+<link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <style>/* latin-ext */
@@ -534,7 +542,7 @@
           <div style="display:flex; align-items:center; gap:12px;">
             <button onclick="{{ goNotificacoes }}" style="position:relative; width:42px; height:42px; border:none; border-radius:14px; background:#fff; box-shadow:0 4px 14px rgba(75,45,163,.08); display:flex; align-items:center; justify-content:center; cursor:pointer;">
               <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#4B2DA3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.7 21a2 2 0 0 1-3.4 0"></path></svg>
-              <span style="position:absolute; top:9px; right:10px; width:8px; height:8px; border-radius:50%; background:#7B4FE0; border:2px solid #fff;"></span>
+              <sc-if value="{{ notifUnread > 0 }}" hint-placeholder-val="{{ true }}"><span style="position:absolute; top:9px; right:10px; width:8px; height:8px; border-radius:50%; background:#E53E3E; border:2px solid #fff;"></span></sc-if>
             </button>
             <div style="width:42px; height:42px; border-radius:14px; background:linear-gradient(135deg,#7B4FE0,#4B2DA3); display:flex; align-items:center; justify-content:center; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:15px; color:#fff;">{{ iniciais }}</div>
           </div>
@@ -1225,7 +1233,7 @@
 
         <div style="background:rgba(255,255,255,.6); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,.6); border-radius:18px; padding:16px; box-shadow:0 8px 22px rgba(75,45,163,.07); margin-bottom:16px;">
           <div style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; color:#1B1326; margin-bottom:6px;">Por que essa chance?</div>
-          <p style="font-size:12.5px; color:#5C5470; line-height:1.6; margin:0;">Sua nota do ENEM ({{ ctxEnem }}) está acima da nota de corte histórica. Sua renda e tipo de escola atendem os critérios do {{ selB.programa }}. Nota MEC da instituição: {{ selB.mec }}.</p>
+          <p style="font-size:12.5px; color:#5C5470; line-height:1.6; margin:0;">Sua nota do ENEM ({{ ctxEnem }}) {{ ctxEnem >= selB.corte ? 'está acima' : 'está abaixo' }} da nota de corte de {{ selB.corte || 650 }} pontos. Renda e escola atendem os critérios do {{ selB.programa }}. Nota MEC da instituição: {{ selB.mec }}{{ selB.vagas !== undefined ? ' · ' + selB.vagas + ' vagas disponíveis' : '' }}.</p>
         </div>
 
         <div style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; color:#1B1326; margin:6px 2px 12px;">Requisitos</div>
@@ -2756,6 +2764,9 @@
               <div style="display:flex; gap:8px; margin-top:13px;">
                 <button onclick="{{ c.open }}" style="flex:2; border:none; cursor:pointer; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:13px; padding:12px; border-radius:13px;" style-active="transform:scale(.98)">Ver candidatura</button>
                 <button onclick="{{ goRecorrencia }}" style="flex:1; border:1.5px solid rgba(194,91,160,.4); cursor:pointer; background:rgba(194,91,160,.07); color:#C25BA0; font-family:'Sora',sans-serif; font-weight:600; font-size:12px; padding:12px; border-radius:13px;" style-active="transform:scale(.98)">Recorrer</button>
+                <sc-if value="{{ c.podeCancelar }}" hint-placeholder-val="{{ true }}">
+                  <button onclick="{{ c.cancelar }}" style="flex:none; border:1.5px solid rgba(229,62,62,.3); cursor:pointer; background:rgba(229,62,62,.06); color:#E53E3E; font-family:'Sora',sans-serif; font-weight:600; font-size:12px; padding:12px 14px; border-radius:13px;" style-active="transform:scale(.98)">✕</button>
+                </sc-if>
               </div>
             </div>
           </sc-for>
@@ -2790,7 +2801,10 @@
               </div>
               <div style="margin-top:12px; padding-top:12px; border-top:1px solid #F2EEFA; display:flex; align-items:center; justify-content:space-between;">
                 <span style="font-size:12px; font-weight:600; color: {{ a.statusColor }};">● {{ a.statusLabel }}</span>
-                <span style="font-size:12px; color:#A89FBA;">Monitorando 24h por dia</span>
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <span style="font-size:12px; color:#A89FBA;">Monitorando 24h por dia</span>
+                  <button onclick="{{ a.deletar }}" style="border:none; background:none; cursor:pointer; padding:4px 6px; border-radius:8px; color:#C25BA0; font-size:11px; font-weight:600;" style-active="opacity:.7" title="Remover alerta">✕ Remover</button>
+                </div>
               </div>
             </div>
           </sc-for>
@@ -3218,7 +3232,7 @@ class Component extends DCLogic {
     chatInput: '',
     chatLoading: false,
     cidade: '', estado: '', userEmail: '',
-    dbApplications: null, dbAlerts: null, dbNotifications: null, dbEventos: null, dbComunidade: null, dbRenovacoes: null, dbDocIds: {},
+    dbApplications: null, dbAlerts: null, dbNotifications: null, dbEventos: null, dbComunidade: null, dbRenovacoes: null, dbDocIds: {}, notifUnread: 0,
     dbUniversidades: null,
     currentApplicationId: null,
     vocResultSaved: false,
@@ -3312,6 +3326,13 @@ class Component extends DCLogic {
       }
     } catch(e) {}
   };
+  cancelApplication = (id) => async () => {
+    if (!confirm('Cancelar esta candidatura? Esta ação não pode ser desfeita.')) return;
+    try {
+      await fetchAPI(`/api/applications/${id}`, { method: 'DELETE' });
+      this.loadApplicationsData();
+    } catch(e) { alert('Não foi possível cancelar. Tente novamente.'); }
+  };
   loadAlertsData = async () => {
     try {
       const data = await fetchAPI('/api/alerts');
@@ -3324,7 +3345,7 @@ class Component extends DCLogic {
     try {
       const data = await fetchAPI('/api/notifications');
       if (data && data.notifications) {
-        this.setState({ dbNotifications: data.notifications });
+        this.setState({ dbNotifications: data.notifications, notifUnread: data.unread || 0 });
       }
     } catch(e) {}
   };
@@ -3665,6 +3686,13 @@ class Component extends DCLogic {
   toggleCompar = (sigla) => () => { const cur = this.state.comparSel; const next = cur.includes(sigla) ? cur.filter(x => x !== sigla) : [...cur, sigla].slice(-3); this.setState({ comparSel: next.length ? next : cur }); };
   setComparSearch = (e) => this.setState({ comparSearch: e.target.value });
   setDoc = (k, v) => () => this.setState(s => ({ docStatus: { ...s.docStatus, [k]: v } }));
+  deleteAlert = (id) => async () => {
+    if (!id) return;
+    try {
+      await fetchAPI(`/api/alerts/${id}`, { method: 'DELETE' });
+      this.loadAlertsData();
+    } catch(e) {}
+  };
   toggleAlerta = (i) => () => this.setState(s => {
     const arr = [...s.alertaItems];
     const updated = { ...arr[i], ativo: !arr[i].ativo };
@@ -4441,6 +4469,8 @@ class Component extends DCLogic {
           ? 'font-size:11px; font-weight:700; color:#C25BA0; background:#FBEEF5; padding:4px 10px; border-radius:8px;'
           : 'font-size:11px; font-weight:600; color:#5B3FA0; background:#F1ECFB; padding:4px 10px; border-radius:8px;',
         open: this.nav('candidatura', { selBolsa: foundB }),
+        cancelar: this.cancelApplication(c.id),
+        podeCancelar: !['Aprovado','Matrícula'].includes(c.status || c.statusLabel),
       };
     });
 
@@ -4458,6 +4488,7 @@ class Component extends DCLogic {
       cidadeLabel: a.cidade === 'Qualquer' ? 'Todo o Brasil' : a.cidade+' · SP',
       minPctLabel: a.minPct+'% ou mais',
       lastCheck: i===0 ? 'há 2h' : 'há 1 dia',
+      deletar: this.deleteAlert(a.id),
     }));
 
     // ── candidatura docs ──
@@ -4558,13 +4589,33 @@ class Component extends DCLogic {
     const setComparSearch = this.setComparSearch;
 
     // bolsa selecionada
-    const selB = this.state.selBolsa || bolsas[0];
-    const requisitos = [
-      { ok: true, txt: 'Nota do ENEM acima de 650' },
-      { ok: true, txt: 'Renda familiar até 3 salários mínimos' },
-      { ok: true, txt: 'Conclusão do ensino médio' },
-      { ok: false, txt: 'Enviar histórico escolar (pendente)' },
-    ].map(r => ({ ...r, bg: r.ok ? '#1F8A5B' : '#C4BAD6', path: r.ok ? 'M20 6L9 17l-5-5' : 'M12 8v5M12 16.5v.5' }));
+    const _selBRaw = this.state.selBolsa || bolsas[0];
+    const _selBDetails = this.state.selBolsaDetails;
+    const selB = _selBDetails ? {
+      ..._selBRaw,
+      curso: _selBDetails.curso_nome || _selBRaw.curso,
+      uni: _selBDetails.universities?.nome || _selBRaw.uni,
+      sigla: _selBDetails.universities?.sigla || _selBRaw.sigla,
+      pct: _selBDetails.percentual ? _selBDetails.percentual + '%' : _selBRaw.pct,
+      corte: _selBDetails.nota_corte || _selBRaw.corte,
+      programa: _selBDetails.programa || _selBRaw.programa,
+      mec: _selBDetails.universities?.ranking_mec || _selBRaw.mec || 4,
+      vagas: _selBDetails.vagas_disponiveis,
+      val: _selBDetails.matchVal ?? _selBRaw.val,
+      chance: _selBDetails.chance || _selBRaw.chance,
+      width: (_selBDetails.matchVal ?? _selBRaw.val ?? 0) + '%',
+      eligibilityReason: _selBDetails.eligibilityReason,
+    } : _selBRaw;
+    const _eligReason = selB.eligibilityReason;
+    const _nota = parseInt(this.state.simEnem, 10) || 650;
+    const requisitos = _eligReason
+      ? _eligReason.map((r, i) => ({ ok: r.ok !== false, txt: r.txt || r, bg: (r.ok !== false) ? '#1F8A5B' : '#C4BAD6', path: (r.ok !== false) ? 'M20 6L9 17l-5-5' : 'M12 8v5M12 16.5v.5' }))
+      : [
+          { ok: _nota >= (selB.corte || 450), txt: `Nota do ENEM (${_nota}) ${_nota >= (selB.corte||450) ? 'acima' : 'abaixo'} do corte de ${selB.corte||650}` },
+          { ok: true, txt: 'Renda familiar dentro do limite do ' + (selB.programa || 'ProUni') },
+          { ok: true, txt: 'Conclusão do ensino médio em escola pública' },
+          { ok: false, txt: 'Histórico escolar pendente de envio' },
+        ].map(r => ({ ...r, bg: r.ok ? '#1F8A5B' : '#C4BAD6', path: r.ok ? 'M20 6L9 17l-5-5' : 'M12 8v5M12 16.5v.5' }));
 
     // evento selecionado
     const _selERaw = this.state.selEvento || eventos[0];
@@ -5048,7 +5099,7 @@ class Component extends DCLogic {
       selB, requisitos, selE,
       hubCats, hub, hubDestaque,
       chatMsgs, quickReplies,
-      notificacoes, settings,
+      notificacoes, settings, notifUnread: this.state.notifUnread,
       renovObrig, renovSemestres, renovAtencao,
       buscaResult, buscaProgramas, buscaFiltro, setBuscaPct: this.setBuscaPct,
       perfilCampos, perfilCompleto, perfilProgW, perfilEdit,

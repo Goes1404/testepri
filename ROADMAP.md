@@ -2,7 +2,7 @@
 
 > Repositório: `goes1404/testepri` · Branch ativa: `claude/repo-setup-dev-server-r3mk1b`
 > Supabase project: `cryeesunxnfgkshvafbo`
-> Última atualização: 2026-07-03
+> Última atualização: 2026-07-03 (Fase 5 adicionada)
 
 ---
 
@@ -51,16 +51,24 @@
 | 2.18 | `POST /api/plano/log` (registrar sessão) | `plano.js` | ✅ |
 | 2.19 | `POST /api/user/vocacional` | `user.js` | ✅ |
 | 2.20 | `GET /api/config` (salário mínimo, FIES etc.) | `config.js` | ✅ |
+| 2.21 | `GET /api/bolsas/:id` (detalhe + match personalizado) | `bolsas.js` | ✅ |
+| 2.22 | `GET /api/bolsas/:id/cut-score-history` | `bolsas.js` | ✅ |
+| 2.23 | `POST /api/bolsas/simulate` (simulação de chance) | `bolsas.js` | ✅ |
+| 2.24 | `POST /api/bolsas/cotas/calculate` (cálculo de cotas) | `bolsas.js` | ✅ |
+| 2.25 | `GET /api/universidades` (mapa, filtro por estado) | `universidades.js` | ✅ |
+| 2.26 | `POST /api/applications/:id/renewals` | `applications.js` | ✅ |
+| 2.27 | `DELETE /api/applications/:id` (cancelar candidatura) | `applications.js` | ✅ |
+| 2.28 | `unread` count em `GET /api/notifications` | `notifications.js` | ✅ |
 
 ---
 
-## Fase 3 — Frontend Wiring ✅/🔄
+## Fase 3 — Frontend Wiring ✅
 
 | # | Tela | Wiring | Status |
 |---|------|--------|--------|
 | 3.1 | Dashboard (Home) | `GET /api/home/dashboard` | ✅ |
 | 3.2 | Bolsas (listagem + filtros) | `GET /api/bolsas` | ✅ |
-| 3.3 | Detalhe da Bolsa | state local | ✅ |
+| 3.3 | Detalhe da Bolsa | `GET /api/bolsas/:id` + cut-score-history | ✅ |
 | 3.4 | Candidatura / Documentos | `GET/PATCH /api/applications` | ✅ |
 | 3.5 | Acompanhamento | `GET /api/applications` | ✅ |
 | 3.6 | Prazos | `GET /api/deadlines` | ✅ |
@@ -75,30 +83,50 @@
 | 3.15 | Relatório Vocacional | RIASEC dinâmico | ✅ |
 | 3.16 | Hub de Conteúdo | `GET /api/conteudo` | ✅ |
 | 3.17 | Conquistas | `GET/POST /api/user/achievements` | ✅ |
-| 3.18 | Plano de Estudos (streak live) | `GET/POST /api/plano/*` | ✅ |
+| 3.18 | Plano de Estudos (streak live + timer 25/45/60min) | `GET/POST /api/plano/*` | ✅ |
 | 3.19 | Elegibilidade | cálculo local por perfil | ✅ |
-| 3.20 | Comparador de Bolsas | local | ✅ |
+| 3.20 | Comparador de Bolsas (busca real) | `GET /api/bolsas` | ✅ |
 | 3.21 | Calculadora Custo Real | local | ✅ |
-| 3.22 | Renovação de Bolsa | `GET /api/applications/:id/renewals` | ✅ |
-| 3.23 | Mapa de Universidades | ✅ |
-| 3.24 | Candidatar-se (botão em BolsaDetalhe) | `POST /api/applications` | ⬜ |
+| 3.22 | Renovação de Bolsa | `GET/POST /api/applications/:id/renewals` | ✅ |
+| 3.23 | Mapa de Universidades | `GET /api/universidades` | ✅ |
+| 3.24 | Candidatar-se (BolsaDetalhe → Confirmar) | `POST /api/applications` | ✅ |
 
 ---
 
-## Fase 4 — Melhorias e Polish ⬜
+## Fase 4 — Melhorias e Polish ✅
 
-| # | Item | Prioridade |
-|---|------|-----------|
-| 4.1 | **Conectar botão "Candidatar-se"** em BolsaDetalhe ao `POST /api/applications` | ✅ |
-| 4.2 | **Mapa de Universidades** (tela 36) com dados reais do DB | ✅ |
-| 4.3 | **Push notifications** via Supabase Realtime para novas bolsas | ✅ |
-| 4.4 | **Upload real de documentos** (Supabase Storage) | ✅ |
-| 4.5 | **Chat IA** (`/api/chat`) — resposta contextual por perfil | ✅ |
-| 4.6 | **Plano de estudos avançado** — sessões de 25/45/60min, histórico de minutos | ✅ |
-| 4.7 | **Comparador de Bolsas** — busca por curso/uni real do DB | ✅ |
-| 4.8 | **Renovação** — POST para submeter dados do semestre | ✅ |
-| 4.9 | **Onboarding** — salvar `obStep` e perfil no banco ao concluir | ✅ |
-| 4.10 | **Comunidade** — POST de posts/respostas, likes reais | ✅ |
+| # | Item | Status |
+|---|------|--------|
+| 4.1 | Conectar botão "Candidatar-se" ao `POST /api/applications` | ✅ |
+| 4.2 | Mapa de Universidades com dados reais do DB | ✅ |
+| 4.3 | Push notifications via Supabase Realtime (novas bolsas) | ✅ |
+| 4.4 | Upload real de documentos (Supabase Storage) | ✅ |
+| 4.5 | Chat IA contextual por perfil (`/api/chat`) | ✅ |
+| 4.6 | Plano de estudos avançado — timer 25/45/60min | ✅ |
+| 4.7 | Comparador de Bolsas — busca por curso/uni real do DB | ✅ |
+| 4.8 | Renovação — POST para submeter dados do semestre | ✅ |
+| 4.9 | Onboarding — salvar cidade/estado/cotas no banco ao concluir | ✅ |
+| 4.10 | Comunidade — POST de posts/respostas, likes reais | ✅ |
+
+---
+
+## Fase 5 — Segurança, UX e Produção
+
+| # | Item | Prioridade | Status |
+|---|------|-----------|--------|
+| 5.1 | **BolsaDetalhe enriquecido** — usa `selBolsaDetails` do DB (eligibilityReason, vagas, nota corte real) | 🔴 Alta | ✅ |
+| 5.2 | **Cancelar candidatura** — `DELETE /api/applications/:id` + botão na tela Acompanhamento | 🔴 Alta | ✅ |
+| 5.3 | **Badge de notificações não lidas** no navbar (ponto vermelho dinâmico) | 🟡 Média | ✅ |
+| 5.4 | **Histórico de nota de corte** — mini gráfico no BolsaDetalhe (`ncTrend`) | 🟡 Média | ⬜ |
+| 5.5 | **Rate limiting** — `express-rate-limit` no backend (200 req/15min global, 10 req/min `/api/chat`) | 🔴 Alta | ✅ |
+| 5.6 | **Helmet.js** — headers de segurança HTTP no backend | 🔴 Alta | ✅ |
+| 5.7 | **Input sanitization** — rejeitar caracteres maliciosos em campos de texto livre | 🟡 Média | ⬜ |
+| 5.8 | **PWA básico** — `manifest.json` + meta theme-color + ícone na homescreen | 🟡 Média | ✅ |
+| 5.9 | **Deploy backend** — `render.yaml` configurado para Render.com | 🟢 Baixa | ✅ |
+| 5.10 | **Deploy frontend** — `vercel.json` atualizado para servir `portal/index.html` | 🟢 Baixa | ✅ |
+| 5.11 | **Simulação de cotas real** — chamar `POST /api/bolsas/cotas/calculate` na tela Cotas | 🟡 Média | ⬜ |
+| 5.12 | **Comparador de Cursos** — ligar tela a dados reais do DB | 🟢 Baixa | ⬜ |
+| 5.13 | **Deletar alerta de vaga** — botão de remover alerta na tela Alertas | 🟡 Média | ✅ |
 
 ---
 
@@ -109,20 +137,20 @@ O arquivo `backend/.env` tem placeholders que o usuário precisa preencher manua
 ```
 SUPABASE_SERVICE_ROLE_KEY=<pegar em Supabase Dashboard → Settings → API>
 JWT_SECRET=<mesmo valor do Supabase Dashboard → Settings → API → JWT Secret>
+ANTHROPIC_API_KEY=<pegar em console.anthropic.com>
 ```
 
+- **Service Role Key + JWT Secret**: https://supabase.com/dashboard/project/cryeesunxnfgkshvafbo/settings/api
+- **Anthropic API Key**: https://console.anthropic.com/settings/api-keys
+
 Sem o `SERVICE_ROLE_KEY`, o backend usa a `ANON_KEY` que pode ser bloqueada pelo RLS em algumas operações admin.
+Sem o `ANTHROPIC_API_KEY`, o chat usa respostas de fallback estáticas.
 
 ---
 
-## Pendência do Usuário
-
-Para o backend funcionar em produção, preencher no `backend/.env`:
-- **Service Role Key**: https://supabase.com/dashboard/project/cryeesunxnfgkshvafbo/settings/api
-- **JWT Secret**: mesmo link acima, seção "JWT Settings"
-
 ## Próximos Passos Imediatos
 
-Todas as fases do roadmap estão concluídas! 🎉
-
-Pendência do usuário: preencher `backend/.env` com `SUPABASE_SERVICE_ROLE_KEY` e `ANTHROPIC_API_KEY`.
+1. **5.4** — Mini gráfico de histórico de nota de corte no BolsaDetalhe
+2. **5.7** — Input sanitization nos campos de texto livre
+3. **5.11** — Simulação de cotas via API real
+4. **5.12** — Comparador de Cursos com dados do DB

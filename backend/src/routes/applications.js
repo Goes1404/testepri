@@ -225,4 +225,34 @@ router.post('/:id/renewals', requireAuth, async (req, res) => {
   }
 });
 
+// DELETE /api/applications/:id — cancel application
+router.delete('/:id', requireAuth, async (req, res) => {
+  try {
+    const { data: app } = await supabase
+      .from('applications')
+      .select('id, status, user_id')
+      .eq('id', req.params.id)
+      .eq('user_id', req.user.id)
+      .single();
+
+    if (!app) return res.status(404).json({ error: 'Candidatura não encontrada' });
+
+    const nonCancellable = ['Aprovado', 'Matrícula'];
+    if (nonCancellable.includes(app.status)) {
+      return res.status(409).json({ error: `Candidatura com status "${app.status}" não pode ser cancelada` });
+    }
+
+    const { error } = await supabase
+      .from('applications')
+      .delete()
+      .eq('id', req.params.id)
+      .eq('user_id', req.user.id);
+
+    if (error) throw error;
+    res.json({ ok: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 module.exports = router;

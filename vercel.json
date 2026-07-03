@@ -1,5 +1,22 @@
 {
-  "rewrites": [
-    { "source": "/", "destination": "/Portal do Aluno Standalone.html" }
+  "version": 2,
+  "builds": [
+    { "src": "portal/index.html", "use": "@vercel/static" },
+    { "src": "portal/manifest.json", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/manifest.json", "dest": "/portal/manifest.json" },
+    { "src": "/(.*)", "dest": "/portal/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
   ]
 }
+
