@@ -91,7 +91,7 @@
 |---|------|-----------|
 | 4.1 | **Conectar botão "Candidatar-se"** em BolsaDetalhe ao `POST /api/applications` | ✅ |
 | 4.2 | **Mapa de Universidades** (tela 36) com dados reais do DB | ✅ |
-| 4.3 | **Push notifications** via Supabase Realtime para novas bolsas | 🟡 Média |
+| 4.3 | **Push notifications** via Supabase Realtime para novas bolsas | ✅ |
 | 4.4 | **Upload real de documentos** (Supabase Storage) | ✅ |
 | 4.5 | **Chat IA** (`/api/chat`) — resposta contextual por perfil | ✅ |
 | 4.6 | **Plano de estudos avançado** — sessões de 25/45/60min, histórico de minutos | ✅ |
@@ -123,5 +123,6 @@ Para o backend funcionar em produção, preencher no `backend/.env`:
 
 ## Próximos Passos Imediatos
 
-1. **4.3** — Push notifications via Supabase Realtime para novas bolsas
-2. **4.7** — Comparador de bolsas com busca por curso/uni real do DB
+Todas as fases do roadmap estão concluídas! 🎉
+
+Pendência do usuário: preencher `backend/.env` com `SUPABASE_SERVICE_ROLE_KEY` e `ANTHROPIC_API_KEY`.
