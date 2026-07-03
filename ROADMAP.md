@@ -2,7 +2,7 @@
 
 > Repositório: `goes1404/testepri` · Branch ativa: `claude/repo-setup-dev-server-r3mk1b`
 > Supabase project: `cryeesunxnfgkshvafbo`
-> Última atualização: 2026-07-01
+> Última atualização: 2026-07-03
 
 ---
 
@@ -80,7 +80,7 @@
 | 3.20 | Comparador de Bolsas | local | ✅ |
 | 3.21 | Calculadora Custo Real | local | ✅ |
 | 3.22 | Renovação de Bolsa | `GET /api/applications/:id/renewals` | ✅ |
-| 3.23 | Mapa de Universidades | ⬜ |
+| 3.23 | Mapa de Universidades | ✅ |
 | 3.24 | Candidatar-se (botão em BolsaDetalhe) | `POST /api/applications` | ⬜ |
 
 ---
@@ -89,15 +89,15 @@
 
 | # | Item | Prioridade |
 |---|------|-----------|
-| 4.1 | **Conectar botão "Candidatar-se"** em BolsaDetalhe ao `POST /api/applications` | 🔴 Alta |
-| 4.2 | **Mapa de Universidades** (tela 36) com dados reais do DB | 🟡 Média |
+| 4.1 | **Conectar botão "Candidatar-se"** em BolsaDetalhe ao `POST /api/applications` | ✅ |
+| 4.2 | **Mapa de Universidades** (tela 36) com dados reais do DB | ✅ |
 | 4.3 | **Push notifications** via Supabase Realtime para novas bolsas | 🟡 Média |
 | 4.4 | **Upload real de documentos** (Supabase Storage) | ✅ |
-| 4.5 | **Chat IA** (`/api/chat`) — resposta contextual por perfil | 🟡 Média |
-| 4.6 | **Plano de estudos avançado** — sessões de 25/45/60min, histórico de minutos | 🟢 Baixa |
+| 4.5 | **Chat IA** (`/api/chat`) — resposta contextual por perfil | ✅ |
+| 4.6 | **Plano de estudos avançado** — sessões de 25/45/60min, histórico de minutos | ✅ |
 | 4.7 | **Comparador de Bolsas** — busca por curso/uni real do DB | 🟢 Baixa |
 | 4.8 | **Renovação** — POST para submeter dados do semestre | ✅ |
-| 4.9 | **Onboarding** — salvar `obStep` e perfil no banco ao concluir | 🟢 Baixa |
+| 4.9 | **Onboarding** — salvar `obStep` e perfil no banco ao concluir | ✅ |
 | 4.10 | **Comunidade** — POST de posts/respostas, likes reais | ✅ |
 
 ---
@@ -123,6 +123,5 @@ Para o backend funcionar em produção, preencher no `backend/.env`:
 
 ## Próximos Passos Imediatos
 
-1. **4.2** — Mapa de Universidades com pins reais (dados do DB)
-2. **4.5** — Chat IA contextual com perfil do usuário (ANTHROPIC_API_KEY no backend)
-3. **4.9** — Onboarding: salvar perfil completo no banco ao concluir
+1. **4.3** — Push notifications via Supabase Realtime para novas bolsas
+2. **4.7** — Comparador de bolsas com busca por curso/uni real do DB

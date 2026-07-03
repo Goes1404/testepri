@@ -2627,7 +2627,35 @@
           <div style="flex:1; background:rgba(255,255,255,.65); border:1px solid rgba(255,255,255,.65); border-radius:18px; padding:16px; text-align:center; box-shadow:0 5px 14px rgba(75,45,163,.06);"><div style="font-size:26px; margin-bottom:6px;">🎯</div><div style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:#4B2DA3;">{{ planoTodayLogged ? '✓' : '—' }}</div><div style="font-size:11px; color:#6E6680; margin-top:3px;">hoje</div></div>
         </div>
 
-        <button onclick="{{ planoLogBtn.on }}" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; border:none; cursor:pointer; background:linear-gradient(135deg,#1F8A5B,#156644); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:14px; border-radius:16px; box-shadow:0 10px 22px -6px rgba(31,138,91,.45); margin-bottom:12px; {{ planoLogBtn.style }}" style-active="transform:scale(.98)">{{ planoLogBtn.label }}</button>
+        <!-- sessão de estudo timer -->
+        <div style="background:rgba(255,255,255,.65); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,.68); border-radius:22px; padding:20px 18px; box-shadow:0 8px 22px rgba(75,45,163,.08); margin-bottom:16px;">
+          <h3 style="font-family:'Space Grotesk',sans-serif; font-size:14px; font-weight:600; color:#1B1326; margin:0 0 14px;">Iniciar sessão de estudos</h3>
+          <!-- duration picker -->
+          <div style="display:flex; gap:8px; margin-bottom:16px;">
+            <sc-for list="{{ planoTimerDurs }}" as="td" hint-placeholder-count="3">
+              <button onclick="{{ td.on }}" style="flex:1; border:{{ td.border }}; border-radius:12px; background:{{ td.bg }}; color:{{ td.color }}; font-family:'Sora',sans-serif; font-weight:600; font-size:13px; padding:10px 0; cursor:pointer; transition:all .2s;" style-active="transform:scale(.96)">{{ td.label }}</button>
+            </sc-for>
+          </div>
+          <!-- timer display -->
+          <div style="display:flex; flex-direction:column; align-items:center; margin-bottom:14px;">
+            <div style="font-family:'Space Grotesk',sans-serif; font-size:46px; font-weight:700; color:#4B2DA3; letter-spacing:-1px; line-height:1;">{{ planoTimerDisplay }}</div>
+            <sc-if value="{{ planoTimerRunning }}" hint-placeholder-val="{{ false }}">
+              <div style="width:100%; height:6px; border-radius:999px; background:#EDE8F7; overflow:hidden; margin-top:10px;">
+                <div style="height:100%; width: {{ planoTimerProgress }}; border-radius:999px; background:linear-gradient(90deg,#1F8A5B,#23A06B); transition:width .9s linear;"></div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ planoTimerDone }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:8px; font-size:13px; font-weight:600; color:#1F8A5B;">Sessão concluída e registrada!</div>
+            </sc-if>
+          </div>
+          <!-- start/stop -->
+          <sc-if value="{{ !planoTimerRunning }}" hint-placeholder-val="{{ true }}">
+            <button onclick="{{ startStudyTimer }}" style="width:100%; border:none; border-radius:14px; background:linear-gradient(135deg,#1F8A5B,#156644); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:13px; cursor:pointer; box-shadow:0 8px 18px -4px rgba(31,138,91,.45);" style-active="transform:scale(.98)">▶ Iniciar sessão</button>
+          </sc-if>
+          <sc-if value="{{ planoTimerRunning }}" hint-placeholder-val="{{ false }}">
+            <button onclick="{{ stopStudyTimer }}" style="width:100%; border:none; border-radius:14px; background:linear-gradient(135deg,#C0392B,#922B21); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:13px; cursor:pointer; box-shadow:0 8px 18px -4px rgba(192,57,43,.4);" style-active="transform:scale(.98)">■ Encerrar e registrar</button>
+          </sc-if>
+        </div>
 
         <button onclick="{{ goBolsas }}" style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; border:none; cursor:pointer; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); color:#fff; font-family:'Sora',sans-serif; font-weight:600; font-size:14px; padding:15px; border-radius:16px; box-shadow:0 12px 26px -6px rgba(75,45,163,.5);" style-active="transform:scale(.98)">Ver bolsas que já posso pegar<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
       </div>
@@ -3177,6 +3205,7 @@ class Component extends DCLogic {
     quizHistory: null, dbAchievements: null,
     dbConteudo: null, hubCatSel: 'Tudo',
     planoStreak: null,
+    planoTimerDur: 25, planoTimerRunning: false, planoTimerRemaining: null,
   };
 
   scrollTop() { const el = this.base && this.base.querySelector('[data-scroll]'); if (el) el.scrollTop = 0; }
@@ -3403,6 +3432,33 @@ class Component extends DCLogic {
       await fetchAPI('/api/plano/log', { method: 'POST', body: JSON.stringify({ minutes }) });
       this.loadPlanoStreak();
     } catch(e) {}
+  };
+  selectTimerDur = (mins) => () => {
+    if (this.state.planoTimerRunning) return;
+    this.setState({ planoTimerDur: mins, planoTimerRemaining: null });
+  };
+  startStudyTimer = () => {
+    if (this.state.planoTimerRunning) return;
+    const secs = (this.state.planoTimerDur || 25) * 60;
+    this.setState({ planoTimerRunning: true, planoTimerRemaining: secs });
+    clearInterval(this._timerInt);
+    this._timerInt = setInterval(() => {
+      this.setState(s => {
+        const next = (s.planoTimerRemaining || 0) - 1;
+        if (next <= 0) {
+          clearInterval(this._timerInt);
+          this.logStudySession(s.planoTimerDur || 25);
+          return { planoTimerRunning: false, planoTimerRemaining: 0 };
+        }
+        return { planoTimerRemaining: next };
+      });
+    }, 1000);
+  };
+  stopStudyTimer = () => {
+    clearInterval(this._timerInt);
+    const elapsed = Math.round(((this.state.planoTimerDur || 25) * 60 - (this.state.planoTimerRemaining || 0)) / 60);
+    if (elapsed >= 1) this.logStudySession(elapsed);
+    this.setState({ planoTimerRunning: false, planoTimerRemaining: null });
   };
   loadConteudoData = async (tag) => {
     try {
@@ -3848,7 +3904,7 @@ class Component extends DCLogic {
       localStorage.setItem('pa-state', JSON.stringify({ nome, ctx, tab, prev, simEnem, cotaSel, obStep }));
     } catch(e) {}
   }
-  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._qt); clearTimeout(this._ob); }
+  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._qt); clearTimeout(this._ob); clearInterval(this._timerInt); }
 
   runAnims() {
     const g = window.gsap;
@@ -4269,6 +4325,33 @@ class Component extends DCLogic {
     const planoLogBtn = planoTodayLogged
       ? { label: 'Sessão registrada ✓', style: 'opacity:.6; cursor:default;', on: () => {} }
       : { label: 'Registrar sessão de hoje', style: '', on: () => this.logStudySession(30) };
+
+    // ── timer de sessão de estudos ──
+    const _timerDur = this.state.planoTimerDur || 25;
+    const _timerRunning = this.state.planoTimerRunning;
+    const _timerRem = this.state.planoTimerRemaining;
+    const _timerDone = _timerRem === 0 && !_timerRunning;
+    const _timerMins = _timerRem !== null ? Math.floor(_timerRem / 60) : _timerDur;
+    const _timerSecs = _timerRem !== null ? _timerRem % 60 : 0;
+    const planoTimerDisplay = (_timerRem !== null)
+      ? String(_timerMins).padStart(2,'0') + ':' + String(_timerSecs).padStart(2,'0')
+      : _timerDur + ':00';
+    const planoTimerDurs = [25, 45, 60].map(m => ({
+      mins: m,
+      label: m + 'min',
+      sel: _timerDur === m && !_timerRunning,
+      bg: (_timerDur === m && !_timerRunning) ? 'linear-gradient(135deg,#6B3FD0,#4B2DA3)' : 'rgba(255,255,255,.65)',
+      color: (_timerDur === m && !_timerRunning) ? '#fff' : '#4B2DA3',
+      border: (_timerDur === m && !_timerRunning) ? '1.5px solid transparent' : '1.5px solid rgba(75,45,163,.25)',
+      on: this.selectTimerDur(m),
+    }));
+    const planoTimerRunning = _timerRunning;
+    const planoTimerDone = _timerDone;
+    const startStudyTimer = this.startStudyTimer;
+    const stopStudyTimer = this.stopStudyTimer;
+    const planoTimerProgress = _timerRem !== null
+      ? Math.round((1 - _timerRem / (_timerDur * 60)) * 100) + '%'
+      : '0%';
     const _planoBolsa = this.state.dashboardBestMatch || (bolsas && bolsas[0]) || {};
     const _planoNota = parseInt(this.state.simEnem, 10) || 650;
     const _planoCorte = _planoBolsa.corte || 642;
@@ -4946,6 +5029,8 @@ class Component extends DCLogic {
       simBolsas, simUnlocked, simEnem, simSlide: this.simSlide,
       comparBolsas, comparPicker,
       planoAreas, planoDias, planoMeta, planoCurrentStreak, planoWeekHours, planoTodayLogged, planoLogBtn,
+      planoTimerDisplay, planoTimerDurs, planoTimerRunning, planoTimerDone, planoTimerProgress,
+      startStudyTimer, stopStudyTimer,
       eligCards, eligCount,
       acompCands,
       alertaFmt,
