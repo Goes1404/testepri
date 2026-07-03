@@ -95,7 +95,7 @@
 | 4.4 | **Upload real de documentos** (Supabase Storage) | ✅ |
 | 4.5 | **Chat IA** (`/api/chat`) — resposta contextual por perfil | ✅ |
 | 4.6 | **Plano de estudos avançado** — sessões de 25/45/60min, histórico de minutos | ✅ |
-| 4.7 | **Comparador de Bolsas** — busca por curso/uni real do DB | 🟢 Baixa |
+| 4.7 | **Comparador de Bolsas** — busca por curso/uni real do DB | ✅ |
 | 4.8 | **Renovação** — POST para submeter dados do semestre | ✅ |
 | 4.9 | **Onboarding** — salvar `obStep` e perfil no banco ao concluir | ✅ |
 | 4.10 | **Comunidade** — POST de posts/respostas, likes reais | ✅ |

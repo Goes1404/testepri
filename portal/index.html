@@ -2884,8 +2884,17 @@
         </div>
         <p style="font-size:13px; color:#6E6680; margin:0 0 16px 52px; line-height:1.45;">Selecione até 3 bolsas para comparar.</p>
 
+        <!-- search -->
+        <div style="position:relative; margin-bottom:12px;">
+          <svg style="position:absolute; left:13px; top:50%; transform:translateY(-50%); pointer-events:none;" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#A89FBA" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="M21 21l-4.35-4.35"></path></svg>
+          <input type="text" value="{{ comparSearch }}" oninput="{{ setComparSearch }}" placeholder="Buscar por curso, universidade ou programa..." style="width:100%; box-sizing:border-box; border:1.5px solid #E3DCF5; border-radius:14px; background:rgba(255,255,255,.7); padding:11px 14px 11px 36px; font-family:'Sora',sans-serif; font-size:13px; color:#1B1326; outline:none;">
+        </div>
+
         <!-- picker -->
         <div style="display:flex; gap:8px; overflow-x:auto; margin:0 -20px 20px; padding:0 20px 4px;">
+          <sc-if value="{{ comparEmpty }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size:13px; color:#A89FBA; padding:8px 0;">Nenhuma bolsa encontrada para "{{ comparSearch }}"</span>
+          </sc-if>
           <sc-for list="{{ comparPicker }}" as="b" hint-placeholder-count="5">
             <button onclick="{{ b.toggle }}" style="{{ b.pickSt }}">{{ b.sigla }} · {{ b.curso }}</button>
           </sc-for>
@@ -3169,7 +3178,7 @@ class Component extends DCLogic {
     selBolsa: null, selEvento: null,
     toggles: { push: true, resumo: true, email: false, lembrete: true },
     simEnem: 650,
-    comparSel: ['AM', 'PUC'],
+    comparSel: ['AM', 'PUC'], comparSearch: '',
     vestIdx: 0, vestAnswers: [],
     custoTransporte: 300, custoMoradia: false, custoAlimentacao: 500,
     comunidadeTab: 'historias',
@@ -3642,6 +3651,7 @@ class Component extends DCLogic {
   flip(k) { return () => this.setState(s => ({ toggles: { ...s.toggles, [k]: !s.toggles[k] } })); }
   simSlide = (e) => { this.setState({ simEnem: parseInt(e.target.value) }); };
   toggleCompar = (sigla) => () => { const cur = this.state.comparSel; const next = cur.includes(sigla) ? cur.filter(x => x !== sigla) : [...cur, sigla].slice(-3); this.setState({ comparSel: next.length ? next : cur }); };
+  setComparSearch = (e) => this.setState({ comparSearch: e.target.value });
   setDoc = (k, v) => () => this.setState(s => ({ docStatus: { ...s.docStatus, [k]: v } }));
   toggleAlerta = (i) => () => this.setState(s => {
     const arr = [...s.alertaItems];
@@ -3884,7 +3894,7 @@ class Component extends DCLogic {
       this.runAnims();
      this.loadConfigData();
       if (this.state.tab === 'inicio') this.loadDashboardData();
-      if (this.state.tab === 'bolsas' || this.state.tab === 'busca') this.loadBolsasData();
+      if (this.state.tab === 'bolsas' || this.state.tab === 'busca' || this.state.tab === 'comparador') this.loadBolsasData();
       if (this.state.tab === 'prazos') this.loadDeadlinesData();
       if (this.state.tab === 'acompanhamento') this.loadApplicationsData();
       if (this.state.tab === 'alerta') this.loadAlertsData();
@@ -4500,8 +4510,17 @@ class Component extends DCLogic {
 
     // ── comparador ──
     const comparSel = this.state.comparSel;
+    const comparSearch = this.state.comparSearch || '';
+    const _comparQ = comparSearch.trim().toLowerCase();
     const comparBolsas = bolsas.filter(b => comparSel.includes(b.sigla));
-    const comparPicker = bolsas.map(b => ({
+    const comparPickerAll = bolsas.filter(b =>
+      !_comparQ ||
+      (b.sigla || '').toLowerCase().includes(_comparQ) ||
+      (b.curso || '').toLowerCase().includes(_comparQ) ||
+      (b.uni || '').toLowerCase().includes(_comparQ) ||
+      (b.programa || '').toLowerCase().includes(_comparQ)
+    );
+    const comparPicker = comparPickerAll.map(b => ({
       ...b,
       picked: comparSel.includes(b.sigla),
       toggle: this.toggleCompar(b.sigla),
@@ -4509,6 +4528,8 @@ class Component extends DCLogic {
         ? 'flex:none; border:1.5px solid #4B2DA3; cursor:pointer; padding:8px 14px; border-radius:999px; font-family:Sora,sans-serif; font-weight:600; font-size:12px; color:#fff; background:linear-gradient(135deg,#6B3FD0,#4B2DA3); white-space:nowrap;'
         : 'flex:none; border:1.5px solid #E3DCF5; cursor:pointer; padding:8px 14px; border-radius:999px; font-family:Sora,sans-serif; font-weight:500; font-size:12px; color:#5B3FA0; background:rgba(255,255,255,.7); white-space:nowrap;',
     }));
+    const comparEmpty = comparPickerAll.length === 0 && _comparQ.length > 0;
+    const setComparSearch = this.setComparSearch;
 
     // bolsa selecionada
     const selB = this.state.selBolsa || bolsas[0];
@@ -5027,7 +5048,7 @@ class Component extends DCLogic {
       docItems, docDone, docTotal, docPct,
       prazos,
       simBolsas, simUnlocked, simEnem, simSlide: this.simSlide,
-      comparBolsas, comparPicker,
+      comparBolsas, comparPicker, comparSearch, comparEmpty, setComparSearch,
       planoAreas, planoDias, planoMeta, planoCurrentStreak, planoWeekHours, planoTodayLogged, planoLogBtn,
       planoTimerDisplay, planoTimerDurs, planoTimerRunning, planoTimerDone, planoTimerProgress,
       startStudyTimer, stopStudyTimer,
