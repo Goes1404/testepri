@@ -15,9 +15,22 @@ router.post('/', requireAuth, async (req, res) => {
     return res.status(400).json({ error: 'message required (max 1000 chars)' });
   }
 
+  // Load user profile for context
+  let profileCtx = '';
+  try {
+    const { data: profile } = await supabase
+      .from('user_profiles')
+      .select('nota_enem, renda_familiar, tipo_escola, cidade, estado')
+      .eq('user_id', req.user.id)
+      .single();
+    if (profile) {
+      const nome = req.user.user_metadata?.nome_completo || req.user.user_metadata?.name || 'Estudante';
+      profileCtx = `\n\nPERFIL DO USUÁRIO:\n- Nome: ${nome}\n- Nota ENEM: ${profile.nota_enem || 'não informada'}\n- Renda familiar: ${profile.renda_familiar || 'não informada'}\n- Tipo de escola: ${profile.tipo_escola || 'não informada'}\n- Localização: ${[profile.cidade, profile.estado].filter(Boolean).join(', ') || 'não informada'}\nUse essas informações para personalizar sua resposta quando relevante.`;
+    }
+  } catch (_) {}
+
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
-    // Fallback mock reply when API key not configured
     const reply = buildFallbackReply(message);
     return res.json({ reply });
   }
@@ -38,7 +51,7 @@ router.post('/', requireAuth, async (req, res) => {
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 400,
-        system: SYSTEM_PROMPT,
+        system: SYSTEM_PROMPT + profileCtx,
         messages,
       }),
     });

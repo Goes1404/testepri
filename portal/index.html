@@ -3171,6 +3171,7 @@ class Component extends DCLogic {
     chatLoading: false,
     cidade: '', estado: '', userEmail: '',
     dbApplications: null, dbAlerts: null, dbNotifications: null, dbEventos: null, dbComunidade: null, dbRenovacoes: null, dbDocIds: {},
+    dbUniversidades: null,
     currentApplicationId: null,
     vocResultSaved: false,
     quizHistory: null, dbAchievements: null,
@@ -3390,6 +3391,13 @@ class Component extends DCLogic {
       if (data) this.setState({ planoStreak: data });
     } catch(e) {}
   };
+  loadMapaData = async (estado) => {
+    try {
+      const q = estado ? `?estado=${encodeURIComponent(estado)}` : '';
+      const data = await fetchAPI(`/api/universidades${q}`);
+      if (data && data.universidades) this.setState({ dbUniversidades: data.universidades });
+    } catch(e) {}
+  };
   logStudySession = async (minutes) => {
     try {
       await fetchAPI('/api/plano/log', { method: 'POST', body: JSON.stringify({ minutes }) });
@@ -3454,14 +3462,18 @@ class Component extends DCLogic {
   obFinish = async () => {
     this.setState({ obStep: 6 }); this.scrollTop();
     try {
-      const { ctx, nome, simEnem } = this.state;
+      const { ctx, nome, simEnem, cidade, estado, cotaSel } = this.state;
       const note = parseInt(simEnem, 10) || 600;
+      const cotasAtivas = Object.entries(cotaSel || {}).filter(([,v]) => v).map(([k]) => k);
       await fetchAPI('/api/user/profile', {
         method: 'PUT',
         body: JSON.stringify({
           nota_enem: note,
           renda_familiar: ctx.renda,
-          tipo_escola: ctx.escola
+          tipo_escola: ctx.escola,
+          cidade: cidade || null,
+          estado: estado || null,
+          cotas: cotasAtivas.length ? cotasAtivas : null,
         })
       });
       if (supabaseClient) {
@@ -3829,6 +3841,7 @@ class Component extends DCLogic {
       if (this.state.tab === 'conquistas') this.loadAchievementsData();
       if (this.state.tab === 'conteudo') this.loadConteudoData(this.state.hubCatSel);
       if (this.state.tab === 'plano') this.loadPlanoStreak();
+      if (this.state.tab === 'mapa') this.loadMapaData();
     }
     try {
       const { nome, ctx, tab, prev, simEnem, cotaSel, obStep } = this.state;
@@ -4543,10 +4556,35 @@ class Component extends DCLogic {
     const fiesAlerta        = fiesComprometim > 25;
 
     // ── MAPA DE UNIVERSIDADES ──
-    const mapaDist = [3.2, 18, 12, 6.5, 9];
-    const mapaPos  = [{t:24,l:38},{t:46,l:64},{t:60,l:28},{t:33,l:70},{t:66,l:50}];
-    const mapaUnis = bolsas.map((b,i) => ({ sigla:b.sigla, uni:b.uni, curso:b.curso, local:b.local, open:b.open, pct:b.pct, progColor:b.progColor, dist:mapaDist[i]+' km', distNum:mapaDist[i], top:mapaPos[i].t+'%', left:mapaPos[i].l+'%' }));
-    const mapaSorted = [...mapaUnis].sort((a,b)=>a.distNum-b.distNum);
+    const _dbUnis = this.state.dbUniversidades;
+    let mapaUnis, mapaSorted;
+    if (_dbUnis && _dbUnis.length > 0) {
+      mapaUnis = _dbUnis.map(u => {
+        const pct = u.melhorPct || 0;
+        const progColor = pct >= 100 ? '#8A5CF0' : pct >= 50 ? '#4B7CF0' : '#2ADFB4';
+        return {
+          sigla: u.sigla || u.nome?.slice(0,6),
+          uni: u.nome,
+          curso: u.melhorPrograma || 'Veja bolsas disponíveis',
+          local: (u.estados || []).join(', ') || '—',
+          open: u.vagasDisp > 0,
+          pct,
+          progColor,
+          notaCorte: u.notaCorte,
+          ranking: u.ranking,
+          top: u.top,
+          left: u.left,
+          dist: '—',
+          distNum: u.ranking || 999,
+        };
+      });
+      mapaSorted = [...mapaUnis].sort((a, b) => (a.ranking || 999) - (b.ranking || 999));
+    } else {
+      const mapaDist = [3.2, 18, 12, 6.5, 9];
+      const mapaPos  = [{t:24,l:38},{t:46,l:64},{t:60,l:28},{t:33,l:70},{t:66,l:50}];
+      mapaUnis = bolsas.map((b,i) => ({ sigla:b.sigla, uni:b.uni, curso:b.curso, local:b.local, open:b.open, pct:b.pct, progColor:b.progColor, dist:mapaDist[i]+' km', distNum:mapaDist[i], top:mapaPos[i].t+'%', left:mapaPos[i].l+'%' }));
+      mapaSorted = [...mapaUnis].sort((a,b)=>a.distNum-b.distNum);
+    }
 
     // ── FAQ INTELIGENTE ──
     const faqAberta = this.state.faqAberta;

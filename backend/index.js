@@ -29,6 +29,7 @@ const comunidadeRoutes = require('./src/routes/comunidade');
 const eventosRoutes = require('./src/routes/eventos');
 const conteudoRoutes = require('./src/routes/conteudo');
 const planoRoutes = require('./src/routes/plano');
+const universidadesRoutes = require('./src/routes/universidades');
 
 // Healthcheck
 app.get('/api/health', (req, res) => {
@@ -53,6 +54,7 @@ app.use('/api/comunidade', comunidadeRoutes);
 app.use('/api/eventos', eventosRoutes);
 app.use('/api/conteudo', conteudoRoutes);
 app.use('/api/plano', planoRoutes);
+app.use('/api/universidades', universidadesRoutes);
 
 // Error Handler
 app.use((err, req, res, next) => {
