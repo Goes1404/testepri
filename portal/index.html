@@ -5199,7 +5199,7 @@ Assinatura: ___________________________`;
       'Média': { color: '#7B4FE0', grad: 'linear-gradient(90deg,#C2ABF2,#7B4FE0)' },
       Baixa: { color: '#9C93B3', grad: 'linear-gradient(90deg,#D6CFE6,#A79DBD)' },
     };
-    const money = n => 'R$ ' + n.toLocaleString('pt-BR');
+    const money = n => 'R$ ' + (+(n) || 0).toLocaleString('pt-BR');
     const dec = b => {
       const m = chanceMeta[b.chance];
       const isSisu = b.programa === 'SISU';
@@ -5845,10 +5845,10 @@ Assinatura: ___________________________`;
               b.chance === 'Média' ? 'linear-gradient(90deg,#F0C14B,#E0A800)' :
               'linear-gradient(90deg,#E8A3C7,#C25BA0)',
         economiaLabel: b.pct === '100%'
-          ? b.mensalidade.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-          : (b.mensalidade * (parseInt(b.pct, 10)/100)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-        comBolsaLabel: b.pct === '100%' ? 'Gratuito' : (b.mensalidade * (1 - parseInt(b.pct, 10)/100)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-        cheioLabel: b.mensalidade.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+          ? (+(b.mensalidade) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+          : ((+(b.mensalidade) || 0) * (parseInt(b.pct, 10)/100)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+        comBolsaLabel: b.pct === '100%' ? 'Gratuito' : ((+(b.mensalidade) || 0) * (1 - parseInt(b.pct, 10)/100)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+        cheioLabel: (+(b.mensalidade) || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
         prazoStyle: b.diasRestantes <= 3
           ? 'font-size:11.5px; font-weight:700; color:#C25BA0; display:inline-flex; align-items:center; gap:4px;'
           : 'font-size:11.5px; font-weight:600; color:#5B3FA0; display:inline-flex; align-items:center; gap:4px;',
