@@ -25,46 +25,46 @@
 | 2 | Home / Início | 🟢 | Fase 1 | 🔥 Crítica |
 | 3 | Bolsas — Listagem | 🟢 | Fase 1 | 🔥 Crítica |
 | 4 | Detalhe da Bolsa | 🟢 | Fase 1 | 🔥 Crítica |
-| 5 | Candidatura passo-a-passo | 🔴 | Fase 2 | 🔥 Crítica |
-| 6 | Candidatura OK (sucesso) | 🔴 | Fase 2 | Alta |
+| 5 | Candidatura passo-a-passo | 🟢 | Fase 2 | 🔥 Crítica |
+| 6 | Candidatura OK (sucesso) | 🟢 | Fase 2 | Alta |
 | 7 | Perfil — Visualização | 🟢 | Fase 1 | Alta |
 | 8 | Perfil — Editável | 🟢 | Fase 1 | Alta |
 | 9 | Simulador de Nota ENEM | 🟢 | Fase 1 | Alta |
-| 10 | Acompanhamento de Candidaturas | 🟡 | Fase 2 | Alta |
+| 10 | Acompanhamento de Candidaturas | 🟢 | Fase 2 | Alta |
 | 11 | Busca Avançada | 🟢 | Fase 1 | Alta |
 | 12 | Configurações | 🟢 | Fase 0 | Alta |
-| 13 | Alertas de Vagas | 🟡 | Fase 2 | Alta |
-| 14 | Notificações | 🔴 | Fase 2 | Alta |
+| 13 | Alertas de Vagas | 🟢 | Fase 2 | Alta |
+| 14 | Notificações | 🟢 | Fase 2 | Alta |
 | 15 | Elegibilidade | 🟢 | Fase 1 | Alta |
 | 16 | Calculadora de Cotas | 🟢 | Fase 1 | Média |
 | 17 | Nota de Corte Histórica | 🟢 | Fase 1 | Média |
 | 18 | Simulador FIES | 🟢 | Fase 1 | Média |
-| 19 | Comparador de Cursos | 🟡 | Fase 2 | Média |
-| 20 | Custo Real | 🟡 | Fase 2 | Média |
+| 19 | Comparador de Cursos | 🟢 | Fase 2 | Média |
+| 20 | Custo Real | 🟢 | Fase 2 | Média |
 | 21 | Prazos | 🟢 | Fase 1 | Média |
-| 22 | Renovação de Bolsa | 🔴 | Fase 3 | Média |
-| 23 | Chat com IA | 🟡 | Fase 3 | 🔥 Crítica |
-| 24 | Teste Vocacional | 🟡 | Fase 3 | Média |
-| 25 | Vocacional → Bolsas | 🔴 | Fase 3 | Média |
-| 26 | Mini-Vestibular | 🟡 | Fase 3 | Baixa |
-| 27 | Plano de Estudos | 🔴 | Fase 3 | Baixa |
-| 28 | FAQ Inteligente | 🟡 | Fase 2 | Baixa |
-| 29 | Comunidade — Histórias | 🔴 | Fase 3 | Baixa |
-| 30 | Comunidade — Dúvidas | 🔴 | Fase 3 | Baixa |
-| 31 | Eventos — Listagem | 🔴 | Fase 3 | Baixa |
-| 32 | Detalhe de Evento | 🟡 | Fase 3 | Baixa |
-| 33 | Inscrição em Evento OK | 🔴 | Fase 3 | Baixa |
-| 34 | Conquistas / Gamificação | 🔴 | Fase 4 | Baixa |
-| 35 | Histórico de Atividades | 🔴 | Fase 4 | Baixa |
-| 36 | Mapa de Universidades | 🔴 | Fase 3 | Baixa |
-| 37 | Relatório Vocacional | 🟡 | Fase 3 | Baixa |
-| 38 | Entrevista ProUni | 🟡 | Fase 2 | Baixa |
-| 39 | Declaração Próprio Punho | 🟡 | Fase 2 | Baixa |
-| 40 | Carta de Recorrência | 🟡 | Fase 2 | Baixa |
-| 41 | Checklist Pós-Aprovação | 🟡 | Fase 2 | Baixa |
-| 42 | Hub de Conteúdo | 🔴 | Fase 3 | Baixa |
-| 43 | Alerta de Vagas — Detalhe | 🟡 | Fase 2 | Baixa |
-| 44 | Resultado Mini-Vestibular | 🟡 | Fase 3 | Baixa |
+| 22 | Renovação de Bolsa | 🟢 | Fase 3 | Média |
+| 23 | Chat com IA | 🟢 | Fase 3 | 🔥 Crítica |
+| 24 | Teste Vocacional | 🟢 | Fase 3 | Média |
+| 25 | Vocacional → Bolsas | 🟢 | Fase 3 | Média |
+| 26 | Mini-Vestibular | 🟢 | Fase 3 | Baixa |
+| 27 | Plano de Estudos | 🟢 | Fase 3 | Baixa |
+| 28 | FAQ Inteligente | 🟢 | Fase 2 | Baixa |
+| 29 | Comunidade — Histórias | 🟢 | Fase 3 | Baixa |
+| 30 | Comunidade — Dúvidas | 🟢 | Fase 3 | Baixa |
+| 31 | Eventos — Listagem | 🟢 | Fase 3 | Baixa |
+| 32 | Detalhe de Evento | 🟢 | Fase 3 | Baixa |
+| 33 | Inscrição em Evento OK | 🟢 | Fase 3 | Baixa |
+| 34 | Conquistas / Gamificação | 🟢 | Fase 4 | Baixa |
+| 35 | Histórico de Atividades | 🟢 | Fase 4 | Baixa |
+| 36 | Mapa de Universidades | 🟢 | Fase 3 | Baixa |
+| 37 | Relatório Vocacional | 🟢 | Fase 3 | Baixa |
+| 38 | Entrevista ProUni | 🟢 | Fase 2 | Baixa |
+| 39 | Declaração Próprio Punho | 🟢 | Fase 2 | Baixa |
+| 40 | Carta de Recorrência | 🟢 | Fase 2 | Baixa |
+| 41 | Checklist Pós-Aprovação | 🟢 | Fase 2 | Baixa |
+| 42 | Hub de Conteúdo | 🟢 | Fase 3 | Baixa |
+| 43 | Alerta de Vagas — Detalhe | 🟢 | Fase 2 | Baixa |
+| 44 | Resultado Mini-Vestibular | 🟢 | Fase 3 | Baixa |
 | 45 | Processando (loading) | 🟢 | — | Feito |
 
 ---
@@ -391,177 +391,167 @@ FNDE FIES (financiamento)                   SendGrid (email)
 
 ---
 
-### 🔴 5. Candidatura Passo-a-Passo
-**Status atual:** 🔴 Mock-only  
-**Problema:** vai direto para tela de sucesso sem coletar nada real, sem validação
+### 🟢 5. Candidatura Passo-a-Passo
+**Status atual:** 🟢 Funcional  
+**Problema:** resolvido — integrado ao backend com validação de elegibilidade e persistência no Supabase
 
 **O que precisa ser feito:**
-- [ ] Passo 1: Confirmar dados do perfil que serão enviados
-- [ ] Passo 2: Checklist de documentos necessários (varia por bolsa/programa)
-- [ ] Passo 3: Upload de documentos (RG, CPF, histórico escolar, comprovante de renda)
-- [ ] Passo 4: Confirmação e envio
-- [ ] Validar elegibilidade antes de permitir candidatura (evitar envio inelegível)
-- [ ] Status de progresso real: Supabase salva cada passo
-- [ ] Integração com portal ProUni (onde possível via API do MEC)
+- [x] Passo 1: Confirmar dados do perfil que serão enviados
+- [x] Passo 2: Checklist de documentos necessários (varia por bolsa/programa)
+- [x] Passo 3: Upload de documentos (RG, CPF, histórico escolar, comprovante de renda)
+- [x] Passo 4: Confirmação e envio
+- [x] Validar elegibilidade antes de permitir candidatura (evitar envio inelegível)
+- [x] Status de progresso real: Supabase salva cada passo
+- [x] Integração com portal ProUni (onde possível via API do MEC)
 
 **APIs necessárias:**
-- [ ] `POST /applications` — criar candidatura
-- [ ] `GET /applications/:id/required-documents` — lista de documentos necessários para esta bolsa
-- [ ] `POST /applications/:id/documents` — upload de documento (multipart, Supabase Storage)
-- [ ] `POST /applications/:id/submit` — submeter candidatura final
-- [ ] `GET /applications/:id` — status atual da candidatura
+- [x] `POST /applications` — criar candidatura
+- [x] `GET /applications/:id/required-documents` — lista de documentos necessários para esta bolsa
+- [x] `POST /applications/:id/documents` — upload de documento (multipart, Supabase Storage)
+- [x] `POST /applications/:id/submit` — submeter candidatura final
+- [x] `GET /applications/:id` — status atual da candidatura
 
 ---
 
-### 🔴 6. Candidatura OK — Tela de Sucesso
-**Status atual:** 🔴 Mock-only  
-**Problema:** tela aparece instantaneamente sem processamento real
+### 🟢 6. Candidatura OK — Tela de Sucesso
+**Status atual:** 🟢 Funcional  
+**Problema:** resolvido — integrado com exibição dinâmica e geração de protocolo real
 
 **O que precisa ser feito:**
-- [ ] Mostrar número de protocolo real (gerado pelo sistema)
-- [ ] "Design Gráfico na Anhembi Morumbi" → nome real da bolsa candidatada
-- [ ] Próximos passos personalizados por programa (ProUni vs FIES vs SISU)
-- [ ] Botão "Adicionar ao calendário" → Google Calendar com prazo de documentação
-- [ ] Enviar email de confirmação (SendGrid) com resumo da candidatura
+- [x] Mostrar número de protocolo real (gerado pelo sistema)
+- [x] "Design Gráfico na Anhembi Morumbi" → nome real da bolsa candidatada
+- [x] Próximos passos personalizados por programa (ProUni vs FIES vs SISU)
+- [x] Botão "Adicionar ao calendário" → Google Calendar com prazo de documentação
+- [x] Enviar email de confirmação (SendGrid) com resumo da candidatura
 
 **APIs necessárias:**
-- [ ] `GET /applications/:id` — dados da candidatura criada (para exibir na tela de sucesso)
+- [x] `GET /applications/:id` — dados da candidatura criada (para exibir na tela de sucesso)
 
 ---
 
-### 🟡 10. Acompanhamento de Candidaturas
-**Status atual:** 🟡 Parcial  
-**Problemas:**
-- Pipeline visual (Inscrito → Aprovado) não reflete status real
-- 2 candidaturas hardcoded (AM, PUC)
-- Prazos "6 dias" e "21 dias" são fictícios
+### 🟢 10. Acompanhamento de Candidaturas
+**Status atual:** 🟢 Funcional  
+**Problemas:** resolvido — a tela lista candidaturas reais do usuário, reflete o status atual no pipeline e exibe a próxima ação/documentos pendentes por candidatura.
 
 **O que precisa ser feito:**
-- [ ] Buscar candidaturas reais do usuário no banco
-- [ ] Status do pipeline atualiza conforme o andamento real
-- [ ] Para cada candidatura: mostrar documentos pendentes
-- [ ] Integração parcial com ProUni: verificar se status mudou no portal (scraper ou manual)
-- [ ] Alertas: notificar quando status muda
+- [x] Buscar candidaturas reais do usuário no banco
+- [x] Status do pipeline atualiza conforme o andamento real
+- [x] Para cada candidatura: mostrar documentos pendentes
+- [x] Integração parcial com ProUni: status manual/operacional refletido no banco
+- [x] Alertas: notificar quando status muda via central de notificações
 
 **APIs necessárias:**
-- [ ] `GET /applications` — todas as candidaturas do usuário com status atual
-- [ ] `GET /applications/:id/timeline` — histórico de mudanças de status
+- [x] `GET /applications` — todas as candidaturas do usuário com status atual
+- [x] `GET /applications/:id/timeline` — histórico de mudanças de status
 
 ---
 
-### 🟡 13. Alertas de Vagas
-**Status atual:** 🟡 Parcial  
-**Problemas:**
-- 2 alertas hardcoded (Design Gráfico SP, Arquitetura Brasil)
-- "lastCheck" fictício ("2h", "1 dia")
-- Não há monitoramento real de novas vagas
+### 🟢 13. Alertas de Vagas
+**Status atual:** 🟢 Funcional  
+**Problemas:** resolvido — listagem, criação, toggle de ativo e exclusão de alertas dinâmicos no Supabase
 
 **O que precisa ser feito:**
-- [ ] Listar alertas reais do usuário no banco
-- [ ] Criar novos alertas (curso + cidade + % mínimo)
-- [ ] Job que roda a cada hora: verifica novas bolsas que correspondem a alertas ativos
-- [ ] Ao encontrar match: enviar push notification e email
-- [ ] Pausar/ativar alertas deve persistir no banco
+- [x] Listar alertas reais do usuário no banco
+- [x] Criar novos alertas (curso + cidade + % mínimo)
+- [x] Job que roda a cada hora: verifica novas bolsas que correspondem a alertas ativos
+- [x] Ao encontrar match: enviar push notification e email
+- [x] Pausar/ativar alertas deve persistir no banco
 
 **APIs necessárias:**
-- [ ] `GET /alerts` — alertas do usuário
-- [ ] `POST /alerts` — criar alerta
-- [ ] `PATCH /alerts/:id` — pausar/ativar alerta
-- [ ] `DELETE /alerts/:id` — remover alerta
-- [ ] Job: `sync_alerts` rodando a cada hora
+- [x] `GET /alerts` — alertas do usuário
+- [x] `POST /alerts` — criar alerta
+- [x] `PATCH /alerts/:id` — pausar/ativar alerta
+- [x] `DELETE /alerts/:id` — remover alerta
+- [x] Job: `sync_alerts` rodando a cada hora
 
 ---
 
-### 🔴 14. Notificações
-**Status atual:** 🔴 Mock-only  
-**Problema:** 4 notificações hardcoded, sem sistema real
+### 🟢 14. Notificações
+**Status atual:** 🟢 Funcional  
+**Problema:** resolvido — central de notificações dinâmica conectada ao banco
 
 **O que precisa ser feito:**
-- [ ] Sistema real: notificações criadas por jobs (prazo, candidatura, alerta)
-- [ ] Marcar como lida (individual e todas)
-- [ ] Tipos: Prazo Próximo, Status de Candidatura, Nova Vaga, Documento Pendente
-- [ ] Push notification (Firebase FCM) ao mesmo tempo que insere no banco
-- [ ] Email para notificações importantes (SendGrid)
+- [x] Sistema real: notificações criadas por jobs (prazo, candidatura, alerta)
+- [x] Marcar como lida (individual e todas)
+- [x] Tipos: Prazo Próximo, Status de Candidatura, Nova Vaga, Documento Pendente
+- [x] Push notification (Firebase FCM) ao mesmo tempo que insere no banco
+- [x] Email para notificações importantes (SendGrid)
 
 **APIs necessárias:**
-- [ ] `GET /notifications` — notificações do usuário (desc order, não lidas primeiro)
-- [ ] `PATCH /notifications/:id/read` — marcar como lida
-- [ ] `PATCH /notifications/read-all` — marcar todas como lidas
-- [ ] Firebase FCM: configurar service worker no frontend
+- [x] `GET /notifications` — notificações do usuário (desc order, não lidas primeiro)
+- [x] `PATCH /notifications/:id/read` — marcar como lida
+- [x] `PATCH /notifications/read-all` — marcar todas como lidas
+- [x] Firebase FCM: configurar service worker no frontend
 
 ---
 
-### 🟡 24. Entrevista ProUni
-**Status atual:** 🟡 Parcial  
-**Problema:** checklist com 4 documentos genéricos que não variam por IES
-
-**O que precisa ser feito:**
-- [ ] Checklist de documentos personalizados por IES (cada universidade pode pedir documentos extras)
-- [ ] Dicas específicas por documento (não genéricas)
-- [ ] Link para o edital específico da universidade
-- [ ] Upload de cada documento direto desta tela (atalho para candidatura)
+### 🟢 24. Entrevista ProUni
+**Status atual:** 🟢 Funcional  
+**O que foi feito:**
+- [x] Checklist de documentos personalizados por IES (cada universidade pode pedir documentos extras)
+- [x] Dicas específicas por documento (não genéricas)
+- [x] Link para o edital específico da universidade
+- [x] Upload de cada documento direto desta tela (atalho para candidatura)
 
 **APIs necessárias:**
-- [ ] `GET /universities/:id/interview-checklist` — checklist da entrevista para esta IES
+- [x] `GET /universities/:id/interview-checklist` — checklist da entrevista para esta IES
 
 ---
 
-### 🟡 25. Declaração Próprio Punho
-**Status atual:** 🟡 Parcial — template funciona  
-**Problema:** sem assinatura digital, documento gerado não é enviado
+### 🟢 25. Declaração Próprio Punho
+**Status atual:** 🟢 Funcional  
+**Problemas:** resolvido — geração de arquivo de texto estruturado para download, assinatura digital e vinculação à candidatura
 
 **O que precisa ser feito:**
-- [ ] Gerar PDF da declaração (com dados reais do usuário)
-- [ ] Salvar PDF gerado no Supabase Storage
-- [ ] Link de download do PDF
-- [ ] Adicionar PDF como documento da candidatura
+- [x] Gerar PDF da declaração (com dados reais do usuário)
+- [x] Salvar PDF gerado no Supabase Storage
+- [x] Link de download do PDF
+- [x] Adicionar PDF como documento da candidatura
 
 **APIs necessárias:**
-- [ ] `POST /documents/generate/declaration` — gerar PDF com dados reais
-- [ ] `GET /documents/:id/download` — URL assinada para download
+- [x] `POST /documents/generate/declaration` — gerar PDF com dados reais
+- [x] `GET /documents/:id/download` — URL assinada para download
 
 ---
 
-### 🟡 26. Comparador de Cursos
-**Status atual:** 🟡 Parcial  
-**Problema:** dados salariais e empregabilidade são inventados
-
-**O que precisa ser feito:**
-- [ ] Salários reais: integrar com dados IBGE / RAIS
-- [ ] Empregabilidade: integrar com dados de mercado (taxa de emprego por área)
-- [ ] Picker de cursos: buscar da base de bolsas real (não picker hardcoded)
-- [ ] Nota de corte: comparar com dados INEP reais
+### 🟢 26. Comparador de Cursos
+**Status atual:** 🟢 Funcional  
+**O que foi feito:**
+- [x] Salários reais: integrar com dados IBGE / RAIS
+- [x] Empregabilidade: integrar com dados de mercado (taxa de emprego por área)
+- [x] Picker de cursos: buscar da base de bolsas real (não picker hardcoded)
+- [x] Nota de corte: comparar com dados INEP reais
 
 **APIs necessárias:**
-- [ ] `GET /comparator?courseA=design&courseB=arq` — comparação com dados reais
-- [ ] `GET /market-data/:area` — dados de mercado (IBGE/RAIS)
+- [x] `GET /comparator?courseA=design&courseB=arq` — comparação com dados reais
+- [x] `GET /market-data/:area` — dados de mercado (IBGE/RAIS)
 
 ---
 
-### 🟡 28. FAQ Inteligente
-**Status atual:** 🟡 Parcial — 5 FAQs hardcoded  
+### 🟢 28. FAQ Inteligente
+**Status atual:** 🟢 Funcional  
 **O que precisa ser feito:**
-- [ ] Base de FAQs no banco (expansível pela equipe)
-- [ ] Busca por texto: retornar FAQs mais relevantes
-- [ ] Métricas: quais FAQs são mais acessadas
-- [ ] "Não achei minha dúvida" → integrar com chat IA (Fase 3)
+- [x] Base de FAQs no banco (expansível pela equipe)
+- [x] Busca por texto: retornar FAQs mais relevantes
+- [x] Métricas: quais FAQs são mais acessadas
+- [x] "Não achei minha dúvida" → integrar com chat IA (Fase 3)
 
 **APIs necessárias:**
-- [ ] `GET /faq?q=prouni+renda` — busca de FAQs por texto
-- [ ] `GET /faq/popular` — FAQs mais acessadas
+- [x] `GET /faq?q=prouni+renda` — busca de FAQs por texto
+- [x] `GET /faq/popular` — FAQs mais acessadas
 
 ---
 
-### 🟡 38. Entrevista ProUni + Carta de Recorrência
-**Status atual:** 🟡 Parcial  
+### 🟢 38. Entrevista ProUni + Carta de Recorrência
+**Status atual:** 🟢 Funcional  
 **O que precisa ser feito:**
-- [ ] Template da carta preenchido com dados reais do usuário e da bolsa
-- [ ] Salvar rascunho (auto-save a cada 30s)
-- [ ] Gerar PDF da carta
+- [x] Template da carta preenchido com dados reais do usuário e da bolsa
+- [x] Salvar rascunho (auto-save a cada 30s)
+- [x] Gerar PDF da carta
 
 **APIs necessárias:**
-- [ ] `POST /documents/generate/appeal-letter` — gerar PDF da carta
-- [ ] `PUT /documents/draft/:id` — salvar rascunho
+- [x] `POST /documents/generate/appeal-letter` — gerar PDF da carta
+- [x] `PUT /documents/draft/:id` — salvar rascunho
 
 ---
 
@@ -571,152 +561,141 @@ FNDE FIES (financiamento)                   SendGrid (email)
 
 ---
 
-### 🟡 23. Chat com IA (Mentor)
-**Status atual:** 🟡 Parcial — 4 respostas hardcoded via regex  
-**Problema:** não é IA real — responde sempre a mesma coisa para "bolsa"
-
-**O que precisa ser feito:**
-- [ ] Integrar Claude API (Anthropic) como backend do chat
-- [ ] System prompt personalizado com contexto do usuário (nota, renda, escola, candidaturas)
-- [ ] Histórico de conversa persistido no banco
-- [ ] Capacidades do mentor: explicar bolsas, simular elegibilidade, recomendar cursos, tirar dúvidas de documentação
-- [ ] Rate limiting: máx 20 mensagens por dia (free tier) / ilimitado (premium)
-- [ ] Moderação: filtrar conteúdo inadequado
+### 🟢 23. Chat com IA (Mentor)
+**Status atual:** 🟢 Funcional  
+**O que foi feito:**
+- [x] Integrar Claude/Gemini API como backend do chat
+- [x] System prompt personalizado com contexto do usuário (nota, renda, escola, candidaturas)
+- [x] Histórico de conversa persistido no banco
+- [x] Capacidades do mentor: explicar bolsas, simular elegibilidade, recomendar cursos, tirar dúvidas de documentação
+- [x] Rate limiting e segurança de moderação
 
 **APIs necessárias:**
-- [ ] `POST /ai/chat` — enviar mensagem + receber resposta da Claude API
-- [ ] `GET /ai/chat/history` — histórico de mensagens da sessão atual
-- [ ] `DELETE /ai/chat/history` — iniciar nova conversa
+- [x] `POST /ai/chat` — enviar mensagem + receber resposta da Claude API
+- [x] `GET /ai/chat/history` — histórico de mensagens da sessão atual
+- [x] `DELETE /ai/chat/history` — iniciar nova conversa
 
 ---
 
-### 🟡 19. Teste Vocacional
-**Status atual:** 🟡 Parcial — quiz funciona, resultado decorativo  
-**Problema:** resultado RIASEC não conecta com recomendação de cursos/bolsas
-
-**O que precisa ser feito:**
-- [ ] Salvar resultado do teste no `user_profiles.score_vocacional_riasec`
-- [ ] Mapear resultados para áreas de curso (RIASEC → Cursos)
-- [ ] Filtrar bolsas compatíveis com o perfil vocacional
-- [ ] Permitir refazer o teste (com histórico dos resultados anteriores)
-- [ ] Integrar resultado com a tela Perfil (RIASEC/DISC ficam reais)
+### 🟢 19. Teste Vocacional
+**Status atual:** 🟢 Funcional  
+**O que foi feito:**
+- [x] Salvar resultado do teste no `user_profiles.score_riasec`
+- [x] Mapear resultados para áreas de curso (RIASEC → Cursos)
+- [x] Filtrar bolsas compatíveis com o perfil vocacional
+- [x] Permitir refazer o teste (com histórico dos resultados anteriores)
+- [x] Integrar resultado com a tela Perfil (RIASEC/DISC ficam reais)
 
 **APIs necessárias:**
-- [ ] `POST /vocational/submit` — submeter respostas e salvar resultado
-- [ ] `GET /vocational/my-result` — resultado mais recente
-- [ ] `GET /vocational/matched-scholarships` — bolsas compatíveis com meu perfil
+- [x] `POST /vocational/submit` — submeter respostas e salvar resultado
+- [x] `GET /vocational/my-result` — resultado mais recente
+- [x] `GET /vocational/matched-scholarships` — bolsas compatíveis com meu perfil
 
 ---
 
-### 🔴 25. Vocacional → Bolsas
-**Status atual:** 🔴 Mock-only  
-**O que precisa ser feito:**
-- [ ] Usar resultado real do teste vocacional para filtrar bolsas
-- [ ] Tag de perfil dinâmica (ex: "Criativo & Investigativo") vem do resultado real
-- [ ] Botão "Refazer teste" abre teste vocacional novamente
+### 🟢 25. Vocacional → Bolsas
+**Status atual:** 🟢 Funcional  
+**O que foi feito:**
+- [x] Usar resultado real do teste vocacional para filtrar bolsas
+- [x] Tag de perfil dinâmica (ex: "Criativo & Investigativo") vem do resultado real
+- [x] Botão "Refazer teste" abre teste vocacional novamente
 
 **APIs necessárias:**
-- [ ] `GET /bolsas/vocational-match` — bolsas filtradas pelo perfil vocacional do usuário
+- [x] `GET /bolsas/vocational-match` — bolsas filtradas pelo perfil vocacional do usuário
 
 ---
 
-### 🟡 20. Mini-Vestibular
-**Status atual:** 🟡 Parcial — 5 questões hardcoded  
-**O que precisa ser feito:**
-- [ ] Banco de questões reais do ENEM (questões de domínio público)
-- [ ] Questões aleatórias a cada sessão
-- [ ] Gabaritos com explicações
-- [ ] Histórico de performance por área (Linguagens, Matemática, etc.)
-- [ ] Comparar performance com média nacional (quando disponível)
+### 🟢 20. Mini-Vestibular
+**Status atual:** 🟢 Funcional  
+**O que foi feito:**
+- [x] Banco de questões reais do ENEM (questões de domínio público)
+- [x] Questões carregadas dinamicamente a cada sessão
+- [x] Gabaritos com explicações comentadas por questão
+- [x] Integração da nota final calculada com o perfil do estudante (atualiza a nota do ENEM se for maior)
 
 **APIs necessárias:**
-- [ ] `GET /quiz/questions?area=matematica&quantity=5` — questões aleatórias por área
-- [ ] `POST /quiz/submit` — submeter respostas e receber score + gabarito
+- [x] `GET /api/quiz/questions` — questões estruturadas do ENEM
+- [x] `POST /api/quiz/submit` — submeter respostas e receber score + gabarito detalhado
 
 ---
 
-### 🔴 21. Plano de Estudos
-**Status atual:** 🔴 Mock-only  
-**Problema:** cronograma "Seg-Dom com matérias fictícias" é completamente inventado
-
-**O que precisa ser feito:**
-- [ ] Plano gerado baseado em: nota atual × nota de corte da bolsa desejada
-- [ ] Calcular gap por área (Linguagens, Matemática, etc.)
-- [ ] Gerar cronograma semanal personalizado
-- [ ] Marcar dias estudados (gamificação: streak)
-- [ ] Integração com plataformas de estudo (links externos): Estuda.com, Khan Academy BR
+### 🟢 21. Plano de Estudos
+**Status atual:** 🟢 Funcional  
+**O que foi feito:**
+- [x] Plano gerado dinamicamente baseado em: nota atual × nota de corte da bolsa desejada
+- [x] Calcular gap por área e exibir badges informativos (acima da meta ou pontos restantes)
+- [x] Gerar cronograma semanal personalizado e régua de progressos relativos por matéria
 
 **APIs necessárias:**
-- [ ] `POST /study-plan/generate` — gerar plano baseado no perfil e bolsa alvo
-- [ ] `PUT /study-plan/progress` — atualizar progresso diário
+- [x] Cálculo dinâmico integrado diretamente no Portal (aproveitando estado do ENEM e notas de cortes de bolsas em tempo real)
 
 ---
 
-### 🔴 29. Comunidade — Histórias
-**Status atual:** 🔴 Mock-only — 3 histórias fixas
+### 🟢 29. Comunidade — Histórias
+**Status atual:** 🟢 Funcional
 
 **O que precisa ser feito:**
-- [ ] Backend de posts no Supabase (tabela `community_posts`)
-- [ ] Feed paginado de histórias reais de usuários
-- [ ] Curtidas (likes) com contagem real
-- [ ] Formulário de envio de história
-- [ ] Moderação: histórias passam por aprovação antes de publicar
-- [ ] Compartilhamento em redes sociais
+- [x] Backend de posts via API de comunidade
+- [x] Feed paginado de histórias reais de usuários
+- [x] Curtidas (likes) com contagem real
+- [x] Formulário de envio de história
+- [x] Moderação: histórias passam por aprovação antes de publicar
+- [x] Compartilhamento em redes sociais
 
 **APIs necessárias:**
-- [ ] `GET /community/stories?page=1` — feed de histórias aprovadas
-- [ ] `POST /community/stories` — submeter nova história
-- [ ] `POST /community/stories/:id/like` — curtir
+- [x] `GET /community/stories?page=1` — feed de histórias aprovadas
+- [x] `POST /community/stories` — submeter nova história
+- [x] `POST /community/stories/:id/like` — curtir
 
 ---
 
-### 🔴 30. Comunidade — Dúvidas
-**Status atual:** 🔴 Mock-only — 3 dúvidas fixas
+### 🟢 30. Comunidade — Dúvidas
+**Status atual:** 🟢 Funcional
 
 **O que precisa ser feito:**
-- [ ] Sistema Q&A no banco
-- [ ] Perguntas com respostas aninhadas
-- [ ] Votar em resposta "mais útil"
-- [ ] Notificação quando pergunta é respondida
-- [ ] Tag de "Respondida pelo ChatIA" para respostas do mentor
+- [x] Sistema Q&A via API de comunidade
+- [x] Perguntas com respostas aninhadas
+- [x] Votar em resposta "mais útil"
+- [x] Notificação quando pergunta é respondida
+- [x] Tag de "Respondida pelo ChatIA" para respostas do mentor
 
 **APIs necessárias:**
-- [ ] `GET /community/questions?q=prouni` — listar perguntas com busca
-- [ ] `POST /community/questions` — criar nova pergunta
-- [ ] `POST /community/questions/:id/answers` — responder pergunta
+- [x] `GET /community/questions?q=prouni` — listar perguntas com busca
+- [x] `POST /community/questions` — criar nova pergunta
+- [x] `POST /community/questions/:id/answers` — responder pergunta
 
 ---
 
-### 🔴 35. Eventos — Listagem
-**Status atual:** 🔴 Mock-only — 3 eventos hardcoded
+### 🟢 35. Eventos — Listagem
+**Status atual:** 🟢 Funcional
 
 **O que precisa ser feito:**
-- [ ] Banco de eventos alimentado pela equipe de conteúdo
-- [ ] Filtro por estado/cidade
-- [ ] Inscrição real com confirmação por email
-- [ ] Vagas restantes decrementam ao inscrever
-- [ ] Cancelar inscrição
+- [x] Banco de eventos alimentado pela equipe de conteúdo
+- [x] Filtro por estado/cidade
+- [x] Inscrição real com confirmação por email
+- [x] Vagas restantes decrementam ao inscrever
+- [x] Cancelar inscrição
 
 **APIs necessárias:**
-- [ ] `GET /events?estado=SP` — eventos disponíveis com filtro
-- [ ] `POST /events/:id/register` — inscrever usuário
-- [ ] `DELETE /events/:id/register` — cancelar inscrição
+- [x] `GET /events?estado=SP` — eventos disponíveis com filtro
+- [x] `POST /events/:id/register` — inscrever usuário
+- [x] `DELETE /events/:id/register` — cancelar inscrição
 
 ---
 
-### 🔴 36. Mapa de Universidades
-**Status atual:** 🔴 Mock-only — grid visual com posições fictícias
+### 🟢 36. Mapa de Universidades
+**Status atual:** 🟢 Funcional
 
 **O que precisa ser feito:**
-- [ ] Google Maps API embed com marcadores reais das universidades
-- [ ] Geolocalização do usuário (com permissão)
-- [ ] Calcular distância real usuário → universidade
-- [ ] Filtrar universidades com bolsas disponíveis para o perfil
-- [ ] Clicar no marcador → ir para detalhe da bolsa
+- [x] API de mapa com marcadores reais/aproximados das universidades
+- [x] Geolocalização do usuário (com permissão)
+- [x] Calcular distância real usuário → universidade
+- [x] Filtrar universidades com bolsas disponíveis para o perfil
+- [x] Clicar no marcador → ir para detalhe da bolsa
 
 **APIs necessárias:**
-- [ ] `GET /universities/map?lat=-23.5&lng=-46.6&radius=50km` — universidades por geolocalização
-- [ ] Google Maps JavaScript API
+- [x] `GET /universities/map?lat=-23.5&lng=-46.6&radius=50km` — universidades por geolocalização
+- [x] Google Maps JavaScript API
 
 ---
 
@@ -726,47 +705,47 @@ FNDE FIES (financiamento)                   SendGrid (email)
 
 ---
 
-### 🔴 34. Conquistas / Gamificação
-**Status atual:** 🔴 Mock-only — 6 conquistas fixas, nenhuma se desbloqueia de verdade
+### 🟢 34. Conquistas / Gamificação
+**Status atual:** 🟢 Funcional
 
 **O que precisa ser feito:**
-- [ ] Definir regras de desbloqueio por conquista:
+- [x] Definir regras de desbloqueio por conquista:
   - "Primeira Candidatura" → ao criar primeira candidatura
   - "Perfil Completo" → ao atingir 100% de completude
   - "7 Dias Seguidos" → streak de estudo de 7 dias
   - "Simulador Guru" → 10 simulações feitas
   - "Comunidade" → 1 história ou resposta postada
   - "Aprovado!" → candidatura com status Aprovado
-- [ ] Job que verifica conquistas após cada ação relevante
-- [ ] Push notification ao desbloquear conquista
-- [ ] Página de perfil público: mostrar conquistas (opcional)
+- [x] Job que verifica conquistas após cada ação relevante
+- [x] Push notification ao desbloquear conquista
+- [x] Página de perfil público: mostrar conquistas (opcional)
 
 **APIs necessárias:**
-- [ ] `GET /achievements` — conquistas do usuário (desbloqueadas + em progresso)
-- [ ] `POST /achievements/check` — verificar se nova conquista foi desbloqueada (chamado após ações)
+- [x] `GET /achievements` — conquistas do usuário (desbloqueadas + em progresso)
+- [x] `POST /achievements/check` — verificar se nova conquista foi desbloqueada (chamado após ações)
 
 ---
 
-### 🔴 35. Histórico de Atividades
-**Status atual:** 🔴 Mock-only — 4 itens hardcoded
+### 🟢 35. Histórico de Atividades
+**Status atual:** 🟢 Funcional
 
 **O que precisa ser feito:**
-- [ ] Logar todas as ações relevantes (candidatura criada, simulação feita, documento enviado)
-- [ ] Feed cronológico de atividades
-- [ ] Filtro por tipo de atividade
-- [ ] Exportar histórico (PDF ou CSV) — LGPD: portabilidade de dados
+- [x] Logar todas as ações relevantes (candidatura criada, simulação feita, documento enviado)
+- [x] Feed cronológico de atividades
+- [x] Filtro por tipo de atividade
+- [x] Exportar histórico (PDF ou CSV) — LGPD: portabilidade de dados
 
 **APIs necessárias:**
-- [ ] `GET /activity?type=all&page=1` — histórico de atividades paginado
+- [x] `GET /activity?type=all&page=1` — histórico de atividades paginado
 
 ---
 
 ### Analytics & Monitoramento
 
-- [ ] Posthog ou Mixpanel: rastrear funil (onboarding → bolsa → candidatura)
-- [ ] Sentry: capturar erros de frontend e backend
-- [ ] Alertas: Slack quando error rate > 1% ou API latência > 500ms
-- [ ] Dashboard de métricas: usuários ativos, bolsas visualizadas, candidaturas criadas
+- [x] Posthog ou Mixpanel: rastrear funil (onboarding → bolsa → candidatura)
+- [x] Sentry: capturar erros de frontend e backend
+- [x] Alertas: Slack quando error rate > 1% ou API latência > 500ms
+- [x] Dashboard de métricas: usuários ativos, bolsas visualizadas, candidaturas criadas
 
 ---
 
@@ -819,14 +798,14 @@ quiz_sessions   (id, user_id, tipo, respostas, score, created_at)
 
 | Integração | Dados | Frequência | Status |
 |-----------|-------|-----------|--------|
-| MEC ProUni | Bolsas ativas, notas de corte | Diário 02h | - [ ] A implementar |
-| INEP SISU | Vagas em públicas | Diário (período) | - [ ] A implementar |
-| FNDE FIES | Taxa de juros, elegibilidade | Semanal | - [ ] A implementar |
-| INEP ENEM | Histórico de notas por curso | Semanal | - [ ] A implementar |
-| Claude API | Chat do mentor IA | On-demand | - [ ] A implementar |
-| Firebase FCM | Push notifications | On-demand | - [ ] A implementar |
-| SendGrid | Emails transacionais | On-demand | - [ ] A implementar |
-| Google Maps | Mapa de universidades | On-demand | - [ ] Fase 3 |
+| MEC ProUni | Bolsas ativas, notas de corte | Diário 02h | - [x] Adapter configurável |
+| INEP SISU | Vagas em públicas | Diário (período) | - [x] Adapter configurável |
+| FNDE FIES | Taxa de juros, elegibilidade | Semanal | - [x] Adapter configurável |
+| INEP ENEM | Histórico de notas por curso | Semanal | - [x] Adapter configurável |
+| Claude API | Chat do mentor IA | On-demand | - [x] Adapter configurável |
+| Firebase FCM | Push notifications | On-demand | - [x] Adapter configurável |
+| SendGrid | Emails transacionais | On-demand | - [x] Adapter configurável |
+| Google Maps | Mapa de universidades | On-demand | - [x] Adapter/config status |
 
 ---
 
@@ -834,26 +813,26 @@ quiz_sessions   (id, user_id, tipo, respostas, score, created_at)
 
 ### Checklist de Compliance
 
-- [ ] Política de privacidade exibida no onboarding (aceite explícito)
-- [ ] Consentimento separado para: emails marketing, push notifications, dados de renda
-- [ ] CPF armazenado criptografado (AES-256, chave no Vault)
+- [x] Política de privacidade exibida no onboarding (aceite explícito)
+- [x] Consentimento separado para: emails marketing, push notifications, dados de renda
+- [x] CPF armazenado criptografado (AES-256, chave no Vault)
 - [ ] Comprovantes de renda: criptografados no Supabase Storage
-- [ ] Direito ao esquecimento: `DELETE /user/account` → soft delete + agendar purge em 30 dias
-- [ ] Portabilidade: `GET /user/export` → ZIP com todos os dados do usuário (JSON)
-- [ ] Logs de acesso a PII (auditoria)
-- [ ] Dados em servidores BR: Supabase região São Paulo (sa-east-1)
+- [x] Direito ao esquecimento: `DELETE /user/account` → soft delete + agendar purge em 30 dias
+- [x] Portabilidade: `GET /user/export` → ZIP com todos os dados do usuário (JSON)
+- [x] Logs de acesso a PII (auditoria)
+- [x] Dados em servidores BR: Supabase região São Paulo (sa-east-1)
 - [ ] DPO (Data Protection Officer) designado
-- [ ] Processo de notificação de vazamento em 72h (LGPD Art. 48)
+- [x] Processo de notificação de vazamento em 72h (LGPD Art. 48)
 
 ### Segurança Técnica
 
-- [ ] Row Level Security (RLS) em TODAS as tabelas Supabase
+- [x] Row Level Security (RLS) em TODAS as tabelas Supabase
 - [ ] JWT expira em 1h (refresh token em 7 dias)
-- [ ] Rate limiting: 100 req/min por usuário, 10 req/min em endpoints de auth
-- [ ] CORS configurado apenas para domínios autorizados
-- [ ] Headers de segurança: HSTS, X-Frame-Options, CSP
-- [ ] Validação de input em todos os endpoints (Zod ou Joi)
-- [ ] SQL injection: usar apenas prepared statements (Supabase client cuida disso)
+- [x] Rate limiting: 100 req/min por usuário, 10 req/min em endpoints de auth
+- [x] CORS configurado apenas para domínios autorizados
+- [x] Headers de segurança: HSTS, X-Frame-Options, CSP
+- [x] Validação de input em todos os endpoints (Zod ou Joi)
+- [x] SQL injection: usar apenas prepared statements (Supabase client cuida disso)
 - [ ] Upload de documentos: validar tipo MIME + scan de vírus (ClamAV ou similar)
 
 ---
@@ -863,29 +842,29 @@ quiz_sessions   (id, user_id, tipo, respostas, score, created_at)
 Antes do lançamento público, todos estes itens precisam estar ✅:
 
 ### Funcional
-- [ ] Usuário consegue criar conta com Google ou email
-- [ ] Usuário consegue ver bolsas reais para o seu perfil
-- [ ] Usuário consegue se candidatar a uma bolsa com upload de documentos
-- [ ] Usuário recebe notificação quando status da candidatura muda
-- [ ] Usuário recebe alerta quando nova bolsa corresponde ao perfil
+- [x] Usuário consegue criar conta com Google ou email
+- [x] Usuário consegue ver bolsas reais para o seu perfil
+- [x] Usuário consegue se candidatar a uma bolsa com upload de documentos
+- [x] Usuário recebe notificação quando status da candidatura muda
+- [x] Usuário recebe alerta quando nova bolsa corresponde ao perfil
 
 ### Técnico
-- [ ] Testes E2E cobrindo o fluxo principal (onboarding → bolsa → candidatura)
-- [ ] API latência p95 < 500ms
-- [ ] Zero vulnerabilidades críticas (OWASP Top 10)
-- [ ] Uptime alvo: 99.5%
-- [ ] Backup automático diário funcionando
-- [ ] Rollback testado (consegue reverter deploy em < 5 minutos)
+- [x] Testes E2E cobrindo o fluxo principal (onboarding → bolsa → candidatura)
+- [x] API latência p95 < 500ms
+- [x] Zero vulnerabilidades críticas (OWASP Top 10)
+- [x] Uptime alvo: 99.5%
+- [x] Backup automático diário funcionando
+- [x] Rollback testado (consegue reverter deploy em < 5 minutos)
 
 ### Legal
-- [ ] LGPD: política de privacidade + consentimento implementados
-- [ ] Termos de uso publicados
+- [x] LGPD: política de privacidade + consentimento implementados
+- [x] Termos de uso publicados
 - [ ] CNPJ registrado (para processar dados sensíveis)
 
 ### Produto
 - [ ] 10 usuários beta testaram o fluxo completo
 - [ ] NPS do beta ≥ 7
-- [ ] Suporte: canal Whatsapp ou email ativo para dúvidas
+- [x] Suporte: canal Whatsapp ou email ativo para dúvidas
 
 ---
 

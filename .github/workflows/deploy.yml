@@ -39,6 +39,18 @@ jobs:
         working-directory: ./backend
         run: node --check index.js
 
+      - name: Run Backend Smoke Tests
+        working-directory: ./backend
+        run: npm test
+
+      - name: Audit Critical Vulnerabilities
+        working-directory: ./backend
+        run: npm run audit:critical
+
+      - name: Rollback Smoke Check
+        working-directory: ./backend
+        run: npm run smoke:rollback
+
   deploy-frontend:
     needs: audit-and-test
     runs-on: ubuntu-latest

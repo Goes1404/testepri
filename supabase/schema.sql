@@ -15,6 +15,8 @@ create table public.users (
     email text not null,
     nome_completo text,
     avatar_url text,
+    deleted_at timestamp with time zone,
+    purge_after timestamp with time zone,
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
@@ -30,6 +32,7 @@ create table public.user_profiles (
     cotas jsonb default '{}'::jsonb,
     score_riasec jsonb default '{}'::jsonb,
     cursos_interesse text[] default '{}'::text[],
+    consents jsonb default '{}'::jsonb,
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
@@ -90,6 +93,7 @@ create table public.documents (
     tipo text not null, -- RG, CPF, Historico Escolar, Comprovante de Renda, ENEM, etc.
     status text default 'pending'::text not null, -- pending, approved, rejected, ai
     file_url text,
+    metadata jsonb default '{}'::jsonb,
     uploaded_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
@@ -101,6 +105,17 @@ create table public.notifications (
     titulo text not null,
     corpo text not null,
     read_at timestamp with time zone,
+    created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- Audit logs for PII access and LGPD-sensitive actions
+create table public.audit_logs (
+    id uuid default gen_random_uuid() primary key,
+    user_id uuid references public.users(id) on delete set null,
+    action text not null,
+    resource text not null,
+    ip_address text,
+    user_agent text,
     created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
@@ -133,6 +148,62 @@ create table public.events (
     cidade text not null,
     estado text not null
 );
+
+-- NPS beta responses (Roadmap Final - Fase 4, item 7)
+create table public.nps_responses (
+    id uuid default gen_random_uuid() primary key,
+    user_id uuid references public.users(id) on delete set null,
+    score integer not null check (score >= 0 and score <= 10),
+    comentario text,
+    created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+alter table public.nps_responses enable row level security;
+
+create policy "Users can insert own nps response" on public.nps_responses
+    for insert with check (auth.uid() = user_id);
+
+create policy "Users can read own nps response" on public.nps_responses
+    for select using (auth.uid() = user_id);
+
+-- Row Level Security baseline
+alter table public.users enable row level security;
+alter table public.user_profiles enable row level security;
+alter table public.applications enable row level security;
+alter table public.documents enable row level security;
+alter table public.notifications enable row level security;
+alter table public.alerts enable row level security;
+alter table public.audit_logs enable row level security;
+
+create policy "Users can read own user row" on public.users
+    for select using (auth.uid() = id);
+
+create policy "Users can update own user row" on public.users
+    for update using (auth.uid() = id);
+
+create policy "Users can manage own profile" on public.user_profiles
+    for all using (auth.uid() = user_id);
+
+create policy "Users can manage own applications" on public.applications
+    for all using (auth.uid() = user_id);
+
+create policy "Users can manage own documents" on public.documents
+    for all using (
+        exists (
+            select 1 from public.applications a
+            where a.id = documents.application_id
+            and a.user_id = auth.uid()
+        )
+    );
+
+create policy "Users can manage own notifications" on public.notifications
+    for all using (auth.uid() = user_id);
+
+create policy "Users can manage own alerts" on public.alerts
+    for all using (auth.uid() = user_id);
+
+create policy "Users can read own audit logs" on public.audit_logs
+    for select using (auth.uid() = user_id);
 
 -- Event Registrations table
 create table public.event_registrations (
@@ -202,6 +273,45 @@ create table public.quiz_sessions (
 );
 
 -- ═══════════════════════════════════════════════════════════════
+alter table public.events enable row level security;
+alter table public.event_registrations enable row level security;
+alter table public.community_posts enable row level security;
+alter table public.community_answers enable row level security;
+alter table public.achievements enable row level security;
+alter table public.activity_log enable row level security;
+alter table public.vocational_results enable row level security;
+alter table public.quiz_sessions enable row level security;
+
+create policy "Public can read events" on public.events
+    for select using (true);
+
+create policy "Users can manage own event registrations" on public.event_registrations
+    for all using (auth.uid() = user_id);
+
+create policy "Public can read approved community posts" on public.community_posts
+    for select using (aprovado = true or auth.uid() = user_id);
+
+create policy "Users can create own community posts" on public.community_posts
+    for insert with check (auth.uid() = user_id);
+
+create policy "Public can read community answers" on public.community_answers
+    for select using (true);
+
+create policy "Users can create own community answers" on public.community_answers
+    for insert with check (auth.uid() = user_id);
+
+create policy "Users can manage own achievements" on public.achievements
+    for all using (auth.uid() = user_id);
+
+create policy "Users can manage own activity log" on public.activity_log
+    for all using (auth.uid() = user_id);
+
+create policy "Users can manage own vocational results" on public.vocational_results
+    for all using (auth.uid() = user_id);
+
+create policy "Users can manage own quiz sessions" on public.quiz_sessions
+    for all using (auth.uid() = user_id);
+
 -- 3. TRIGGERS & FUNCTIONS
 -- ═══════════════════════════════════════════════════════════════
 

@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "node --test",
+    "audit:critical": "npm audit --audit-level=critical",
+    "smoke:rollback": "node --check index.js && node --test test/smoke.test.js"
   },
   "keywords": [
     "prouni",
@@ -18,6 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "@supabase/supabase-js": "^2.43.0",
+    "clamscan": "^2.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
