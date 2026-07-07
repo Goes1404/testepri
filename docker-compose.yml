@@ -1,6 +1,6 @@
 services:
   clamav:
-    image: clamav/clamav:1.3
+    image: clamav/clamav:stable
     container_name: portal-clamav
     restart: unless-stopped
     ports:

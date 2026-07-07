@@ -3359,17 +3359,28 @@
 const SUPABASE_URL = window.ENV_SUPABASE_URL || localStorage.getItem('supabase-url') || 'https://your-project.supabase.co';
 const SUPABASE_ANON_KEY = window.ENV_SUPABASE_ANON_KEY || localStorage.getItem('supabase-anon-key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.mock';
 const supabaseClient = (window.supabase && SUPABASE_URL.indexOf('your-project') === -1)
-  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    })
   : null;
+
+async function getSupabaseSession() {
+  if (!supabaseClient) return null;
+  const { data, error } = await supabaseClient.auth.getSession();
+  if (error) throw error;
+  return data.session || null;
+}
 
 async function trackEvent(event, properties = {}) {
   try {
     const baseUrl = window.ENV_API_URL || localStorage.getItem('api-url') || 'http://localhost:5000';
     const headers = { 'Content-Type': 'application/json' };
-    if (supabaseClient) {
-      const session = (await supabaseClient.auth.getSession()).data.session;
-      if (session?.access_token) headers.Authorization = `Bearer ${session.access_token}`;
-    }
+    const session = await getSupabaseSession();
+    if (session?.access_token) headers.Authorization = `Bearer ${session.access_token}`;
     await fetch(`${baseUrl}/api/telemetry/event`, {
       method: 'POST',
       headers,
@@ -3406,11 +3417,9 @@ async function fetchAPI(endpoint, options = {}) {
     'Content-Type': 'application/json',
     ...options.headers
   };
-  if (supabaseClient) {
-    const session = (await supabaseClient.auth.getSession()).data.session;
-    if (session?.access_token) {
-      headers['Authorization'] = `Bearer ${session.access_token}`;
-    }
+  const session = await getSupabaseSession();
+  if (session?.access_token) {
+    headers['Authorization'] = `Bearer ${session.access_token}`;
   }
   const response = await fetch(`${baseUrl}${endpoint}`, {
     ...options,

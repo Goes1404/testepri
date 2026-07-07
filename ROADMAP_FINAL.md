@@ -8,7 +8,7 @@
 - Roadmap completo atual: 297/304 tarefas concluidas
 - Restante estimado: 7 tarefas
 - Percentual restante: 2,3%
-- Atualizacao 2026-07-06: codigo de suporte para os itens 1, 2, 4, 5 e 7 ja implementado (upload real + signed URL, scan de virus, docker-compose do ClamAV, campos DPO/CNPJ no endpoint legal, tabela/rota de NPS, roteiro de teste do beta). Todos os 7 itens seguem bloqueados no "criterio de pronto" ate alguem com acesso externo (painel Supabase, decisao juridica, usuarios reais) executar o passo que falta — ver "Tarefas restantes" em cada item.
+- Atualizacao 2026-07-07: codigo de suporte para os itens 1, 2, 3, 4, 5 e 7 ja implementado (upload real + signed URL, scan de virus, docker-compose do ClamAV validado com EICAR real, renovacao de sessao no frontend, teste de token expirado no backend, campos DPO/CNPJ no endpoint legal, tabela/rota de NPS, roteiro de teste do beta). Os itens que dependem de acesso externo seguem bloqueados no "criterio de pronto" ate alguem com acesso ao painel Supabase, decisao juridica ou usuarios reais executar o passo que falta — ver "Tarefas restantes" em cada item.
 - Nao fabricamos CNPJ/DPO nem resultados de beta/NPS: sao dados juridicos e humanos reais, preencher fake quebraria compliance e mascararia a validacao. So a infraestrutura de codigo foi adiantada.
 
 ---
@@ -44,17 +44,18 @@
 
 ### 2. Scan de virus em uploads
 
-**Status: codigo pronto, falta ClamAV real em producao.**
+**Status: codigo pronto e validado localmente, falta ClamAV real em producao.**
 
 **Objetivo:** impedir armazenamento de arquivos maliciosos.
 
 **Feito:**
-- `backend/src/services/virusScan.js`: se `CLAMAV_HOST` estiver configurado, escaneia via `clamscan`/clamd; sem isso, cai para deteccao de assinatura EICAR (suficiente para o criterio de teste, mas nao substitui um AV real em producao).
+- `backend/src/services/virusScan.js`: se `CLAMAV_HOST` estiver configurado, escaneia via `clamd` por stream TCP; sem isso, cai para deteccao de assinatura EICAR (suficiente para o criterio de teste automatizado, mas nao substitui um AV real em producao).
 - `POST /api/applications/:id/documents` roda o scan antes do upload; arquivo infectado vira `status: 'rejected'` (HTTP 422) e nunca chega ao Storage; resultado do scan (`engine`, `clean`, `virusName`) fica em `documents.metadata.scan`.
 - Teste automatizado: `backend/test/virusScan.test.js` (PDF limpo aceito, EICAR rejeitado).
+- Teste real local em 2026-07-07: `docker compose up -d clamav` deixou `portal-clamav` em `running healthy`; EICAR foi detectado como `Eicar-Test-Signature` via `clamdscan` e via `scanBuffer` com `engine: 'clamav'`.
 
 **Tarefas restantes:**
-- `docker-compose.yml` (raiz do repo) ja sobe um `clamav/clamav` real: `docker compose up -d clamav` + `CLAMAV_HOST=localhost` no `.env` liga o scan real (nao pude rodar aqui, ambiente sem Docker disponivel).
+- Aplicar a mesma configuracao no ambiente de producao/staging: `docker compose up -d clamav` ou servico equivalente + `CLAMAV_HOST`/`CLAMAV_PORT` no `.env`.
 
 **Dependencias:**
 - Ambiente com ClamAV/worker ou provedor de malware scanning.
@@ -70,12 +71,19 @@
 
 ### 3. JWT do Supabase com expiracao de 1h
 
+**Status: codigo/teste pronto, falta aplicar a expiracao no painel Supabase real.**
+
 **Objetivo:** configurar sessao de autenticacao conforme politica tecnica.
 
-**Tarefas:**
+**Feito:**
+- Backend valida todo Bearer token com `supabase.auth.getUser(token)` em `backend/src/middleware/auth.js`; token invalido ou expirado retorna `401`.
+- Teste automatizado: `backend/test/auth.test.js` cobre header ausente, token expirado/invalido e token valido.
+- Frontend inicializa Supabase Auth com `persistSession: true`, `autoRefreshToken: true` e `detectSessionInUrl: true`; chamadas API passam a buscar a sessao por helper central antes de enviar o Bearer token.
+
+**Tarefas restantes:**
 - Ajustar expiracao do access token para 3600s no painel Supabase Auth.
-- Validar refresh token e renovacao de sessao no frontend.
-- Testar comportamento com token expirado.
+- Validar em staging/producao que o refresh token renova a sessao apos 1h.
+- Testar manualmente com token expirado real emitido pelo Supabase.
 
 **Dependencias:**
 - Acesso admin ao projeto Supabase.
@@ -91,7 +99,7 @@
 
 ### 4. DPO designado
 
-**Status: endpoint pronto, falta a decisao/nome real.**
+**Status: endpoint/env/teste prontos, falta a decisao/nome real.**
 
 **Objetivo:** definir responsavel por protecao de dados.
 
@@ -100,6 +108,8 @@
 - ~~Configurar `DPO_EMAIL` no ambiente.~~ Ja lido de `process.env.DPO_EMAIL` em `/api/config/legal` (`backend/src/routes/config.js`) — falta so setar o valor real no `.env` de producao.
 - Publicar contato na politica de privacidade.
 - ~~Atualizar `/api/config/legal` com contato real.~~ Endpoint ja expoe `dataProtection.dpoEmail`.
+- `backend/.env.example` documenta as variaveis legais sem valores ficticios de DPO/CNPJ.
+- Teste automatizado: `backend/test/configLegal.test.js` garante que `/api/config/legal` publica DPO, suporte, URLs legais e entidade a partir do ambiente.
 
 **Dependencias:**
 - Decisao juridica/organizacional.
@@ -112,7 +122,7 @@
 
 ### 5. CNPJ registrado
 
-**Status: endpoint pronto, falta o dado juridico real.**
+**Status: endpoint/env/teste prontos, falta o dado juridico real.**
 
 **Objetivo:** formalizar entidade responsavel pelo tratamento de dados sensiveis.
 
@@ -120,6 +130,8 @@
 - Registrar ou associar CNPJ responsavel.
 - Atualizar termos de uso e politica de privacidade.
 - ~~Inserir razao social/CNPJ nos canais legais.~~ `/api/config/legal` ja expoe `entity.cnpj` e `entity.razaoSocial` (via env `CNPJ`/`RAZAO_SOCIAL`) — falta preencher com o CNPJ real.
+- `backend/.env.example` deixa `CNPJ` e `RAZAO_SOCIAL` vazios para evitar publicar dados fake por acidente.
+- Teste automatizado: `backend/test/configLegal.test.js` cobre a publicacao de `entity.cnpj` e `entity.razaoSocial` quando os valores reais forem configurados.
 
 **Dependencias:**
 - Processo contabil/juridico externo.

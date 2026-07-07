@@ -6,6 +6,7 @@
 // that is sufficient to prove the reject path works, but it will NOT catch
 // real malware. Do not treat the fallback as a production-grade AV.
 const EICAR_SIGNATURE = 'X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*';
+const { Readable } = require('stream');
 
 let clamscanClientPromise = null;
 
@@ -15,11 +16,16 @@ function getClamscanClient() {
     clamscanClientPromise = (async () => {
       const NodeClam = require('clamscan');
       const clamscan = await new NodeClam().init({
+        clamscan: {
+          active: false
+        },
         clamdscan: {
           host: process.env.CLAMAV_HOST,
           port: parseInt(process.env.CLAMAV_PORT || '3310', 10),
-          timeout: 30000
-        }
+          timeout: 30000,
+          localFallback: false
+        },
+        preference: 'clamdscan'
       });
       return clamscan;
     })();
@@ -34,7 +40,7 @@ async function scanBuffer(buffer) {
   if (clamscanPromise) {
     try {
       const clamscan = await clamscanPromise;
-      const { isInfected, viruses } = await clamscan.scanBuffer(buffer);
+      const { isInfected, viruses = [] } = await clamscan.scanStream(Readable.from([buffer]));
       return {
         clean: !isInfected,
         engine: 'clamav',
