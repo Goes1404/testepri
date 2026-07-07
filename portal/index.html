@@ -5519,13 +5519,31 @@ Assinatura: ___________________________`;
     const vestLabel = vestScore >= 700 ? 'Excelente' : vestScore >= 600 ? 'Bom' : 'Em desenvolvimento';
     const vestColor = vestScore >= 700 ? '#1F8A5B' : vestScore >= 600 ? '#4B2DA3' : '#C25BA0';
     const vestBolsas = bolsas.filter(b => b.corte === 0 || vestScore >= b.corte);
+    const VEST_EXPLICACOES = [
+      'Metáfora é uma comparação implícita. "A vida é uma batalha" equipara dois conceitos sem usar "como" ou "tal qual".',
+      'Se 2x + 4 = 12, então 2x = 8 e x = 4. Portanto x² = 16.',
+      'No governo de Juscelino Kubitschek (1956–1961), o Plano de Metas acelerou a industrialização com "50 anos em 5".',
+      'Na fotossíntese, plantas absorvem CO₂ e H₂O e produzem glicose (C₆H₁₂O₆) e oxigênio (O₂).',
+      'A tese — posição central do texto — deve ser apresentada na introdução para orientar todo o desenvolvimento.',
+    ];
+    const quizExplica = vestQ.map((q, i) => ({
+      area: q.area,
+      pergunta: q.q,
+      isCorrect: vAnswers[i] === VEST_CORRECT[i],
+      respostaAluno: q.opts[vAnswers[i]] || '—',
+      respostaCorreta: q.opts[VEST_CORRECT[i]],
+      explicacao: VEST_EXPLICACOES[i] || '',
+      path: vAnswers[i] === VEST_CORRECT[i]
+        ? 'M22 11.08V12a10 10 0 1 1-5.93-9.14M22 4L12 14.01l-3-3'
+        : 'M18 6L6 18M6 6l12 12',
+    }));
 
     // ── calculadora de custo real ──
     const custoTransporte = this.state.custoTransporte;
     const custoAlimentacao = this.state.custoAlimentacao;
     const custoMoradia = this.state.custoMoradia;
     const moradiaVal = custoMoradia ? 900 : 0;
-    const money2 = n => 'R$ ' + n.toLocaleString('pt-BR');
+    const money2 = n => 'R$ ' + (+(n) || 0).toLocaleString('pt-BR');
     const custoItems = bolsas.slice(0, 3).map(b => {
       const mensalidade = b.isSisu ? 0 : b.isFies ? Math.round(b.cheio * 0.5) : b.cheio - Math.round(b.cheio * b.pctNum / 100);
       const total = mensalidade + custoTransporte + custoAlimentacao + moradiaVal;
