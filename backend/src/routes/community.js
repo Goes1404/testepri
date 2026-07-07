@@ -2,6 +2,19 @@ const express = require('express');
 const router = express.Router();
 const { supabase } = require('../db');
 const { requireAuth } = require('../middleware/auth');
+const { moderateText } = require('../services/moderation');
+
+// Rejeita conteúdo bloqueado pelo moderador automático (ROADMAP Hub G)
+function rejectIfBlocked(res, ...texts) {
+  const { allowed } = moderateText(...texts);
+  if (!allowed) {
+    res.status(422).json({
+      error: 'Seu conteúdo contém termos que violam as diretrizes da comunidade. Revise o texto e tente novamente.'
+    });
+    return true;
+  }
+  return false;
+}
 
 // In-memory seed database fallback for offline demo resilience
 let communityPosts = [
@@ -226,6 +239,7 @@ router.post('/posts', requireAuth, async (req, res, next) => {
     if (!texto) {
       return res.status(400).json({ error: 'Conteúdo do post é obrigatório.' });
     }
+    if (rejectIfBlocked(res, title, texto)) return;
 
     const newPost = {
       id: 'post-' + Date.now(),
@@ -260,6 +274,7 @@ router.post('/stories', requireAuth, async (req, res, next) => {
     const ini = nome.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 
     if (!texto) return res.status(400).json({ error: 'Conteudo do post e obrigatorio.' });
+    if (rejectIfBlocked(res, texto)) return;
 
     const newPost = {
       id: 'post-' + Date.now(),
@@ -293,6 +308,7 @@ router.post('/questions', requireAuth, async (req, res, next) => {
     const ini = nome.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
 
     if (!texto) return res.status(400).json({ error: 'Conteudo da pergunta e obrigatorio.' });
+    if (rejectIfBlocked(res, texto)) return;
 
     const newPost = {
       id: 'post-' + Date.now(),
@@ -374,6 +390,7 @@ router.post('/posts/:id/comments', requireAuth, async (req, res, next) => {
     if (!texto) {
       return res.status(400).json({ error: 'Texto do comentário é obrigatório.' });
     }
+    if (rejectIfBlocked(res, texto)) return;
 
     const post = communityPosts.find(p => p.id === id);
     if (!post) {
@@ -408,6 +425,7 @@ router.post('/questions/:id/answers', requireAuth, async (req, res, next) => {
     const nome = req.user.nome || 'Aluno Anonimo';
 
     if (!texto) return res.status(400).json({ error: 'Texto da resposta e obrigatorio.' });
+    if (rejectIfBlocked(res, texto)) return;
 
     const post = communityPosts.find(p => p.id === id && p.type === 'question');
     if (!post) return res.status(404).json({ error: 'Pergunta nao encontrada.' });

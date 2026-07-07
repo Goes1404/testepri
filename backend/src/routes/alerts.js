@@ -181,12 +181,24 @@ async function syncAlerts() {
             text: body
           });
 
-          await sendPush({
-            token: alert.push_token || alert.criterios?.push_token,
-            title,
-            body,
-            data: { scholarship_id: String(s.id), alert_id: String(alert.id) }
-          });
+          // Envia push para todos os dispositivos registrados do usuário (tabela push_tokens)
+          const { data: tokens } = await supabase
+            .from('push_tokens')
+            .select('token')
+            .eq('user_id', alert.user_id);
+
+          const pushTokens = (tokens || []).map(t => t.token);
+          const legacyToken = alert.push_token || alert.criterios?.push_token;
+          if (legacyToken) pushTokens.push(legacyToken);
+
+          for (const token of pushTokens) {
+            await sendPush({
+              token,
+              title,
+              body,
+              data: { scholarship_id: String(s.id), alert_id: String(alert.id) }
+            }).catch(() => {});
+          }
 
           await supabase
             .from('alerts')

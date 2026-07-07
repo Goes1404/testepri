@@ -66,10 +66,35 @@ const QUESTIONS_ENEM = [
   }
 ];
 
+// Load questions from the quiz_questions table (see supabase/upgrade_producao.sql).
+// Falls back to the static array when the table is unavailable (local dev without DB).
+async function loadQuestions() {
+  try {
+    const { data, error } = await supabase
+      .from('quiz_questions')
+      .select('area, enunciado, alternativas, correta, explicacao')
+      .eq('ativo', true)
+      .order('id', { ascending: true });
+
+    if (!error && Array.isArray(data) && data.length > 0) {
+      return data.map(q => ({
+        area: q.area,
+        q: q.enunciado,
+        opts: q.alternativas,
+        correct: q.correta,
+        explicacao: q.explicacao
+      }));
+    }
+  } catch (e) {
+    // fall through to static fallback
+  }
+  return QUESTIONS_ENEM;
+}
+
 // GET /api/quiz/questions
 router.get('/questions', async (req, res) => {
-  // Return all questions (in random order or standard order)
-  res.json(QUESTIONS_ENEM);
+  const questions = await loadQuestions();
+  res.json(questions);
 });
 
 // POST /api/quiz/submit
@@ -82,8 +107,9 @@ router.post('/submit', requireAuth, async (req, res, next) => {
       return res.status(400).json({ error: 'Respostas inválidas.' });
     }
 
+    const questions = await loadQuestions();
     let correctCount = 0;
-    const results = QUESTIONS_ENEM.map((q, idx) => {
+    const results = questions.map((q, idx) => {
       const selected = answers[idx] !== undefined ? answers[idx] : -1;
       const isCorrect = selected === q.correct;
       if (isCorrect) correctCount++;
@@ -118,10 +144,22 @@ router.post('/submit', requireAuth, async (req, res, next) => {
       // Ignore
     }
 
+    // Persist the attempt for history/achievements (best effort)
+    try {
+      await supabase.from('quiz_sessions').insert({
+        user_id: userId,
+        tipo: 'vestibular',
+        respostas: answers,
+        score
+      });
+    } catch (e) {
+      // Ignore
+    }
+
     res.json({
       score,
       correctCount,
-      totalCount: QUESTIONS_ENEM.length,
+      totalCount: questions.length,
       results
     });
   } catch (err) {

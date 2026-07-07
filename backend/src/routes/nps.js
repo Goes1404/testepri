@@ -14,13 +14,29 @@ router.post('/', requireAuth, async (req, res, next) => {
       return res.status(400).json({ error: 'score deve ser um numero entre 0 e 10.' });
     }
 
-    const { data: response, error } = await supabase
+    const ciclo = process.env.NPS_CICLO || 'beta-2026';
+    let { data: response, error } = await supabase
       .from('nps_responses')
-      .insert({ user_id: userId, score: numericScore, comentario: comentario || null })
+      .insert({ user_id: userId, score: numericScore, comentario: comentario || null, ciclo })
       .select()
       .single();
 
-    if (error) return res.status(500).json({ error: error.message });
+    // Banco ainda sem a coluna ciclo (upgrade_producao.sql não aplicado): grava sem ela
+    if (error && /ciclo/i.test(error.message || '')) {
+      ({ data: response, error } = await supabase
+        .from('nps_responses')
+        .insert({ user_id: userId, score: numericScore, comentario: comentario || null })
+        .select()
+        .single());
+    }
+
+    if (error) {
+      // 23505 = unique_violation: usuário já respondeu neste ciclo (ROADMAP Hub J)
+      if (error.code === '23505') {
+        return res.status(409).json({ error: 'Você já enviou seu feedback neste ciclo de avaliação. Obrigado!' });
+      }
+      return res.status(500).json({ error: error.message });
+    }
 
     res.json({ message: 'Resposta registrada. Obrigado pelo feedback!', response });
   } catch (err) {

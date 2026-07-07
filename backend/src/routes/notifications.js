@@ -43,6 +43,31 @@ router.patch('/:id/read', requireAuth, async (req, res, next) => {
   }
 });
 
+// POST /api/notifications/push-token - Register FCM token for push notifications (ROADMAP Hub H)
+router.post('/push-token', requireAuth, async (req, res, next) => {
+  try {
+    const userId = req.user.id;
+    const { token, plataforma } = req.body;
+
+    if (!token || typeof token !== 'string' || token.length > 4096) {
+      return res.status(400).json({ error: 'Token FCM inválido.' });
+    }
+
+    const { error } = await supabase
+      .from('push_tokens')
+      .upsert(
+        { user_id: userId, token, plataforma: plataforma || 'web' },
+        { onConflict: 'token' }
+      );
+
+    if (error) return res.status(500).json({ error: error.message });
+
+    res.json({ success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // PATCH /api/notifications/read-all - Mark all as read
 router.patch('/read-all', requireAuth, async (req, res, next) => {
   try {

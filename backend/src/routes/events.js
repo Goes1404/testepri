@@ -2,6 +2,58 @@ const express = require('express');
 const router = express.Router();
 const { supabase } = require('../db');
 const { requireAuth } = require('../middleware/auth');
+const { sendEmail } = require('../services/integrations');
+
+// Gera arquivo .ics (iCalendar) para o aluno salvar o evento no Google Calendar/Outlook (ROADMAP Hub G)
+function buildIcs(event) {
+  const start = new Date(`${event.data}T${event.horario || '09:00'}:00-03:00`);
+  const end = new Date(start.getTime() + 2 * 60 * 60 * 1000); // duração padrão de 2h
+  const fmt = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  const escapeText = value => String(value || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\n/g, '\\n');
+
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//Portal do Aluno//Eventos//PT-BR',
+    'METHOD:PUBLISH',
+    'BEGIN:VEVENT',
+    `UID:${event.id}@portal-do-aluno`,
+    `DTSTAMP:${fmt(new Date())}`,
+    `DTSTART:${fmt(start)}`,
+    `DTEND:${fmt(end)}`,
+    `SUMMARY:${escapeText(event.titulo)}`,
+    `DESCRIPTION:${escapeText(event.descricao)}`,
+    `LOCATION:${escapeText(`${event.local} - ${event.cidade}/${event.estado}`)}`,
+    'END:VEVENT',
+    'END:VCALENDAR'
+  ].join('\r\n');
+}
+
+// Dispara e-mail de confirmação com anexo .ics (best effort — não bloqueia a inscrição)
+async function sendRegistrationEmail(user, event) {
+  if (!user?.email) return;
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: `Inscrição confirmada: ${event.titulo}`,
+      text: `Sua inscrição no evento "${event.titulo}" foi confirmada!\n\n` +
+        `Data: ${event.data} às ${event.horario}\n` +
+        `Local: ${event.local} - ${event.cidade}/${event.estado}\n` +
+        `Instituição: ${event.universidade}\n\n` +
+        `O convite de calendário (.ics) está anexado — abra-o para salvar o evento no Google Calendar ou Outlook.\n\n` +
+        `Equipe Portal do Aluno`,
+      attachments: [
+        {
+          filename: 'evento.ics',
+          type: 'text/calendar',
+          content: buildIcs(event)
+        }
+      ]
+    });
+  } catch (err) {
+    console.error('Falha ao enviar e-mail de confirmação de evento:', err.message);
+  }
+}
 
 // ─── In-memory seed events ───────────────────────────────────────
 let eventsDb = [
@@ -191,6 +243,9 @@ router.post('/:id/register', requireAuth, async (req, res) => {
 
     event.inscricoes.push(userId);
     event.vagas_disponiveis -= 1;
+
+    // Confirmação por e-mail com convite .ics (não bloqueia a resposta)
+    sendRegistrationEmail(req.user, event).catch(() => {});
 
     res.json({
       success: true,

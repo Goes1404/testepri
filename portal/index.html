@@ -6526,4 +6526,106 @@ Assinatura: ___________________________`;
 </script>
 
 
+<!-- ═══ LGPD: Banner de Consentimento de Cookies (ROADMAP — Compliance LGPD) ═══ -->
+<div id="lgpd-cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:99999;background:#1a1a2e;color:#fff;padding:16px 20px;box-shadow:0 -4px 20px rgba(0,0,0,.35);font-family:inherit;">
+  <div style="max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between;">
+    <p style="margin:0;flex:1 1 320px;font-size:.9rem;line-height:1.45;">
+      🍪 Usamos cookies e armazenamento local para manter sua sessão segura, lembrar preferências e melhorar sua experiência,
+      conforme a <strong>LGPD (Lei 13.709/2018)</strong>. Dados de navegação só são coletados com o seu consentimento.
+    </p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button id="lgpd-cookie-reject" style="background:transparent;color:#cbd5e1;border:1px solid #475569;border-radius:8px;padding:10px 16px;cursor:pointer;font-size:.85rem;">Apenas essenciais</button>
+      <button id="lgpd-cookie-accept" style="background:#6366f1;color:#fff;border:none;border-radius:8px;padding:10px 20px;cursor:pointer;font-weight:600;font-size:.85rem;">Aceitar todos</button>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var KEY = 'lgpd-cookie-consent';
+  var banner = document.getElementById('lgpd-cookie-banner');
+  if (!banner) return;
+
+  var stored = null;
+  try { stored = localStorage.getItem(KEY); } catch (e) {}
+
+  if (!stored) banner.style.display = 'block';
+
+  function saveConsent(value) {
+    try {
+      localStorage.setItem(KEY, JSON.stringify({ value: value, at: new Date().toISOString() }));
+    } catch (e) {}
+    banner.style.display = 'none';
+    window.LGPD_ANALYTICS_ALLOWED = value === 'all';
+  }
+
+  try {
+    window.LGPD_ANALYTICS_ALLOWED = stored ? JSON.parse(stored).value === 'all' : false;
+  } catch (e) {
+    window.LGPD_ANALYTICS_ALLOWED = false;
+  }
+
+  document.getElementById('lgpd-cookie-accept').addEventListener('click', function () { saveConsent('all'); });
+  document.getElementById('lgpd-cookie-reject').addEventListener('click', function () { saveConsent('essential'); });
+})();
+</script>
+
+<!-- ═══ Firebase Cloud Messaging: registro de push (ROADMAP Hub H) ═══ -->
+<script>
+// Ativa notificações push quando houver configuração do Firebase disponível.
+// Configure window.ENV_FIREBASE_CONFIG (objeto do app web Firebase, incluindo vapidKey)
+// ou salve JSON em localStorage 'firebase-config'.
+window.initPushNotifications = async function () {
+  try {
+    var cfg = window.ENV_FIREBASE_CONFIG || JSON.parse(localStorage.getItem('firebase-config') || 'null');
+    if (!cfg || !cfg.projectId || !('serviceWorker' in navigator) || !('Notification' in window)) {
+      return { skipped: true, reason: 'Firebase não configurado ou navegador sem suporte.' };
+    }
+
+    var permission = await Notification.requestPermission();
+    if (permission !== 'granted') return { skipped: true, reason: 'Permissão negada.' };
+
+    var swUrl = 'firebase-messaging-sw.js?config=' + encodeURIComponent(JSON.stringify(cfg));
+    var registration = await navigator.serviceWorker.register(swUrl);
+
+    // Carrega SDK compat do Firebase sob demanda
+    async function loadScript(src) {
+      return new Promise(function (resolve, reject) {
+        var s = document.createElement('script');
+        s.src = src; s.onload = resolve; s.onerror = reject;
+        document.head.appendChild(s);
+      });
+    }
+    if (!window.firebase || !window.firebase.messaging) {
+      await loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');
+      await loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging-compat.js');
+    }
+
+    if (!window.firebase.apps.length) window.firebase.initializeApp(cfg);
+    var messaging = window.firebase.messaging();
+    var token = await messaging.getToken({
+      vapidKey: cfg.vapidKey,
+      serviceWorkerRegistration: registration
+    });
+    if (!token) return { skipped: true, reason: 'Token FCM não emitido.' };
+
+    // Registra o token no backend para receber alertas de vagas
+    var baseUrl = window.ENV_API_URL || localStorage.getItem('api-url') || 'http://localhost:5000';
+    var session = null;
+    try { session = (await window.supabaseClient.auth.getSession()).data.session; } catch (e) {}
+    await fetch(baseUrl + '/api/notifications/push-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': session ? 'Bearer ' + session.access_token : ''
+      },
+      body: JSON.stringify({ token: token, plataforma: 'web' })
+    });
+
+    return { success: true };
+  } catch (err) {
+    console.warn('initPushNotifications falhou:', err);
+    return { error: String(err && err.message || err) };
+  }
+};
+</script>
 </body></html>

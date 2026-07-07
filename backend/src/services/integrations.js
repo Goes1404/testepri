@@ -20,9 +20,12 @@ async function postJson(url, headers, body) {
   return response.json();
 }
 
-async function askClaude({ system, message, maxTokens = 700 }) {
+async function askClaude({ system, message, history = [], maxTokens = 700 }) {
   const apiKey = process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY;
   if (!apiKey) return null;
+
+  // Mitigação de custos (ROADMAP Hub E): no máximo 10 mensagens anteriores
+  const recentHistory = history.slice(-10);
 
   const data = await postJson(
     'https://api.anthropic.com/v1/messages',
@@ -34,14 +37,17 @@ async function askClaude({ system, message, maxTokens = 700 }) {
       model: process.env.ANTHROPIC_MODEL || 'claude-3-5-sonnet-latest',
       max_tokens: maxTokens,
       system,
-      messages: [{ role: 'user', content: message }]
+      messages: [
+        ...recentHistory,
+        { role: 'user', content: message }
+      ]
     }
   );
 
   return data.content?.map(part => part.text || '').join('\n').trim() || null;
 }
 
-async function sendEmail({ to, subject, text, html }) {
+async function sendEmail({ to, subject, text, html, attachments = [] }) {
   const apiKey = process.env.SENDGRID_API_KEY;
   const from = process.env.SENDGRID_FROM_EMAIL || process.env.SUPPORT_EMAIL;
   if (!apiKey || !from || !to) return { skipped: true };
@@ -56,7 +62,17 @@ async function sendEmail({ to, subject, text, html }) {
       content: [
         { type: 'text/plain', value: text || subject },
         ...(html ? [{ type: 'text/html', value: html }] : [])
-      ]
+      ],
+      ...(attachments.length > 0
+        ? {
+            attachments: attachments.map(att => ({
+              content: Buffer.from(att.content).toString('base64'),
+              filename: att.filename,
+              type: att.type || 'application/octet-stream',
+              disposition: 'attachment'
+            }))
+          }
+        : {})
     }
   );
 

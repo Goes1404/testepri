@@ -3,6 +3,9 @@ const cors = require('cors');
 const morgan = require('morgan');
 require('dotenv').config();
 
+const { initMonitoring, captureError } = require('./src/services/monitoring');
+initMonitoring();
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 const allowedOrigins = (process.env.CORS_ORIGINS || '*')
@@ -196,6 +199,7 @@ app.use('/api/nps', npsRoutes);
 // Error Handler
 app.use((err, req, res, next) => {
   console.error('Unhandled Server Error:', err);
+  captureError(err, { path: req.path, method: req.method });
   res.status(err.status || 500).json({
     error: err.message || 'Internal Server Error'
   });
