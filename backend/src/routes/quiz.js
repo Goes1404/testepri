@@ -68,7 +68,17 @@ const QUESTIONS_ENEM = [
 
 // Load questions from the quiz_questions table (see supabase/upgrade_producao.sql).
 // Falls back to the static array when the table is unavailable (local dev without DB).
+// Cache de 5 minutos: evita uma query por request e latência alta quando o banco
+// está indisponível (timeout de conexão a cada chamada).
+let questionsCache = { data: null, fetchedAt: 0 };
+const QUESTIONS_CACHE_TTL_MS = 5 * 60 * 1000;
+
 async function loadQuestions() {
+  const now = Date.now();
+  if (questionsCache.data && now - questionsCache.fetchedAt < QUESTIONS_CACHE_TTL_MS) {
+    return questionsCache.data;
+  }
+
   try {
     const { data, error } = await supabase
       .from('quiz_questions')
@@ -77,17 +87,24 @@ async function loadQuestions() {
       .order('id', { ascending: true });
 
     if (!error && Array.isArray(data) && data.length > 0) {
-      return data.map(q => ({
-        area: q.area,
-        q: q.enunciado,
-        opts: q.alternativas,
-        correct: q.correta,
-        explicacao: q.explicacao
-      }));
+      questionsCache = {
+        data: data.map(q => ({
+          area: q.area,
+          q: q.enunciado,
+          opts: q.alternativas,
+          correct: q.correta,
+          explicacao: q.explicacao
+        })),
+        fetchedAt: now
+      };
+      return questionsCache.data;
     }
   } catch (e) {
     // fall through to static fallback
   }
+
+  // Cacheia o fallback também (evita marteladas no banco indisponível)
+  questionsCache = { data: QUESTIONS_ENEM, fetchedAt: now };
   return QUESTIONS_ENEM;
 }
 

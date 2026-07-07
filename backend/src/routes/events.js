@@ -301,3 +301,4 @@ router.get('/user/registrations', requireAuth, async (req, res) => {
 });
 
 module.exports = router;
+module.exports.buildIcs = buildIcs; // exposto para testes

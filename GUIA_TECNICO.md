@@ -37,12 +37,18 @@ backend/
     monitoring.js           # Sentry opcional (SENTRY_DSN)
     storage.js              # Signed URLs (TTL 600s)
     virusScan.js            # ClamAV stream TCP
-  test/                     # node --test (auth, legal, smoke, virus scan)
+  test/                     # node --test (auth, legal, smoke, virus scan, moderação, ics)
+  scripts/
+    check-db.js             # Diagnóstico somente-leitura do banco (tabelas/contagens/buckets)
+    fetch-supabase-ca.js    # Extrai e fixa o CA TLS do pooler Supabase (cert pinning)
+    apply-delta.js          # Aplica supabase/delta_producao.sql via Postgres (TLS estrito)
 supabase/
   schema.sql                # Estrutura relacional + RLS (instalação nova)
   seed.sql                  # Universidades e cursos base
   storage_setup.sql         # Bucket privado documents
   upgrade_producao.sql      # Idempotente: quiz_questions, índices, triggers, push_tokens, NPS por ciclo
+  producao_completo.sql     # Arquivo único (schema+seed+storage+upgrade) p/ banco vazio
+  delta_producao.sql        # Delta idempotente p/ banco com schema base antigo
 .github/workflows/
   deploy.yml                # CI/CD: testes → deploy Vercel + Railway (branch main)
   backup.yml                # pg_dump diário 05:00 UTC, retenção 14 dias

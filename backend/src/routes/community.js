@@ -4,6 +4,19 @@ const { supabase } = require('../db');
 const { requireAuth } = require('../middleware/auth');
 const { moderateText } = require('../services/moderation');
 
+// Write-through: persiste o post no Supabase (community_posts) em segundo plano.
+// A leitura continua servida da memória (contrato do frontend inalterado);
+// a tabela garante durabilidade e histórico entre restarts/deploys.
+function persistPost(userId, tipo, titulo, corpo) {
+  supabase
+    .from('community_posts')
+    .insert({ user_id: userId, tipo, titulo: titulo || corpo.slice(0, 80), corpo, aprovado: true })
+    .then(({ error }) => {
+      if (error) console.warn('community write-through falhou:', error.message);
+    })
+    .catch(() => {});
+}
+
 // Rejeita conteúdo bloqueado pelo moderador automático (ROADMAP Hub G)
 function rejectIfBlocked(res, ...texts) {
   const { allowed } = moderateText(...texts);
@@ -260,6 +273,7 @@ router.post('/posts', requireAuth, async (req, res, next) => {
     };
 
     communityPosts.unshift(newPost);
+    persistPost(req.user.id, newPost.type, title, texto);
     res.json({ success: true, post: newPost });
   } catch (err) {
     next(err);
@@ -294,6 +308,7 @@ router.post('/stories', requireAuth, async (req, res, next) => {
     };
 
     communityPosts.unshift(newPost);
+    persistPost(req.user.id, 'historia', null, texto);
     res.json({ success: true, post: newPost });
   } catch (err) {
     next(err);
@@ -330,6 +345,7 @@ router.post('/questions', requireAuth, async (req, res, next) => {
     };
 
     communityPosts.unshift(newPost);
+    persistPost(req.user.id, 'duvida', null, texto);
     res.json({ success: true, question: newPost });
   } catch (err) {
     next(err);

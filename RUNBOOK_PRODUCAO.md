@@ -9,6 +9,10 @@ Procedimentos operacionais para colocar e manter o portal em produção. Públic
 ### 1.1 Supabase (≈ meio dia)
 1. Criar projeto de produção em https://supabase.com/dashboard (região `sa-east-1`).
 2. SQL Editor → executar **nesta ordem**: `supabase/schema.sql` → `supabase/seed.sql` → `supabase/storage_setup.sql` → `supabase/upgrade_producao.sql`.
+   - Banco vazio? `supabase/producao_completo.sql` faz tudo em uma colada só.
+   - Banco com schema base antigo? `supabase/delta_producao.sql` cria apenas o que falta (idempotente).
+   - Alternativa via terminal: `cd backend && node scripts/fetch-supabase-ca.js && node scripts/apply-delta.js` (exige `SUPABASE_DB_PASSWORD` no `.env`; TLS estrito com CA fixado).
+   - Diagnóstico do estado do banco a qualquer momento: `node backend/scripts/check-db.js`.
 3. Auth → Providers → Email: **habilitar "Confirm email"**.
 4. Auth → URL Configuration: Site URL e Redirect URLs = `https://aluno.SEUDOMINIO.com.br`.
 5. Anotar: `SUPABASE_URL`, `anon key`, `service_role key`, `JWT secret`, connection string (para backup).

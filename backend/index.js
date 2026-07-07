@@ -111,6 +111,14 @@ app.use((req, res, next) => {
   next();
 });
 
+// Evita crescimento sem limite do rate limit store (uma entrada por IP+rota)
+setInterval(() => {
+  const now = Date.now();
+  for (const [key, value] of rateLimitStore) {
+    if (now - value.startedAt > rateLimitWindowMs) rateLimitStore.delete(key);
+  }
+}, rateLimitWindowMs).unref();
+
 // Routes import
 const userRoutes = require('./src/routes/user');
 const bolsasRoutes = require('./src/routes/bolsas');
@@ -136,13 +144,27 @@ const telemetryRoutes = require('./src/routes/telemetry');
 const integrationsRoutes = require('./src/routes/integrations');
 const npsRoutes = require('./src/routes/nps');
 
-// Healthcheck
-app.get('/api/health', (req, res) => {
-  res.json({
+// Healthcheck (inclui verificação leve do banco quando ?deep=1)
+app.get('/api/health', async (req, res) => {
+  const payload = {
     status: 'ok',
     uptime: process.uptime(),
     timestamp: new Date().toISOString()
-  });
+  };
+
+  if (req.query.deep === '1') {
+    try {
+      const { supabase } = require('./src/db');
+      const { error } = await supabase.from('universities').select('id', { head: true, count: 'exact' }).limit(1);
+      payload.database = error ? 'error' : 'ok';
+      if (error) payload.status = 'degraded';
+    } catch (e) {
+      payload.database = 'unreachable';
+      payload.status = 'degraded';
+    }
+  }
+
+  res.json(payload);
 });
 
 app.get('/api/metrics', (req, res) => {
@@ -206,14 +228,25 @@ app.use((err, req, res, next) => {
 });
 
 function startServer() {
-  return app.listen(PORT, () => {
-  console.log(`Portal do Aluno API Server listening on port ${PORT}`);
-  
-  // Start the background sync alerts job (every 5 minutes)
-  setInterval(() => {
-    syncAlerts().catch(err => console.error('Background syncAlerts error:', err));
-  }, 5 * 60 * 1000);
+  const server = app.listen(PORT, () => {
+    console.log(`Portal do Aluno API Server listening on port ${PORT}`);
+
+    // Start the background sync alerts job (every 5 minutes)
+    setInterval(() => {
+      syncAlerts().catch(err => console.error('Background syncAlerts error:', err));
+    }, 5 * 60 * 1000).unref();
   });
+
+  // Graceful shutdown: para de aceitar conexões novas e encerra as ativas
+  const shutdown = signal => {
+    console.log(`${signal} recebido — encerrando servidor...`);
+    server.close(() => process.exit(0));
+    setTimeout(() => process.exit(1), 10000).unref();
+  };
+  process.on('SIGTERM', () => shutdown('SIGTERM'));
+  process.on('SIGINT', () => shutdown('SIGINT'));
+
+  return server;
 }
 
 if (require.main === module) {
